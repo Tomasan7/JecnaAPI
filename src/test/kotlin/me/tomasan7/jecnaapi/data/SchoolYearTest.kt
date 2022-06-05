@@ -1,4 +1,4 @@
-package me.tomasan7.jecnadesktop.data
+package me.tomasan7.jecnaapi.data
 
 import org.junit.Test
 import org.junit.jupiter.api.assertThrows
