@@ -9,9 +9,9 @@ import io.ktor.http.*
 
 abstract class AuthWebClient
 {
-    protected val auth: Auth
+    val auth: Auth
 
-    protected val cookieStorage = AcceptAllCookiesStorage()
+    val cookieStorage = AcceptAllCookiesStorage()
 
     protected val httpClient = HttpClient(CIO) {
         install(HttpCookies) {
