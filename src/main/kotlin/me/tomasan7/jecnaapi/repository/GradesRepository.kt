@@ -8,11 +8,11 @@ import me.tomasan7.jecnaapi.data.SchoolYear
  */
 interface GradesRepository
 {
-    suspend fun queryGrades(): GradesPage
+    suspend fun queryGradesPage(): GradesPage
 
     /**
      * @param schoolYear The [SchoolYear] to get the [GradesPage] for.
      * @param firstHalf The school year half to get the [GradesPage] for. `true` for first half and `false` for second half.
      */
-    suspend fun queryGrades(schoolYear: SchoolYear, firstHalf: Boolean): GradesPage
+    suspend fun queryGradesPage(schoolYear: SchoolYear, firstHalf: Boolean): GradesPage
 }

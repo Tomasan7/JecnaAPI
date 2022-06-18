@@ -8,11 +8,11 @@ import me.tomasan7.jecnaapi.data.SchoolYear
  */
 interface AttendancesRepository
 {
-    suspend fun queryAttendances(): AttendancesPage
+    suspend fun queryAttendancesPage(): AttendancesPage
 
     /**
      * @param schoolYear The [SchoolYear] to get the [AttendancesPage] for.
      * @param month The month to get the [AttendancesPage] for. (`1` = January)
      */
-    suspend fun queryAttendances(schoolYear: SchoolYear, month: Int): AttendancesPage
+    suspend fun queryAttendancesPage(schoolYear: SchoolYear, month: Int): AttendancesPage
 }

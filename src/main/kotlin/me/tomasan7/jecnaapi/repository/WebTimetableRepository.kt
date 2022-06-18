@@ -15,9 +15,9 @@ class WebTimetableRepository(private val webClient: JecnaWebClient) : TimetableR
 {
     private val timetableParser = HtmlTimetableParser()
 
-    override suspend fun queryTimetable() = timetableParser.parse(webClient.queryStringBody(WEB_PATH))
+    override suspend fun queryTimetablePage() = timetableParser.parse(webClient.queryStringBody(WEB_PATH))
 
-    override suspend fun queryTimetable(schoolYear: SchoolYear) =
+    override suspend fun queryTimetablePage(schoolYear: SchoolYear) =
         timetableParser.parse(webClient.queryStringBody(WEB_PATH, Parameters.build {
             append(schoolYear.jecnaEncode())
         }))

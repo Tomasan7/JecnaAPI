@@ -16,9 +16,9 @@ class WebAttendancesRepository(private val webClient: JecnaWebClient) : Attendan
 {
     private val attendancesParser = HtmlAttendancesParser()
 
-    override suspend fun queryAttendances() = attendancesParser.parse(webClient.queryStringBody(WEB_PATH))
+    override suspend fun queryAttendancesPage() = attendancesParser.parse(webClient.queryStringBody(WEB_PATH))
 
-    override suspend fun queryAttendances(schoolYear: SchoolYear, month: Int) =
+    override suspend fun queryAttendancesPage(schoolYear: SchoolYear, month: Int) =
         attendancesParser.parse(webClient.queryStringBody(WEB_PATH, Parameters.build {
             append(schoolYear.jecnaEncode())
             append(JecnaPeriodEncoder.encodeMonth(month))

@@ -8,10 +8,10 @@ import me.tomasan7.jecnaapi.data.TimetablePage
  */
 interface TimetableRepository
 {
-    suspend fun queryTimetable(): TimetablePage
+    suspend fun queryTimetablePage(): TimetablePage
 
     /**
      * @param schoolYear The [SchoolYear] to get the [TimetablePage] for.
      */
-    suspend fun queryTimetable(schoolYear: SchoolYear): TimetablePage
+    suspend fun queryTimetablePage(schoolYear: SchoolYear): TimetablePage
 }
