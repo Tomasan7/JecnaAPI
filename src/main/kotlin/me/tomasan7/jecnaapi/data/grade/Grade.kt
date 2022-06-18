@@ -45,6 +45,8 @@ data class Grade(val value: Int,
 
     companion object
     {
+        private val gradeCharValues = listOf('N', '0', '1', '2', '3', '4', '5')
+
         /**
          * Converts value's char representation to the value.
          *
@@ -53,7 +55,7 @@ data class Grade(val value: Int,
          */
         private fun valueCharToValue(valueChar: Char): Int
         {
-            require(valueChar in listOf('N', '0', '1', '2', '3', '4', '5'))
+            require(valueChar in gradeCharValues)
 
             return if (valueChar == 'N') 0 else valueChar.toString().toInt()
         }
