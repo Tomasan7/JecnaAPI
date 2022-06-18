@@ -91,12 +91,12 @@ class HtmlAttendancesParser : AttendancesParser
     companion object
     {
         /* Matches a date in 'dd.MM.' format. (for speed and simplicity, it also matches non-existing dates) */
-        private val DATE_REGEX = Regex("[0-3]?\\d\\.[0-1]?\\d\\.", RegexOption.DOT_MATCHES_ALL)
+        private val DATE_REGEX = Regex("""[0-3]?\\d\\.[0-1]?\\d\\.""", RegexOption.DOT_MATCHES_ALL)
 
         /* Matches whole string if it contains "Odchod" => if it's a leave. */
-        private val LEAVE_REGEX = Regex(".*Odchod.*", RegexOption.DOT_MATCHES_ALL)
+        private val LEAVE_REGEX = Regex(""".*Odchod.*""", RegexOption.DOT_MATCHES_ALL)
 
         /* Matches time in hh:mm format. */
-        private val TIME_REGEX = Regex("(?:[0-1]?[0-9]|2[0-3]):[0-5][0-9]", RegexOption.DOT_MATCHES_ALL)
+        private val TIME_REGEX = Regex("""(?:[0-1]?\d|2[0-3]):[0-5]\d""", RegexOption.DOT_MATCHES_ALL)
     }
 }

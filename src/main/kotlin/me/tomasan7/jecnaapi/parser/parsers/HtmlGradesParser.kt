@@ -59,12 +59,12 @@ class HtmlGradesParser : GradesParser
     companion object
     {
         /* Matches everything before last '(' preceded by a space. */
-        private val DESCRIPTION_REGEX = Regex(".*(?= \\((?!.*\\())", RegexOption.DOT_MATCHES_ALL)
+        private val DESCRIPTION_REGEX = Regex(""".*(?= \((?!.*\())""", RegexOption.DOT_MATCHES_ALL)
 
         /* Matches everything between last '(' and first ',' after it. */
-        private val DATE_REGEX = Regex("(?<=\\((?!.{0,100}\\())[^,]*(?=,)", RegexOption.DOT_MATCHES_ALL)
+        private val DATE_REGEX = Regex("""(?<=\((?!.{0,100}\())[^,]*(?=,)""", RegexOption.DOT_MATCHES_ALL)
 
         /* Matches everything between the first ',' followed by a space after last '(' and ending ')' */
-        private val TEACHER_REGEX = Regex("(?<=(?<=\\((?!.{0,100}\\()[^,]{0,100}), ).*(?=\\)$)", RegexOption.DOT_MATCHES_ALL)
+        private val TEACHER_REGEX = Regex("""(?<=(?<=\((?!.{0,100}\()[^,]{0,100}), ).*(?=\)${'$'})""", RegexOption.DOT_MATCHES_ALL)
     }
 }
