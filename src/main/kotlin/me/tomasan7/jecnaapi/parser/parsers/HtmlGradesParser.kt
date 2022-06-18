@@ -1,5 +1,6 @@
 package me.tomasan7.jecnaapi.parser.parsers
 
+import me.tomasan7.jecnaapi.data.Name
 import me.tomasan7.jecnaapi.data.grade.FinalGrade
 import me.tomasan7.jecnaapi.data.grade.Grade
 import me.tomasan7.jecnaapi.data.grade.GradesPage
@@ -34,10 +35,11 @@ class HtmlGradesParser : GradesParser
                 val gradeEles = rowEle.select("td > a.score:not(.scoreFinal)")
 
                 val subjectSplit = subjectEle.text().split(SUBJECT_SHORT_SPLIT_REGEX, 2)
-                val subjectName = subjectSplit[0]
-                val subjectShortWithBrackets = subjectSplit.getOrNull(1)
+                val subjectFullName = subjectSplit[0]
+                val subjectShortNameWithBrackets = subjectSplit.getOrNull(1)
                 /* Removes the brackets from the string. (IT) -> IT */
-                val subjectShort = subjectShortWithBrackets?.substring(1, subjectShortWithBrackets.length - 1)
+                val subjectShortName = subjectShortNameWithBrackets?.substring(1, subjectShortNameWithBrackets.length - 1)
+                val subjectName = Name(subjectFullName, subjectShortName)
 
                 val grades = mutableListOf<Grade>()
 
@@ -60,7 +62,7 @@ class HtmlGradesParser : GradesParser
                 val finalGradeEle = rowEle.selectFirst(".scoreFinal")
                 val finalGrade = if (finalGradeEle != null) FinalGrade(finalGradeEle.text().toInt(), subjectName) else null
 
-                gradesPageBuilder.addSubject(Subject(subjectName, subjectShort, grades, finalGrade))
+                gradesPageBuilder.addSubject(Subject(subjectName, grades, finalGrade))
             }
             return gradesPageBuilder.build()
         }

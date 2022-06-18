@@ -1,20 +1,27 @@
 package me.tomasan7.jecnaapi.data.grade
 
+import me.tomasan7.jecnaapi.data.Name
+import me.tomasan7.jecnaapi.data.toSubjectName
 import java.util.*
 
 /**
  * Representing grades table.
  * Stores `0` or more grades for each subject.
  */
-class GradesPage private constructor(private val grades: Map<String, Subject>)
+class GradesPage private constructor(private val grades: Map<Name, Subject>)
 {
-    /** All subjects. */
-    val subjects = grades.keys
+    /** All subject names. */
+    val subjectNames = grades.keys
 
     /**
-     * @return [Subject] with the passed name. Can be `null`, when theres no subject with that name.
+     * @return [Subject] with the passed [Name]. Can be `null`, when theres no subject with that name.
      */
-    fun getSubjectByName(subject: String) = grades.getOrDefault(subject, null)
+    fun getSubjectByName(subjectName: Name) = grades.getOrDefault(subjectName, null)
+
+    /**
+     * @return [Subject] with the passed [subjectName] as it's full name. Can be `null`, when theres no subject with that name.
+     */
+    fun getSubjectByName(subjectName: String) = grades.getOrDefault(subjectName.toSubjectName(), null)
 
     /**
      * This [GradesPage] as a [Map].
@@ -24,7 +31,7 @@ class GradesPage private constructor(private val grades: Map<String, Subject>)
 
     class Builder
     {
-        private val grades: MutableMap<String, Subject> = HashMap()
+        private val grades: MutableMap<Name, Subject> = HashMap()
 
         /**
          * Adds [Subject].

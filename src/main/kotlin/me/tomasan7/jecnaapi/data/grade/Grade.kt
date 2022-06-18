@@ -1,5 +1,6 @@
 package me.tomasan7.jecnaapi.data.grade
 
+import me.tomasan7.jecnaapi.data.Name
 import java.time.LocalDate
 
 /**
@@ -11,7 +12,7 @@ import java.time.LocalDate
  */
 data class Grade(val value: Int,
                  val small: Boolean,
-                 val subject: String? = null,
+                 val subject: Name? = null,
                  val teacher: String? = null,
                  val description: String? = null,
                  val receiveDate: LocalDate? = null)
@@ -23,7 +24,7 @@ data class Grade(val value: Int,
      */
     constructor(valueChar: Char,
                 small: Boolean,
-                subject: String?,
+                subject: Name?,
                 teacher: String?,
                 description: String?,
                 receiveDate: LocalDate?) : this(valueCharToValue(valueChar),

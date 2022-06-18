@@ -1,6 +1,7 @@
 package me.tomasan7.jecnaapi.data.grade
 
-data class Subject(val name: String,
-                   val nameShort: String? = null,
+import me.tomasan7.jecnaapi.data.Name
+
+data class Subject(val name: Name,
                    val grades: List<Grade>,
                    val finalGrade: FinalGrade? = null)
