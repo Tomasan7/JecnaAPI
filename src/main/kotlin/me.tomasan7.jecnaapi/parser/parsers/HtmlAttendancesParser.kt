@@ -1,7 +1,7 @@
 package me.tomasan7.jecnaapi.parser.parsers
 
 import me.tomasan7.jecnaapi.data.Attendance
-import me.tomasan7.jecnaapi.data.Attendances
+import me.tomasan7.jecnaapi.data.AttendancesPage
 import me.tomasan7.jecnaapi.parser.ParseException
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -12,15 +12,15 @@ import java.time.format.DateTimeFormatterBuilder
 import java.time.temporal.ChronoField
 
 /**
- * Parses correct HTML to [Attendances] instance.
+ * Parses correct HTML to [AttendancesPage] instance.
  */
 class HtmlAttendancesParser : AttendancesParser
 {
-    override fun parse(source: String): Attendances
+    override fun parse(source: String): AttendancesPage
     {
         try
         {
-            val attendancesBuilder = Attendances.builder()
+            val attendancesPageBuilder = AttendancesPage.builder()
 
             val document = Jsoup.parse(source)
             /* All the rows (tr) in the absence table. */
@@ -49,11 +49,11 @@ class HtmlAttendancesParser : AttendancesParser
                     /* Find the time and parse it to the LocalTime object. */
                     val time = LocalTime.parse(TIME_REGEX.find(dayAttendanceStr)!!.value, DateTimeFormatter.ofPattern("H:mm"))
 
-                    attendancesBuilder.addAttendance(day, Attendance(exit, time))
+                    attendancesPageBuilder.addAttendance(day, Attendance(exit, time))
                 }
             }
 
-            return attendancesBuilder.build()
+            return attendancesPageBuilder.build()
         }
         catch (e: Exception)
         {

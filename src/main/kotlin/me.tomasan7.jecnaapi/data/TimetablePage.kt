@@ -8,8 +8,8 @@ import kotlin.collections.ArrayList
 /**
  * Whole timetable containing [LessonSpot]s for each day and their [LessonPeriod]s.
  */
-class Timetable private constructor(private val timetable: Map<String, List<LessonSpot?>>,
-                                    val lessonPeriods: List<LessonPeriod>)
+class TimetablePage private constructor(private val timetable: Map<String, List<LessonSpot?>>,
+                                        val lessonPeriods: List<LessonPeriod>)
 {
     /**
      * @return All the days this timetable has [lessons][Lesson] in.
@@ -70,7 +70,7 @@ class Timetable private constructor(private val timetable: Map<String, List<Less
         }
 
         /**
-         * Adds a [LessonPeriod] to the [Timetable].
+         * Adds a [LessonPeriod] to the [TimetablePage].
          *
          * @param lessonPeriod The [LessonPeriod] to add.
          * @return This [builder's][Builder] instance back.
@@ -139,11 +139,11 @@ class Timetable private constructor(private val timetable: Map<String, List<Less
             return this
         }
 
-        fun build(): Timetable
+        fun build(): TimetablePage
         {
             /* TODO: Maybe check if there is equal or more lessonPeriods than lessons in any day?
 			 * Because that would mean there is a lesson without specified LessonPeriod. */
-            return Timetable(timetable, lessonPeriods)
+            return TimetablePage(timetable, lessonPeriods)
         }
     }
 

@@ -1,25 +1,23 @@
 package me.tomasan7.jecnaapi.parser.parsers
 
 import me.tomasan7.jecnaapi.data.Grade
-import me.tomasan7.jecnaapi.data.Grades
+import me.tomasan7.jecnaapi.data.GradesPage
 import me.tomasan7.jecnaapi.parser.ParseException
 import org.jsoup.Jsoup
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import kotlin.system.measureTimeMillis
-import kotlin.time.measureTime
 
 /**
- * Parses correct HTML to [Grades] instance.
+ * Parses correct HTML to [GradesPage] instance.
  * **Beware: The grade's subject is taken from the table's row name, not from the grade's page!**
  */
 class HtmlGradesParser : GradesParser
 {
-    override fun parse(source: String): Grades
+    override fun parse(source: String): GradesPage
     {
         try
         {
-            val gradesBuilder = Grades.builder()
+            val gradesPageBuilder = GradesPage.builder()
 
             val document = Jsoup.parse(source)
 
@@ -47,10 +45,10 @@ class HtmlGradesParser : GradesParser
                     val description = DESCRIPTION_REGEX.find(titleAttr)?.value
                     val receiveDate = DATE_REGEX.find(titleAttr)?.value?.let { LocalDate.parse(it, DateTimeFormatter.ofPattern("dd.MM.yyyy")) }
 
-                    gradesBuilder.addGrade(subjectEle.text(), Grade(value, small, subject, teacher, description, receiveDate))
+                    gradesPageBuilder.addGrade(subjectEle.text(), Grade(value, small, subject, teacher, description, receiveDate))
                 }
             }
-            return gradesBuilder.build()
+            return gradesPageBuilder.build()
         }
         catch (e: Exception)
         {

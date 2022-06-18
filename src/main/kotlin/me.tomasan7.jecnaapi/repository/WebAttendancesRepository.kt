@@ -1,7 +1,7 @@
 package me.tomasan7.jecnaapi.repository
 
 import io.ktor.http.*
-import me.tomasan7.jecnaapi.data.Attendances
+import me.tomasan7.jecnaapi.data.AttendancesPage
 import me.tomasan7.jecnaapi.data.SchoolYear
 import me.tomasan7.jecnaapi.parser.parsers.HtmlAttendancesParser
 import me.tomasan7.jecnaapi.util.JecnaPeriodEncoder
@@ -10,7 +10,7 @@ import me.tomasan7.jecnaapi.web.JecnaWebClient
 import me.tomasan7.jecnaapi.web.append
 
 /**
- * Retrieves [Attendances] from the Ječná web.
+ * Retrieves [AttendancesPage] from the Ječná web.
  */
 class WebAttendancesRepository(private val webClient: JecnaWebClient) : AttendancesRepository
 {

@@ -7,7 +7,7 @@ import kotlin.collections.HashMap
  * Representing grades table.
  * Stores `0` or more grades for each subject.
  */
-class Grades private constructor(private val grades: Map<String, List<Grade>>)
+class GradesPage private constructor(private val grades: Map<String, List<Grade>>)
 {
     /** All subjects. */
     val subjects = grades.keys
@@ -18,7 +18,7 @@ class Grades private constructor(private val grades: Map<String, List<Grade>>)
     fun getGradesForSubject(subject: String) = grades.getOrDefault(subject, listOf())
 
     /**
-     * This [Grades] as a [Map].
+     * This [GradesPage] as a [Map].
      * Key = subject, value = list of [grades][Grade].
      */
     val asMap = grades
@@ -40,7 +40,7 @@ class Grades private constructor(private val grades: Map<String, List<Grade>>)
             return this
         }
 
-        fun build() = Grades(grades)
+        fun build() = GradesPage(grades)
     }
 
     companion object

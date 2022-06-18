@@ -3,20 +3,20 @@ package me.tomasan7.jecnaapi.parser.parsers
 import me.tomasan7.jecnaapi.data.Lesson
 import me.tomasan7.jecnaapi.data.LessonPeriod
 import me.tomasan7.jecnaapi.data.LessonSpot
-import me.tomasan7.jecnaapi.data.Timetable
+import me.tomasan7.jecnaapi.data.TimetablePage
 import me.tomasan7.jecnaapi.parser.ParseException
 import org.jsoup.Jsoup
 
 /**
- * Parses correct HTML to [Timetable] instance.
+ * Parses correct HTML to [TimetablePage] instance.
  */
 class HtmlTimetableParser : TimetableParser
 {
-    override fun parse(source: String): Timetable
+    override fun parse(source: String): TimetablePage
     {
         try
         {
-            val timetableBuilder = Timetable.builder()
+            val timetablePageBuilder = TimetablePage.builder()
 
             val document = Jsoup.parse(source)
 
@@ -34,7 +34,7 @@ class HtmlTimetableParser : TimetableParser
 
             /* Add all the LessonPeriods to the timetable. */
             lessonPeriodEles.forEach {
-                timetableBuilder.addLessonPeriod(LessonPeriod.fromString(it.selectFirst(".time")!!.text()))
+                timetablePageBuilder.addLessonPeriod(LessonPeriod.fromString(it.selectFirst(".time")!!.text()))
             }
 
             /* Removes the row with the LessonPeriods, so it leaves all the subjects. */
@@ -52,7 +52,7 @@ class HtmlTimetableParser : TimetableParser
                     /* Skip if the lesson spot is empty, this leaves the lesson variable to null -> indicating no lesson. */
                     if (lessonSpotEle.hasClass("empty"))
                     {
-                        timetableBuilder.addLesson(day, null)
+                        timetablePageBuilder.addLesson(day, null)
                         continue
                     }
 
@@ -78,11 +78,11 @@ class HtmlTimetableParser : TimetableParser
                         ))
                     }
 
-                    timetableBuilder.addLessonSpot(day, LessonSpot(lessons))
+                    timetablePageBuilder.addLessonSpot(day, LessonSpot(lessons))
                 }
             }
 
-            return timetableBuilder.build()
+            return timetablePageBuilder.build()
         }
         catch (e: Exception)
         {

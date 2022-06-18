@@ -7,10 +7,10 @@ import kotlin.collections.HashMap
 /**
  * Holds all [attendances][Attendance] for each day.
  */
-class Attendances private constructor(private val attendances: Map<LocalDate, List<Attendance>>)
+class AttendancesPage private constructor(private val attendances: Map<LocalDate, List<Attendance>>)
 {
     /**
-     * All days, this [Attendances] has data for.
+     * All days, this [AttendancesPage] has data for.
      */
     val days = attendances.keys
 
@@ -38,7 +38,7 @@ class Attendances private constructor(private val attendances: Map<LocalDate, Li
             return this
         }
 
-        fun build() = Attendances(attendances)
+        fun build() = AttendancesPage(attendances)
     }
 
     companion object
