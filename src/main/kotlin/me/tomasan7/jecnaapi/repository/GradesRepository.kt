@@ -1,6 +1,6 @@
 package me.tomasan7.jecnaapi.repository
 
-import me.tomasan7.jecnaapi.data.GradesPage
+import me.tomasan7.jecnaapi.data.grade.GradesPage
 import me.tomasan7.jecnaapi.data.SchoolYear
 
 /**
