@@ -31,14 +31,20 @@ class HtmlAttendancesParser : AttendancesParser
                 /* The first column in the row, which contains the day date. */
                 val dayEle = rowEle.selectFirst(".date")
                 val day = parseDayDate(dayEle!!.text(), document)
-                /* The second column in the row, which contains all the attendances in one text. */
-                val attendancesEle = rowEle.select("td:not(.date)")
-                /* A string containing all enters/leaves in a day. */
-                val attendancesStr = attendancesEle.text()
-                /* Represents a single entry/leave in the day. */
-                val dayAttendances = attendancesStr.split(", ")
+                /* The second column in the row, which contains all the paragraphs with the texts. */
+                val attendancesEle = rowEle.select("td")[1]
+                val attendancesParagraphs = attendancesEle.select("p")
+                /* Contains all entries/leaves in the day as string. */
+                val dayAttendancesAsStr = mutableListOf<String>()
 
-                for (dayAttendanceStr in dayAttendances)
+                for (attendanceParagraph in attendancesParagraphs)
+                {
+                    val dayAttendances = attendanceParagraph.text().split(", ")
+                    dayAttendancesAsStr.addAll(dayAttendances)
+                }
+
+
+                for (dayAttendanceStr in dayAttendancesAsStr)
                 {
                     /* Don't save the days, which have no presence. */
                     if (dayAttendanceStr.isBlank())
