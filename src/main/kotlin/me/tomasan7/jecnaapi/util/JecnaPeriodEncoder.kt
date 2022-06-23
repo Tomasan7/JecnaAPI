@@ -76,7 +76,7 @@ object JecnaPeriodEncoder
      * @param firstHalf Is `true` for first half and `false` for second half.
      * @return School year half URL query parameter as [Pair] of a key and a value.
      */
-    fun encodeSchoolYearHalf(firstHalf: Boolean) = SCHOOL_YEAR_HALF_ID_KEY to (if (firstHalf) FIRST_HALF_ID else SECOND_HALF_ID)
+    fun encodeSchoolYearHalf(firstHalf: Boolean) = SCHOOL_YEAR_HALF_ID_KEY to if (firstHalf) FIRST_HALF_ID else SECOND_HALF_ID
 
     /**
      * @param id The id of the school year half.
