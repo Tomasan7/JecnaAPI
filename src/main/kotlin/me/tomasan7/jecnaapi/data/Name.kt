@@ -24,7 +24,7 @@ data class Name(val full: String, val short: String? = null)
     }
 
     /**
-     * Returns `full.hashCode()`
+     * @return `full.hashCode()`
      */
     override fun hashCode(): Int
     {
