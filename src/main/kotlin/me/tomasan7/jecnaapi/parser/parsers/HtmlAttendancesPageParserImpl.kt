@@ -14,15 +14,15 @@ import java.time.temporal.ChronoField
 /**
  * Parses correct HTML to [AttendancesPage] instance.
  */
-class HtmlAttendancesParser : AttendancesParser
+class HtmlAttendancesPageParserImpl : HtmlAttendancesPageParser
 {
-    override fun parse(source: String): AttendancesPage
+    override fun parse(html: String): AttendancesPage
     {
         try
         {
             val attendancesPageBuilder = AttendancesPage.builder()
 
-            val document = Jsoup.parse(source)
+            val document = Jsoup.parse(html)
             /* All the rows (tr) in the absence table. */
             val rowEles = document.select(".tab.absence-list > tbody > tr")
 

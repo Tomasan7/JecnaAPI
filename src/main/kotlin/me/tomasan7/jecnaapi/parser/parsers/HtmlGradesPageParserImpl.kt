@@ -15,15 +15,15 @@ import java.time.format.DateTimeFormatter
  * Parses correct HTML to [GradesPage] instance.
  * **Beware: The grade's subject is taken from the table's row name, not from the grade's page!**
  */
-class HtmlGradesParser : GradesParser
+class HtmlGradesPageParserImpl : HtmlGradesPageParser
 {
-    override fun parse(source: String): GradesPage
+    override fun parse(html: String): GradesPage
     {
         try
         {
             val gradesPageBuilder = GradesPage.builder()
 
-            val document = Jsoup.parse(source)
+            val document = Jsoup.parse(html)
 
             /* All the rows (tr) in the grades table. */
             val rowEles = document.select(".score > tbody > tr")

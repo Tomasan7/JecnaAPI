@@ -10,15 +10,15 @@ import org.jsoup.Jsoup
 /**
  * Parses correct HTML to [TimetablePage] instance.
  */
-class HtmlTimetableParser : TimetableParser
+class HtmlTimetableParserImpl : HtmlTimetablePageParser
 {
-    override fun parse(source: String): TimetablePage
+    override fun parse(html: String): TimetablePage
     {
         try
         {
             val timetablePageBuilder = TimetablePage.builder()
 
-            val document = Jsoup.parse(source)
+            val document = Jsoup.parse(html)
 
             /* All the rows (tr) in the grades table. */
             val rowEles = document.select("table.timetable > tbody > tr")
