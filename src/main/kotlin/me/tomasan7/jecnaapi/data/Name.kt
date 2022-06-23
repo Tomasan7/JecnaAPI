@@ -43,4 +43,4 @@ data class Name(val full: String, val short: String? = null)
 /**
  * Creates [Name] with this [String] as it's full name. The short is left `null`.
  */
-fun String.toSubjectName() = Name(this)
+fun String.toName() = Name(this)

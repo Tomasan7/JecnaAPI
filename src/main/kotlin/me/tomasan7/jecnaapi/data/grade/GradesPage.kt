@@ -1,7 +1,7 @@
 package me.tomasan7.jecnaapi.data.grade
 
 import me.tomasan7.jecnaapi.data.Name
-import me.tomasan7.jecnaapi.data.toSubjectName
+import me.tomasan7.jecnaapi.data.toName
 import java.util.*
 
 /**
@@ -21,7 +21,7 @@ class GradesPage private constructor(private val grades: Map<Name, Subject>)
     /**
      * @return [Subject] with the passed [subjectName] as it's full name. Can be `null`, when theres no subject with that name.
      */
-    fun getSubjectByName(subjectName: String) = grades.getOrDefault(subjectName.toSubjectName(), null)
+    fun getSubjectByName(subjectName: String) = grades.getOrDefault(subjectName.toName(), null)
 
     /**
      * This [GradesPage] as a [Map].
