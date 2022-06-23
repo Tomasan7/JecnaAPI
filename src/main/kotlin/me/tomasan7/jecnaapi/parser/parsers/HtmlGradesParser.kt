@@ -7,6 +7,7 @@ import me.tomasan7.jecnaapi.data.grade.GradesPage
 import me.tomasan7.jecnaapi.data.grade.Subject
 import me.tomasan7.jecnaapi.parser.ParseException
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Element
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -31,8 +32,8 @@ class HtmlGradesParser : GradesParser
             {
                 /* The first column in the row, which contains the subject name. */
                 val subjectEle = rowEle.selectFirst("th")!!
-                /* All the grade elements in the second column of the row. (not finalGrades) */
-                val gradeEles = rowEle.select("td > a.score:not(.scoreFinal)")
+
+                val gradesColumnEles = rowEle.select("td")[0].children()
 
                 val subjectSplit = subjectEle.text().split(SUBJECT_SHORT_SPLIT_REGEX, 2)
                 val subjectFullName = subjectSplit[0]
@@ -41,28 +42,22 @@ class HtmlGradesParser : GradesParser
                 val subjectShortName = subjectShortNameWithBrackets?.substring(1, subjectShortNameWithBrackets.length - 1)
                 val subjectName = Name(subjectFullName, subjectShortName)
 
-                val grades = mutableListOf<Grade>()
+                val subjectGradesBuilder = Subject.Grades.builder()
 
-                for (gradeEle in gradeEles)
+                var lastSubjectPart: String? = null
+                for (gradesColumnEle in gradesColumnEles)
                 {
-                    val valueString = gradeEle.selectFirst(".value")!!.text()
-                    val value = valueString[0]
-                    val small = gradeEle.classNames().contains("scoreSmall")
-
-                    /* The title attribute of the grade element, which contains all the details. (description, date and teacher) */
-                    val titleAttr = gradeEle.attr("title")
-
-                    val teacher = TEACHER_REGEX.find(titleAttr)?.value
-                    val description = DESCRIPTION_REGEX.find(titleAttr)?.value
-                    val receiveDate = DATE_REGEX.find(titleAttr)?.value?.let { LocalDate.parse(it, DateTimeFormatter.ofPattern("dd.MM.yyyy")) }
-
-                    grades.add(Grade(value, small, subjectName, teacher, description, receiveDate))
+                    if (gradesColumnEle.classNames().contains("subjectPart"))
+                        /* The substring removes the colon (':') after the subject part. */
+                        lastSubjectPart = gradesColumnEle.text().let { it.substring(0, it.length - 1) }
+                    else if (gradesColumnEle.`is`("a"))
+                        subjectGradesBuilder.addGrade(lastSubjectPart, parseGrade(gradesColumnEle, subjectName))
                 }
 
                 val finalGradeEle = rowEle.selectFirst(".scoreFinal")
                 val finalGrade = if (finalGradeEle != null) FinalGrade(finalGradeEle.text().toInt(), subjectName) else null
 
-                gradesPageBuilder.addSubject(Subject(subjectName, grades, finalGrade))
+                gradesPageBuilder.addSubject(Subject(subjectName, subjectGradesBuilder.build(), finalGrade))
             }
             return gradesPageBuilder.build()
         }
@@ -70,6 +65,22 @@ class HtmlGradesParser : GradesParser
         {
             throw ParseException(e)
         }
+    }
+
+    private fun parseGrade(gradeEle: Element, subjectName: Name): Grade
+    {
+        val valueString = gradeEle.selectFirst(".value")!!.text()
+        val value = valueString[0]
+        val small = gradeEle.classNames().contains("scoreSmall")
+
+        /* The title attribute of the grade element, which contains all the details. (description, date and teacher) */
+        val titleAttr = gradeEle.attr("title")
+
+        val teacher = TEACHER_REGEX.find(titleAttr)?.value
+        val description = DESCRIPTION_REGEX.find(titleAttr)?.value
+        val receiveDate = DATE_REGEX.find(titleAttr)?.value?.let { LocalDate.parse(it, DateTimeFormatter.ofPattern("dd.MM.yyyy")) }
+
+        return Grade(value, small, subjectName, teacher, description, receiveDate)
     }
 
     companion object
