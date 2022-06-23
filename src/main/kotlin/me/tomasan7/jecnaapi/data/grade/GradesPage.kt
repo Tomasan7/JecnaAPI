@@ -8,7 +8,8 @@ import java.util.*
  * Representing grades table.
  * Stores `0` or more grades for each subject.
  */
-class GradesPage private constructor(private val grades: Map<Name, Subject>)
+class GradesPage private constructor(private val grades: Map<Name, Subject>,
+                                     val behaviour: Behaviour)
 {
     /** All subject names. */
     val subjectNames = grades.keys
@@ -32,6 +33,7 @@ class GradesPage private constructor(private val grades: Map<Name, Subject>)
     class Builder
     {
         private val grades: MutableMap<Name, Subject> = HashMap()
+        private lateinit var behaviour: Behaviour
 
         /**
          * Adds [Subject].
@@ -44,7 +46,16 @@ class GradesPage private constructor(private val grades: Map<Name, Subject>)
             return this
         }
 
-        fun build() = GradesPage(grades)
+        fun setBehaviour(behaviour: Behaviour)
+        {
+            this.behaviour = behaviour
+        }
+
+        fun build(): GradesPage
+        {
+            check(::behaviour.isInitialized) { "Behaviour has not been set." }
+            return GradesPage(grades, behaviour)
+        }
     }
 
     companion object

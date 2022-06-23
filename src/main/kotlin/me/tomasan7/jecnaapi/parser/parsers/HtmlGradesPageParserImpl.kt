@@ -1,10 +1,7 @@
 package me.tomasan7.jecnaapi.parser.parsers
 
 import me.tomasan7.jecnaapi.data.Name
-import me.tomasan7.jecnaapi.data.grade.FinalGrade
-import me.tomasan7.jecnaapi.data.grade.Grade
-import me.tomasan7.jecnaapi.data.grade.GradesPage
-import me.tomasan7.jecnaapi.data.grade.Subject
+import me.tomasan7.jecnaapi.data.grade.*
 import me.tomasan7.jecnaapi.parser.ParseException
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
@@ -28,6 +25,8 @@ class HtmlGradesPageParserImpl : HtmlGradesPageParser
             /* All the rows (tr) in the grades table. */
             val rowEles = document.select(".score > tbody > tr")
 
+            lateinit var behaviour: Behaviour
+
             for (rowEle in rowEles)
             {
                 /* The first column in the row, which contains the subject name. */
@@ -42,6 +41,32 @@ class HtmlGradesPageParserImpl : HtmlGradesPageParser
                 val subjectShortName = subjectShortNameWithBrackets?.substring(1, subjectShortNameWithBrackets.length - 1)
                 val subjectName = Name(subjectFullName, subjectShortName)
 
+                val finalGradeEle = rowEle.selectFirst(".scoreFinal")
+                val finalGrade = if (finalGradeEle != null) FinalGrade(finalGradeEle.text().toInt(), subjectName) else null
+
+                if (subjectName.full == Behaviour.SUBJECT_NAME)
+                {
+                    val notificationEles = gradesColumnEles.select("span > a")
+
+                    val notifications = mutableListOf<Behaviour.Notification>()
+
+                    for (notificationEle in notificationEles)
+                    {
+                        val type = if (notificationEle.children()[0].classNames().contains("sprite-icon-tick-16"))
+                            Behaviour.NotificationType.GOOD
+                        else
+                            Behaviour.NotificationType.BAD
+
+                        val message = notificationEle.selectFirst(".label")!!.text()
+
+                        notifications.add(Behaviour.Notification(type, message))
+                    }
+
+                    behaviour = Behaviour(notifications, finalGrade!!)
+                    continue
+                }
+
+
                 val subjectGradesBuilder = Subject.Grades.builder()
 
                 var lastSubjectPart: String? = null
@@ -54,11 +79,11 @@ class HtmlGradesPageParserImpl : HtmlGradesPageParser
                         subjectGradesBuilder.addGrade(lastSubjectPart, parseGrade(gradesColumnEle, subjectName))
                 }
 
-                val finalGradeEle = rowEle.selectFirst(".scoreFinal")
-                val finalGrade = if (finalGradeEle != null) FinalGrade(finalGradeEle.text().toInt(), subjectName) else null
-
                 gradesPageBuilder.addSubject(Subject(subjectName, subjectGradesBuilder.build(), finalGrade))
             }
+
+            gradesPageBuilder.setBehaviour(behaviour)
+
             return gradesPageBuilder.build()
         }
         catch (e: Exception)
