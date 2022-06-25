@@ -29,57 +29,21 @@ class HtmlGradesPageParserImpl : HtmlGradesPageParser
 
             for (rowEle in rowEles)
             {
-                /* The first column in the row, which contains the subject name. */
+                /* The first column (th; the header column) containing the subject name. */
                 val subjectEle = rowEle.selectFirst("th")!!
+                /* The second column (td; the first body column) with the main content. (subject parts, grades, commendations) */
+                val mainColumnEle = rowEle.select("td")[0]
 
-                val gradesColumnEles = rowEle.select("td")[0].children()
+                val subjectName = parseSubjectName(subjectEle.text())
 
-                val subjectSplit = subjectEle.text().split(SUBJECT_SHORT_SPLIT_REGEX, 2)
-                val subjectFullName = subjectSplit[0]
-                val subjectShortNameWithBrackets = subjectSplit.getOrNull(1)
-                /* Removes the brackets from the string. (IT) -> IT */
-                val subjectShortName = subjectShortNameWithBrackets?.substring(1, subjectShortNameWithBrackets.length - 1)
-                val subjectName = Name(subjectFullName, subjectShortName)
-
-                val finalGradeEle = rowEle.selectFirst(".scoreFinal")
-                val finalGrade = if (finalGradeEle != null) FinalGrade(finalGradeEle.text().toInt(), subjectName) else null
-
+                /* If this row's subject name is the behaviour one, parse this row as behaviour. */
                 if (subjectName.full == Behaviour.SUBJECT_NAME)
-                {
-                    val notificationEles = gradesColumnEles.select("span > a")
-
-                    val notifications = mutableListOf<Behaviour.Notification>()
-
-                    for (notificationEle in notificationEles)
-                    {
-                        val type = if (notificationEle.children()[0].classNames().contains("sprite-icon-tick-16"))
-                            Behaviour.NotificationType.GOOD
-                        else
-                            Behaviour.NotificationType.BAD
-
-                        val message = notificationEle.selectFirst(".label")!!.text()
-
-                        notifications.add(Behaviour.Notification(type, message))
-                    }
-
-                    behaviour = Behaviour(notifications, finalGrade!!)
-                    continue
-                }
-
-
-                val subjectGradesBuilder = Subject.Grades.builder()
-
-                var lastSubjectPart: String? = null
-                for (gradesColumnEle in gradesColumnEles)
-                {
-                    if (gradesColumnEle.classNames().contains("subjectPart"))
-                        /* The substring removes the colon (':') after the subject part. */
-                        lastSubjectPart = gradesColumnEle.text().let { it.substring(0, it.length - 1) }
-                    else if (gradesColumnEle.`is`("a"))
-                        subjectGradesBuilder.addGrade(lastSubjectPart, parseGrade(gradesColumnEle, subjectName))
-                }
-
-                gradesPageBuilder.addSubject(Subject(subjectName, subjectGradesBuilder.build(), finalGrade))
+                    behaviour = Behaviour(parseBehaviourNotifications(mainColumnEle),
+                                          parseFinalGrade(rowEle.findFinalGradeEle()!!, subjectName))
+                else
+                    gradesPageBuilder.addSubject(Subject(subjectName,
+                                                         parseSubjectGrades(mainColumnEle, subjectName),
+                                                         parseFinalGrade(rowEle.findFinalGradeEle()!!, subjectName)))
             }
 
             gradesPageBuilder.setBehaviour(behaviour)
@@ -92,10 +56,90 @@ class HtmlGradesPageParserImpl : HtmlGradesPageParser
         }
     }
 
+    /**
+     * Parses the [grades][Subject.Grades] from the main content column.
+     *
+     * @param gradesColumnEle The main content column.
+     * @param subjectName The [name][Name] of the subject this grades are in.
+     * @return The parsed [grades][Subject.Grades].
+     */
+    private fun parseSubjectGrades(gradesColumnEle: Element, subjectName: Name): Subject.Grades
+    {
+        val subjectGradesBuilder = Subject.Grades.builder()
+
+        /* All the elements in the main content column. (either grade or subject part) */
+        val columnContentEles = gradesColumnEle.select("td")[0].children()
+
+        /* The last encountered subject part, so we know where the following grades belong. */
+        var lastSubjectPart: String? = null
+
+        for (contentEle in columnContentEles)
+        {
+            if (contentEle.classNames().contains("subjectPart"))
+                /* The substring removes the colon (':') after the subject part. */
+                lastSubjectPart = contentEle.text().let { it.substring(0, it.length - 1) }
+            else if (contentEle.`is`("a"))
+                subjectGradesBuilder.addGrade(lastSubjectPart, parseGrade(contentEle, subjectName))
+        }
+
+        return subjectGradesBuilder.build()
+    }
+
+    /**
+     * Parses the [notifications][Behaviour.Notification] from the main content column.
+     *
+     * @param behaviourColumnEle The main content column.
+     * @return A list of the parsed [notifications][Behaviour.Notification].
+     */
+    private fun parseBehaviourNotifications(behaviourColumnEle: Element): List<Behaviour.Notification>
+    {
+        /* All the notification elements (a) in the main content column. */
+        val notificationEles = behaviourColumnEle.select("span > a")
+
+        val notifications = mutableListOf<Behaviour.Notification>()
+
+        for (notificationEle in notificationEles)
+        {
+            /* The element of the icon (tick or cross) */
+            val iconEle = notificationEle.selectFirst(".sprite-icon-16")!!
+
+            /* Choosing type based on it's icon. (tick = good; cross = bad) */
+            val type = if (iconEle.classNames().contains("sprite-icon-tick-16"))
+                Behaviour.NotificationType.GOOD
+            else
+                Behaviour.NotificationType.BAD
+
+            val message = notificationEle.selectFirst(".label")!!.text()
+
+            notifications.add(Behaviour.Notification(type, message))
+        }
+
+        return notifications.toList()
+    }
+
+    /**
+     * Parses [FinalGrade] from it's HTML element.
+     *
+     * @return The parsed [FinalGrade].
+     */
+    private fun parseFinalGrade(finalGradeEle: Element, subjectName: Name) = FinalGrade(finalGradeEle.text().toInt(), subjectName)
+
+    /**
+     * Finds the [FinalGrade]'s HTML element in the subject row element.
+     *
+     * @receiver The subject row element.
+     * @return The [FinalGrade]'s HTML element.
+     */
+    private fun Element.findFinalGradeEle() = selectFirst(".scoreFinal")
+
+    /**
+     * Parses a [Grade] from it's HTML element.
+     *
+     * @return The parsed [Grade].
+     */
     private fun parseGrade(gradeEle: Element, subjectName: Name): Grade
     {
-        val valueString = gradeEle.selectFirst(".value")!!.text()
-        val value = valueString[0]
+        val valueChar = gradeEle.selectFirst(".value")!!.text()[0]
         val small = gradeEle.classNames().contains("scoreSmall")
 
         /* The title attribute of the grade element, which contains all the details. (description, date and teacher) */
@@ -105,21 +149,53 @@ class HtmlGradesPageParserImpl : HtmlGradesPageParser
         val description = DESCRIPTION_REGEX.find(titleAttr)?.value
         val receiveDate = DATE_REGEX.find(titleAttr)?.value?.let { LocalDate.parse(it, DateTimeFormatter.ofPattern("dd.MM.yyyy")) }
 
-        return Grade(value, small, subjectName, teacher, description, receiveDate)
+        return Grade(valueChar, small, subjectName, teacher, description, receiveDate)
+    }
+
+    /**
+     * Converts a [String] in "`name (shortname)`" format to a [Name] object.
+     *
+     * @return The [Name] instance.
+     */
+    private fun parseSubjectName(subjectNameStr: String): Name
+    {
+        val subjectSplit = subjectNameStr.split(SUBJECT_SHORT_SPLIT_REGEX, 2)
+        val subjectFullName = subjectSplit[0]
+        /* example value: "(IT)" */
+        val subjectShortNameWithBrackets = subjectSplit.getOrNull(1)
+        /* Removes the brackets from the string. (IT) -> IT */
+        val subjectShortName = subjectShortNameWithBrackets?.substring(1, subjectShortNameWithBrackets.length - 1)
+
+        return Name(subjectFullName, subjectShortName)
     }
 
     companion object
     {
-        /* Matches everything before last '(' preceded by a space. */
+        /**
+         * Matches the description in a [Grade]'s HTML element title.
+         *
+         * Matches everything before last '(' preceded by a space.
+         */
         private val DESCRIPTION_REGEX = Regex(""".*(?= \((?!.*\())""", RegexOption.DOT_MATCHES_ALL)
 
-        /* Matches everything between last '(' and first ',' after it. */
+        /**
+         * Matches the date in a [Grade]'s HTML element title.
+         *
+         * Matches everything between last '(' and first ',' after it.
+         */
         private val DATE_REGEX = Regex("""(?<=\((?!.{0,100}\())[^,]*(?=,)""", RegexOption.DOT_MATCHES_ALL)
 
-        /* Matches everything between the first ',' followed by a space after last '(' and ending ')' */
+        /**
+         * Matches the teacher in a [Grade]'s HTML element title.
+         *
+         * Matches everything between the first ',' followed by a space after last '(' and ending ')'
+         */
         private val TEACHER_REGEX = Regex("""(?<=(?<=\((?!.{0,100}\()[^,]{0,100}), ).*(?=\)${'$'})""", RegexOption.DOT_MATCHES_ALL)
 
-        /* Matches the space between subject name and it's short name in brackets. */
+        /**
+         *  Matches the space between subject name and it's short name in brackets.
+         *  Used for splitting the name into full and short.
+         */
         private val SUBJECT_SHORT_SPLIT_REGEX = Regex(""" (?=\(\w{1,4}\)${'$'})""")
     }
 }
