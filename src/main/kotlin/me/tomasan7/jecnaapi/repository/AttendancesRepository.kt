@@ -1,7 +1,7 @@
 package me.tomasan7.jecnaapi.repository
 
 import me.tomasan7.jecnaapi.data.AttendancesPage
-import me.tomasan7.jecnaapi.data.SchoolYear
+import me.tomasan7.jecnaapi.util.SchoolYear
 
 /**
  * Retrieves [AttendancesPage] from any kind of data source.

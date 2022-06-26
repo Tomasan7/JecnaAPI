@@ -1,6 +1,6 @@
 package me.tomasan7.jecnaapi.repository
 
-import me.tomasan7.jecnaapi.data.SchoolYear
+import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.data.TimetablePage
 
 /**
