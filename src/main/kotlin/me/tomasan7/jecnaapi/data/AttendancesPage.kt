@@ -52,12 +52,12 @@ class AttendancesPage private constructor(private val attendances: Map<LocalDate
     {
         /**
          * Represents an [Attendance] [List] as a [String].
-         * Does so by joining all [Attendance.toString]'s with comma.
+         * Does so by joining all [Attendance.toString]'s with a comma.
          *
-         * @param attendanceList The [Attendance] [List] to represent.
+         * @receiver The [Attendance] [List] to represent.
          * @return The [String] representation.
          */
-        fun attendanceListAsString(attendanceList: List<Attendance>) = attendanceList.joinToString()
+        fun List<Attendance>.toAttendanceString() = joinToString()
 
         fun builder() = Builder()
     }
