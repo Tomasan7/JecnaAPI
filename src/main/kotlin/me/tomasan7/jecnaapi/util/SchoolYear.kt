@@ -10,19 +10,17 @@ data class SchoolYear(val firstCalendarYear: Int)
     /**
      * Constructs a [SchoolYear] this [date] belongs to. Considers the summer holidays as a new year.
      */
-    constructor(date: LocalDate) : this(if (SCHOOL_YEAR_LAST_MONTH <= date.monthValue) date.year else date.year + 1)
+    constructor(date: LocalDate) : this(if (date.month in FIRST_CALENDAR_YEAR_MONTHS) date.year else date.year - 1)
 
     /**
      * Returns calendar year [month] is in based on this [SchoolYear]. Considers the summer holidays as a new year.
      */
     fun getCalendarYear(month: Month): Int
     {
-        val monthValue = month.value
-
-        return if (monthValue in 1..SCHOOL_YEAR_LAST_MONTH)
-            secondCalendarYear
-        else
+        return if (month in FIRST_CALENDAR_YEAR_MONTHS)
             firstCalendarYear
+        else
+            secondCalendarYear
     }
 
     /**
@@ -31,10 +29,10 @@ data class SchoolYear(val firstCalendarYear: Int)
     operator fun contains(date: LocalDate): Boolean
     {
         return (date.year == firstCalendarYear
-                && SCHOOL_YEAR_LAST_MONTH <= date.monthValue)
+                && date.month in FIRST_CALENDAR_YEAR_MONTHS)
                ||
                (date.year == secondCalendarYear
-                && date.monthValue <= SCHOOL_YEAR_LAST_MONTH)
+                && date.month in SECOND_CALENDAR_YEAR_MONTHS)
     }
 
     operator fun compareTo(other: SchoolYear) = firstCalendarYear.compareTo(other.firstCalendarYear)
@@ -56,11 +54,25 @@ data class SchoolYear(val firstCalendarYear: Int)
 
     companion object
     {
-        /** Last month in a school year - June. */
-        private const val SCHOOL_YEAR_LAST_MONTH = 6
+        /**
+         * All [months][Month] in the first calendar year of a [SchoolYear]. (with summer holidays)
+         */
+        private val FIRST_CALENDAR_YEAR_MONTHS = Month.JULY..Month.DECEMBER
 
-        /** First month in a school year - August. */
-        private const val SCHOOL_YEAR_FIRST_MONTH = 9
+        /**
+         * All [months][Month] represented by their [Month.getValue] in the first calendar year of a [SchoolYear]. (with summer holidays)
+         */
+        private val FIRST_CALENDAR_YEAR_MONTHS_VALUES = FIRST_CALENDAR_YEAR_MONTHS.mapToIntRange { it.value }
+
+        /**
+         * All [months][Month] in the second calendar year of a [SchoolYear]. (without summer holidays)
+         */
+        private val SECOND_CALENDAR_YEAR_MONTHS = Month.JANUARY..Month.JUNE
+
+        /**
+         * All [months][Month] represented by their [Month.getValue] in the second calendar year of a [SchoolYear]. (without summer holidays)
+         */
+        private val SECOND_CALENDAR_YEAR_MONTHS_VALUES = SECOND_CALENDAR_YEAR_MONTHS.mapToIntRange { it.value }
 
         /**
          * @return [SchoolYear] represented in [String]. The [string] **must be in `"firstYear/secondYear"` format.** (eg. 2021/2022)
