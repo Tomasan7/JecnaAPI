@@ -32,9 +32,16 @@ class AttendancesPage private constructor(private val attendances: Map<LocalDate
         fun addAttendance(day: LocalDate, attendance: Attendance): Builder
         {
             /* Gets the list for the day, if none is present, creates a new list and puts it into the map. Then the attendance is added to that list. */
-            attendances.computeIfAbsent(day) { LinkedList() }
-                .add(attendance)
+            attendances.computeIfAbsent(day) { LinkedList() }.add(attendance)
+            return this
+        }
 
+        /**
+         * Sets the [attendanceList] to the [day].
+         */
+        fun setAttendances(day: LocalDate, attendanceList: List<Attendance>): Builder
+        {
+            attendances[day] = attendanceList.toMutableList()
             return this
         }
 
