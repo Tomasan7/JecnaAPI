@@ -20,9 +20,9 @@ data class SchoolYear(val firstCalendarYear: Int)
         val monthValue = month.value
 
         return if (monthValue in 1..SCHOOL_YEAR_LAST_MONTH)
-            firstCalendarYear
-        else
             secondCalendarYear
+        else
+            firstCalendarYear
     }
 
     /**

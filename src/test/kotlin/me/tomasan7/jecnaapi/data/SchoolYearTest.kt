@@ -43,10 +43,10 @@ internal class SchoolYearTest
     {
         val schoolYear = SchoolYear(2021)
 
-        assertEquals(2021, schoolYear.getCalendarYear(6.month()))
-        assertEquals(2021, schoolYear.getCalendarYear(1.month()))
-        assertEquals(2022, schoolYear.getCalendarYear(7.month()))
-        assertEquals(2022, schoolYear.getCalendarYear(12.month()))
+        assertEquals(2022, schoolYear.getCalendarYear(6.month()))
+        assertEquals(2022, schoolYear.getCalendarYear(1.month()))
+        assertEquals(2021, schoolYear.getCalendarYear(7.month()))
+        assertEquals(2021, schoolYear.getCalendarYear(12.month()))
     }
 
     @Test
