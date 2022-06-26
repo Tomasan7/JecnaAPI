@@ -17,7 +17,7 @@ class AttendancesPage private constructor(private val attendances: Map<LocalDate
     /**
      * @return All [attendances][Attendance] for the provided day. Returns an empty list when no data for [day] is present.
      */
-    fun getAttendancesForDay(day: LocalDate) = attendances.getOrDefault(day, listOf())
+    operator fun get(day: LocalDate) = attendances.getOrDefault(day, listOf())
 
     class Builder
     {
