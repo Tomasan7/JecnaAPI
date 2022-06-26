@@ -1,6 +1,7 @@
 package me.tomasan7.jecnaapi.util
 
 import java.time.LocalDate
+import java.time.Month
 
 data class SchoolYear(val firstCalendarYear: Int)
 {
@@ -11,9 +12,17 @@ data class SchoolYear(val firstCalendarYear: Int)
      */
     constructor(date: LocalDate) : this(if (SCHOOL_YEAR_LAST_MONTH <= date.monthValue) date.year else date.year + 1)
 
-    fun getCalendarYear(month: Int)
+    /**
+     * Returns calendar year [month] is in based on this [SchoolYear]. Considers the summer holidays as a new year.
+     */
+    fun getCalendarYear(month: Month): Int
     {
+        val monthValue = month.value
 
+        return if (monthValue in 1..SCHOOL_YEAR_LAST_MONTH)
+            firstCalendarYear
+        else
+            secondCalendarYear
     }
 
     /**

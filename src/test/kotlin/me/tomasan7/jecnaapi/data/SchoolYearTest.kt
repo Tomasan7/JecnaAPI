@@ -1,6 +1,7 @@
 package me.tomasan7.jecnaapi.data
 
-import org.junit.Test
+import me.tomasan7.jecnaapi.util.SchoolYear
+import me.tomasan7.jecnaapi.util.month
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.time.LocalDate
@@ -35,6 +36,17 @@ internal class SchoolYearTest
         assertEquals(true, date1 in schoolYear)
         assertEquals(true, date2 in schoolYear)
         assertEquals(false, date3 in schoolYear)
+    }
+
+    @Test
+    fun testGetCalendarYear()
+    {
+        val schoolYear = SchoolYear(2021)
+
+        assertEquals(2021, schoolYear.getCalendarYear(6.month()))
+        assertEquals(2021, schoolYear.getCalendarYear(1.month()))
+        assertEquals(2022, schoolYear.getCalendarYear(7.month()))
+        assertEquals(2022, schoolYear.getCalendarYear(12.month()))
     }
 
     @Test
