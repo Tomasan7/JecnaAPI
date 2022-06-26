@@ -1,6 +1,6 @@
 package me.tomasan7.jecnaapi.data.grade
 
-import me.tomasan7.jecnaapi.data.Name
+import me.tomasan7.jecnaapi.util.Name
 
 data class FinalGrade(val value: Int,
                       val subject: Name? = null)

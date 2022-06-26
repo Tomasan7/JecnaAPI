@@ -1,4 +1,4 @@
-package me.tomasan7.jecnaapi.data
+package me.tomasan7.jecnaapi.util
 
 /**
  * Holds a full and short name of a subject.

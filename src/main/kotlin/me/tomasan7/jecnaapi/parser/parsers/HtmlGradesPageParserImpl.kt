@@ -1,6 +1,6 @@
 package me.tomasan7.jecnaapi.parser.parsers
 
-import me.tomasan7.jecnaapi.data.Name
+import me.tomasan7.jecnaapi.util.Name
 import me.tomasan7.jecnaapi.data.grade.*
 import me.tomasan7.jecnaapi.parser.ParseException
 import org.jsoup.Jsoup
