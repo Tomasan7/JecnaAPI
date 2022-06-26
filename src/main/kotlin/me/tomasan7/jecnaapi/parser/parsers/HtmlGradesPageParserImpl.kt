@@ -32,7 +32,7 @@ class HtmlGradesPageParserImpl : HtmlGradesPageParser
                 /* The first column (th; the header column) containing the subject name. */
                 val subjectEle = rowEle.selectFirst("th")!!
                 /* The second column (td; the first body column) with the main content. (subject parts, grades, commendations) */
-                val mainColumnEle = rowEle.select("td")[0]
+                val mainColumnEle = rowEle.selectFirst("td")!!
 
                 val subjectName = parseSubjectName(subjectEle.text())
 
@@ -68,7 +68,7 @@ class HtmlGradesPageParserImpl : HtmlGradesPageParser
         val subjectGradesBuilder = Subject.Grades.builder()
 
         /* All the elements in the main content column. (either grade or subject part) */
-        val columnContentEles = gradesColumnEle.select("td")[0].children()
+        val columnContentEles = gradesColumnEle.selectFirst("td")!!.children()
 
         /* The last encountered subject part, so we know where the following grades belong. */
         var lastSubjectPart: String? = null
@@ -89,7 +89,7 @@ class HtmlGradesPageParserImpl : HtmlGradesPageParser
      * Parses the [notifications][Behaviour.Notification] from the main content column.
      *
      * @param behaviourColumnEle The main content column.
-     * @return A list of the parsed [notifications][Behaviour.Notification].
+     * @return The list of parsed [notifications][Behaviour.Notification].
      */
     private fun parseBehaviourNotifications(behaviourColumnEle: Element): List<Behaviour.Notification>
     {
