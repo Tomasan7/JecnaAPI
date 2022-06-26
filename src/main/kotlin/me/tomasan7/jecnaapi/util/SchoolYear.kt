@@ -11,6 +11,11 @@ data class SchoolYear(val firstCalendarYear: Int)
      */
     constructor(date: LocalDate) : this(if (SCHOOL_YEAR_LAST_MONTH <= date.monthValue) date.year else date.year + 1)
 
+    fun getCalendarYear(month: Int)
+    {
+
+    }
+
     /**
      * @return Whether the passed date is inside this [SchoolYear]. Considers the summer holidays as a new year.
      */
@@ -90,3 +95,8 @@ fun Int.schoolYear() = SchoolYear(this)
  * @see [SchoolYear.toString]
  */
 fun String.toSchoolYear() = SchoolYear.fromString(this)
+
+/**
+ * Constructs a [SchoolYear] this [LocalDate] belongs to. Considers the summer holidays as a new year.
+ */
+fun LocalDate.schoolYear() = SchoolYear(this)
