@@ -49,7 +49,7 @@ data class SchoolYear(val firstCalendarYear: Int)
         private const val SCHOOL_YEAR_FIRST_MONTH = 9
 
         /**
-         * @return [SchoolYear] represented in [String]. The [string] **must be in 'firstYear/secondYear' format.** (eg. 2021/2022)
+         * @return [SchoolYear] represented in [String]. The [string] **must be in `"firstYear/secondYear"` format.** (eg. 2021/2022)
          * @throws IllegalArgumentException When the [string] [String] is not in the correct format.
          * @see [SchoolYear.toString]
          */
@@ -83,3 +83,10 @@ data class SchoolYear(val firstCalendarYear: Int)
  * @receiver The first calendar year of the resulting [SchoolYear].
  */
 fun Int.schoolYear() = SchoolYear(this)
+
+/**
+ * @return [SchoolYear] represented in [String]. The [String] **must be in `"firstYear/secondYear"` format.** (eg. 2021/2022)
+ * @throws IllegalArgumentException When the [String] [String] is not in the correct format.
+ * @see [SchoolYear.toString]
+ */
+fun String.toSchoolYear() = SchoolYear.fromString(this)
