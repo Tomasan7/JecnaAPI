@@ -3,7 +3,7 @@ package me.tomasan7.jecnaapi.util
 import java.time.LocalDate
 import java.time.Month
 
-data class SchoolYear(val firstCalendarYear: Int)
+data class SchoolYear(val firstCalendarYear: Int): Comparable<SchoolYear>
 {
     val secondCalendarYear: Int = firstCalendarYear + 1
 
@@ -35,9 +35,7 @@ data class SchoolYear(val firstCalendarYear: Int)
                 && date.month in SECOND_CALENDAR_YEAR_MONTHS)
     }
 
-    operator fun compareTo(other: SchoolYear) = firstCalendarYear.compareTo(other.firstCalendarYear)
-
-    operator fun rangeTo(other: SchoolYear) = (firstCalendarYear..other.firstCalendarYear).map { SchoolYear(it) }
+    override fun compareTo(other: SchoolYear) = firstCalendarYear.compareTo(other.firstCalendarYear)
 
     override fun equals(other: Any?): Boolean
     {
