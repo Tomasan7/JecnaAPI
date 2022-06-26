@@ -19,7 +19,7 @@ class TimetablePage private constructor(private val timetable: Map<String, List<
 
     /**
      * Returns all [lessons][LessonSpot] for the provided day.
-     * The [lessons][LessonSpot] lessons are order by the hour they are in.
+     * The [lessons][LessonSpot] lessons are ordered by the hour they are in.
      *
      * @param day The day to get all [lessons][Lesson] for.
      * @return All [lessons][LessonSpot] for the provided day.
