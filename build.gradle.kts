@@ -27,11 +27,6 @@ dependencies {
     api("io.ktor:ktor-client-cio:$ktorVersion")
 
     testImplementation(kotlin("test"))
-    /* Use the Kotlin test library. */
-    testImplementation("org.jetbrains.kotlin:kotlin-test")
-    /* Use the Kotlin JUnit integration. */
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 }
 
 tasks {

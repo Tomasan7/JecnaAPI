@@ -1,11 +1,11 @@
 package me.tomasan7.jecnaapi.data
 
 import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.time.LocalDate
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
-
 
 internal class SchoolYearTest
 {

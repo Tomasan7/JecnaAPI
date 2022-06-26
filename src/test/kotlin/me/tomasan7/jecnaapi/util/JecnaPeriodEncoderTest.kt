@@ -1,9 +1,8 @@
 package me.tomasan7.jecnaapi.util
 
-import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.util.JecnaPeriodEncoder.jecnaDecode
 import me.tomasan7.jecnaapi.util.JecnaPeriodEncoder.jecnaEncode
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertEquals
 
