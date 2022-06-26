@@ -29,8 +29,8 @@ internal class SchoolYearTest
     {
         val schoolYear = SchoolYear(2021)
 
-        val date2 = LocalDate.of(2021, 7, 25)
         val date1 = LocalDate.of(2022, 5, 31)
+        val date2 = LocalDate.of(2021, 7, 25)
         val date3 = LocalDate.of(2022, 7, 25)
 
         assertEquals(true, date1 in schoolYear)
