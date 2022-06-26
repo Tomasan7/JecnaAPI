@@ -13,3 +13,14 @@ fun <T> emptyMutableLinkedList() = LinkedList<T>()
  * @see [Month.of]
  */
 fun Int.month() = Month.of(this)
+
+/**
+ * Maps any [ClosedRange] to an [IntRange] using [mappingFunction].
+ */
+fun <T : Comparable<T>> ClosedRange<T>.mapToIntRange(mappingFunction: (T) -> Int): IntRange
+{
+    val startMapped = mappingFunction(start)
+    val endMapped = mappingFunction(endInclusive)
+
+    return startMapped..endMapped
+}
