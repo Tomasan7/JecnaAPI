@@ -17,6 +17,8 @@ abstract class AuthWebClient
         install(HttpCookies) {
             storage = cookieStorage
         }
+
+        followRedirects = false
     }
 
     constructor(auth: Auth)
