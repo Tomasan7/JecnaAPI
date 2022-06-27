@@ -22,6 +22,12 @@ class JecnaWebClient : AuthWebClient
             }).status == HttpStatusCode.Found
     }
 
+    override suspend fun isLoggedIn(): Boolean
+    {
+        /* Responds with status 302 (redirect to login page) when user is not logged in. */
+        return httpClient.get(newRequestBuilder(LOGIN_TEST_ENDPOINT) {  }).status != HttpStatusCode.Found
+    }
+
     override suspend fun query(path: String, parameters: Parameters?) = httpClient.get(newRequestBuilder(path, parameters))
 
     /**
@@ -56,5 +62,11 @@ class JecnaWebClient : AuthWebClient
     companion object
     {
         const val ENDPOINT = "https://www.spsejecna.cz"
+
+        /**
+         * Endpoint used for testing whether user is logged in or not.
+         * Using particularly this one, because it's the smallest => fastest to download.
+         */
+        const val LOGIN_TEST_ENDPOINT = "/user-student/record-list"
     }
 }

@@ -39,6 +39,11 @@ abstract class AuthWebClient
     abstract suspend fun login(): Boolean
 
     /**
+     * @return Whether this [client][AuthWebClient] is logged in or not.
+     */
+    abstract suspend fun isLoggedIn(): Boolean
+
+    /**
      * Makes a request to the provided path. May vary depending on whether user is logged in or not.
      *
      * @param path Relative path from the domain. Must include first slash.
