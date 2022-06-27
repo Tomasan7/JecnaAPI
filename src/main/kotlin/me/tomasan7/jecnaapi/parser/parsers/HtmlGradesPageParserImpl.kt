@@ -3,6 +3,7 @@ package me.tomasan7.jecnaapi.parser.parsers
 import me.tomasan7.jecnaapi.util.Name
 import me.tomasan7.jecnaapi.data.grade.*
 import me.tomasan7.jecnaapi.parser.ParseException
+import me.tomasan7.jecnaapi.util.emptyMutableLinkedList
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.time.LocalDate
@@ -96,7 +97,7 @@ class HtmlGradesPageParserImpl : HtmlGradesPageParser
         /* All the notification elements (a) in the main content column. */
         val notificationEles = behaviourColumnEle.select("span > a")
 
-        val notifications = mutableListOf<Behaviour.Notification>()
+        val notifications = emptyMutableLinkedList<Behaviour.Notification>()
 
         for (notificationEle in notificationEles)
         {

@@ -66,7 +66,7 @@ class HtmlAttendancesPageParserImpl : HtmlAttendancesPageParser
         val lines = attendancesColumnEle.select("p")
 
         /* Contains all entries/leaves in the day as string. */
-        val dayAttendancesAsStr = mutableListOf<String>()
+        val dayAttendancesAsStr = emptyMutableLinkedList<String>()
 
         for (attendanceParagraph in lines)
             dayAttendancesAsStr.addAll(attendanceParagraph.text().split(", "))

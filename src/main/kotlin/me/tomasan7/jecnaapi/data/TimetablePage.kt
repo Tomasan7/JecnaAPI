@@ -1,6 +1,7 @@
 package me.tomasan7.jecnaapi.data
 
 import me.tomasan7.jecnaapi.data.LessonSpot
+import me.tomasan7.jecnaapi.util.emptyMutableLinkedList
 import java.util.*
 import kotlin.Comparator
 import kotlin.collections.ArrayList
@@ -94,7 +95,7 @@ class TimetablePage private constructor(private val timetable: Map<String, List<
         fun setLessonSpot(day: String, hour: Int, lessonSpot: LessonSpot?): Builder
         {
             /* Gets the list for the day, if none is present, creates a new list and puts it into the map. Then the lesson is added to that list. */
-            timetable.computeIfAbsent(day) { LinkedList() }[hour] = lessonSpot
+            timetable.computeIfAbsent(day) { emptyMutableLinkedList() }[hour] = lessonSpot
             return this
         }
 
@@ -106,7 +107,7 @@ class TimetablePage private constructor(private val timetable: Map<String, List<
         fun setLesson(day: String, hour: Int, lesson: Lesson?): Builder
         {
             /* Gets the list for the day, if none is present, creates a new list and puts it into the map. Then the lesson is added to that list. */
-            timetable.computeIfAbsent(day) { LinkedList() }[hour] = lesson?.let { LessonSpot(it) }
+            timetable.computeIfAbsent(day) { emptyMutableLinkedList() }[hour] = lesson?.let { LessonSpot(it) }
             return this
         }
 
@@ -122,7 +123,7 @@ class TimetablePage private constructor(private val timetable: Map<String, List<
         fun addLessonSpot(day: String, lessonSpot: LessonSpot?): Builder
         {
             /* Gets the list for the day, if none is present, creates a new list and puts it into the map. Then the lesson is added to that list. */
-            timetable.computeIfAbsent(day) { LinkedList() }.add(lessonSpot)
+            timetable.computeIfAbsent(day) { emptyMutableLinkedList() }.add(lessonSpot)
             return this
         }
 
@@ -134,7 +135,7 @@ class TimetablePage private constructor(private val timetable: Map<String, List<
         fun addLesson(day: String, lesson: Lesson?): Builder
         {
             /* Gets the list for the day, if none is present, creates a new list and puts it into the map. Then the lesson is added to that list. */
-            timetable.computeIfAbsent(day) { LinkedList() }
+            timetable.computeIfAbsent(day) { emptyMutableLinkedList() }
                 .add(lesson?.let { LessonSpot(it) })
             return this
         }
