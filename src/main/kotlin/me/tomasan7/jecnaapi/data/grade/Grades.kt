@@ -10,7 +10,12 @@ class Grades private constructor(private val subjectPartsGrades: Map<String?, Li
 {
     val subjectParts = subjectPartsGrades.keys
 
-    operator fun get (subjectPart: String?) = subjectPartsGrades[subjectPart]
+    operator fun get(subjectPart: String?) = subjectPartsGrades[subjectPart]
+
+    /**
+     * @return This [Grades] average calculated by the [averageCalculator].
+     */
+    fun average(averageCalculator: GradeAverageCalculator = WeightedGradeAverageCalculator()) = averageCalculator(this)
 
     companion object
     {
