@@ -64,9 +64,9 @@ class HtmlGradesPageParserImpl : HtmlGradesPageParser
      * @param subjectName The [name][Name] of the subject this grades are in.
      * @return The parsed [grades][Subject.Grades].
      */
-    private fun parseSubjectGrades(gradesColumnEle: Element, subjectName: Name): Subject.Grades
+    private fun parseSubjectGrades(gradesColumnEle: Element, subjectName: Name): Grades
     {
-        val subjectGradesBuilder = Subject.Grades.builder()
+        val subjectGradesBuilder = Grades.builder()
 
         /* All the elements in the main content column. (either grade or subject part) */
         val columnContentEles = gradesColumnEle.selectFirst("td")!!.children()
