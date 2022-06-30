@@ -1,16 +1,25 @@
 package me.tomasan7.jecnaapi.web
 
+import io.ktor.client.*
+import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.cookies.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.http.*
 
 class JecnaWebClient : AuthWebClient
 {
-    constructor(auth: Auth) : super(auth)
+    private val cookieStorage = AcceptAllCookiesStorage()
 
-    constructor(username: String, password: String) : super(username, password)
+    private val httpClient = HttpClient(CIO) {
+        install(HttpCookies) {
+            storage = cookieStorage
+        }
 
-    override suspend fun login(): Boolean
+        followRedirects = false
+    }
+
+    override suspend fun login(auth: Auth): Boolean
     {
         /* The user login request. */
         return httpClient.submitForm(
@@ -25,7 +34,7 @@ class JecnaWebClient : AuthWebClient
     override suspend fun isLoggedIn(): Boolean
     {
         /* Responds with status 302 (redirect to login page) when user is not logged in. */
-        return httpClient.get(newRequestBuilder(LOGIN_TEST_ENDPOINT) {  }).status != HttpStatusCode.Found
+        return httpClient.get(newRequestBuilder(LOGIN_TEST_ENDPOINT)).status != HttpStatusCode.Found
     }
 
     override suspend fun query(path: String, parameters: Parameters?) = httpClient.get(newRequestBuilder(path, parameters))

@@ -1,47 +1,33 @@
 package me.tomasan7.jecnaapi.web
 
-import io.ktor.client.*
 import io.ktor.client.call.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.plugins.cookies.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 
-abstract class AuthWebClient
+interface AuthWebClient
 {
-    val auth: Auth
-
-    val cookieStorage = AcceptAllCookiesStorage()
-
-    protected val httpClient = HttpClient(CIO) {
-        install(HttpCookies) {
-            storage = cookieStorage
-        }
-
-        followRedirects = false
-    }
-
-    constructor(auth: Auth)
-    {
-        this.auth = auth
-    }
-
-    constructor(username: String, password: String)
-    {
-        auth = Auth(username, password)
-    }
+    /**
+     * Logins the client.
+     *
+     * @param auth The auth details to login the user with.
+     * @return True if login was successful, false otherwise.
+     */
+    suspend fun login(auth: Auth): Boolean
 
     /**
      * Logins the client.
      *
+     * @param username The username to login.
+     * @param password The [username's][username] password.
      * @return True if login was successful, false otherwise.
+     * @see [login]
      */
-    abstract suspend fun login(): Boolean
+    suspend fun login(username: String, password: String) = login(Auth(username, password))
 
     /**
      * @return Whether this [client][AuthWebClient] is logged in or not.
      */
-    abstract suspend fun isLoggedIn(): Boolean
+    suspend fun isLoggedIn(): Boolean
 
     /**
      * Makes a request to the provided path. May vary depending on whether user is logged in or not.
@@ -59,7 +45,7 @@ abstract class AuthWebClient
      * @param parameters HTTP parameters, which will be sent URL encoded.
      * @return The [HttpResponse].
      */
-    abstract suspend fun query(path: String, parameters: Parameters? = null): HttpResponse
+    suspend fun query(path: String, parameters: Parameters? = null): HttpResponse
 }
 
 /**
