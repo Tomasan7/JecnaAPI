@@ -22,11 +22,23 @@ class GradesPage private constructor(private val grades: Map<Name, Subject>,
     /**
      * @return [Subject] with the passed [subjectName] as it's full name. Can be `null`, when theres no subject with that name.
      */
-    fun getSubjectByName(subjectName: String) = grades.getOrDefault(subjectName.toName(), null)
+    fun getSubjectByName(subjectName: String) = getSubjectByName(subjectName.toName())
+
+    /**
+     * @return [Subject] with the passed [Name]. Can be `null`, when theres no subject with that name.
+     * @see [getSubjectByName]
+     */
+    operator fun get(subjectName: Name) = getSubjectByName(subjectName)
+
+    /**
+     * @return [Subject] with the passed [subjectName] as it's full name. Can be `null`, when theres no subject with that name.
+     * @see [getSubjectByName]
+     */
+    operator fun get(subjectName: String) = getSubjectByName(subjectName)
 
     /**
      * This [GradesPage] as a [Map].
-     * Key = subject name, value = [Subject].
+     * Key = subject [Name], value = [Subject].
      */
     val asMap = grades
 
