@@ -12,7 +12,7 @@ class WeightedGradeAverageCalculator : GradeAverageCalculator
 
         for (subjectPart in grades.subjectParts)
         {
-            val subjectPartGrades = grades[subjectPart] ?: continue
+            val subjectPartGrades = grades[subjectPart]!!
 
             for (grade in subjectPartGrades)
             {
