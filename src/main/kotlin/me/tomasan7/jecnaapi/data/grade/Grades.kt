@@ -1,6 +1,7 @@
 package me.tomasan7.jecnaapi.data.grade
 
 import me.tomasan7.jecnaapi.util.emptyMutableLinkedList
+import java.util.LinkedList
 
 /**
  * @property subjectPartsGrades Map of all [grades][Grade] for each subject part. (eg. "Teorie, Cvičení")
@@ -30,7 +31,7 @@ class Grades private constructor(private val subjectPartsGrades: Map<String?, Li
 
         fun setGrades(subjectPart: String?, grades: List<Grade>)
         {
-            subjectPartsGrades[subjectPart] = emptyMutableLinkedList()
+            subjectPartsGrades[subjectPart] = LinkedList(grades)
         }
 
         fun build() = Grades(subjectPartsGrades)
