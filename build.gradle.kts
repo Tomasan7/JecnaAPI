@@ -22,7 +22,7 @@ dependencies {
     /* Jsoup - for parsing HTML. */
     api("org.jsoup:jsoup:1.15.1")
     /* Ktor - for HTTP client. */
-    val ktorVersion = "2.0.2"
+    val ktorVersion = "2.0.3"
     api("io.ktor:ktor-client-core:$ktorVersion")
     api("io.ktor:ktor-client-cio:$ktorVersion")
 
