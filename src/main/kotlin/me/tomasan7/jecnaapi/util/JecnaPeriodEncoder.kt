@@ -1,7 +1,5 @@
 package me.tomasan7.jecnaapi.util
 
-import me.tomasan7.jecnaapi.util.SchoolYear
-
 /**
  * Converts periods/times from Kotlin objects to a Jecna URL query parameters.
  */
