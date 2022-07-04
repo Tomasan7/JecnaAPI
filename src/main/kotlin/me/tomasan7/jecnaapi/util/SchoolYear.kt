@@ -24,6 +24,17 @@ data class SchoolYear(val firstCalendarYear: Int): Comparable<SchoolYear>
     }
 
     /**
+     * Returns new [SchoolYear], which is [increment] years after this one.
+     */
+    operator fun plus(increment: Int) = SchoolYear(firstCalendarYear + increment)
+
+    /**
+     * Returns new [SchoolYear], which is [increment] years before this one.
+     */
+    operator fun minus(decrement: Int) = SchoolYear(firstCalendarYear - decrement)
+
+
+    /**
      * @return Whether the passed date is inside this [SchoolYear]. Considers the summer holidays as a part of the ending [SchoolYear].
      */
     operator fun contains(date: LocalDate): Boolean

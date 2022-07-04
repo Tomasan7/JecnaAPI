@@ -2,6 +2,7 @@ package me.tomasan7.jecnaapi.data
 
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.util.month
+import me.tomasan7.jecnaapi.util.schoolYear
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 import java.time.LocalDate
@@ -22,6 +23,18 @@ internal class SchoolYearTest
         assertThrows<IllegalArgumentException>("SchoolYear String wasn't in correct format. SecondYear must be equal to firstYear + 1.") {
             SchoolYear.fromString("2021/2023")
         }
+    }
+
+    @Test
+    fun testPlus()
+    {
+        assertEquals(SchoolYear(2021), SchoolYear(2019) + 2)
+    }
+
+    @Test
+    fun testMinus()
+    {
+        assertEquals(SchoolYear(2021), SchoolYear(2023) - 2)
     }
 
     @Test
