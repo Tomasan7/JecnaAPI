@@ -35,9 +35,9 @@ internal class SchoolYearTest
         val date4 = LocalDate.of(2022, 7, 25)
 
         assertEquals(false, date1 in schoolYear)
-        assertEquals(true, date2 in schoolYear)
+        assertEquals(false, date2 in schoolYear)
         assertEquals(true, date3 in schoolYear)
-        assertEquals(false, date4 in schoolYear)
+        assertEquals(true, date4 in schoolYear)
     }
 
     @Test
@@ -45,16 +45,16 @@ internal class SchoolYearTest
     {
         val schoolYear = SchoolYear(2021)
 
-        assertEquals(2022, schoolYear.getCalendarYear(6.month()))
-        assertEquals(2022, schoolYear.getCalendarYear(1.month()))
-        assertEquals(2021, schoolYear.getCalendarYear(7.month()))
+        assertEquals(2021, schoolYear.getCalendarYear(9.month()))
         assertEquals(2021, schoolYear.getCalendarYear(12.month()))
+        assertEquals(2022, schoolYear.getCalendarYear(1.month()))
+        assertEquals(2022, schoolYear.getCalendarYear(7.month()))
     }
 
     @Test
     fun testOfDate()
     {
-        assertEquals(SchoolYear(2021), SchoolYear(LocalDate.of(2021, 7, 25)))
+        assertEquals(SchoolYear(2020), SchoolYear(LocalDate.of(2021, 7, 25)))
         assertEquals(SchoolYear(2021), SchoolYear(LocalDate.of(2022, 6, 25)))
         assertNotEquals(SchoolYear(2023), SchoolYear(LocalDate.of(2022, 7, 25)))
     }
