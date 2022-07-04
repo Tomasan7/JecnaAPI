@@ -10,9 +10,10 @@ fun <T> emptyMutableLinkedList() = LinkedList<T>()
 
 /**
  * @return [Month] corresponding to this number.
+ * @throws java.time.DateTimeException if the month-of-year is invalid.
  * @see [Month.of]
  */
-fun Int.month() = Month.of(this)
+fun Int.month(): Month = Month.of(this)
 
 /**
  * Maps any [ClosedRange] to an [IntRange] using [mappingFunction].
