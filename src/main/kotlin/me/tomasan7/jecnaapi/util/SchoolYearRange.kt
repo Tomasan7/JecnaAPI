@@ -5,12 +5,14 @@ class SchoolYearRange(
     override val endInclusive: SchoolYear
 ) : ClosedRange<SchoolYear>, Iterable<SchoolYear>
 {
-    override fun iterator() = SchoolYearIterator((start.firstCalendarYear..endInclusive.firstCalendarYear).iterator())
+    override fun iterator() = SchoolYearRangeIterator(this)
 }
 
-class SchoolYearIterator internal constructor(private val intIterator: IntIterator) : Iterator<SchoolYear>
+class SchoolYearRangeIterator internal constructor(schoolYearRange: SchoolYearRange) : Iterator<SchoolYear>
 {
-    override fun hasNext() = intIterator.hasNext()
+    private val schoolYearIntIterator = (schoolYearRange.start.firstCalendarYear..schoolYearRange.endInclusive.firstCalendarYear).iterator()
 
-    override fun next() = intIterator.next().schoolYear()
+    override fun hasNext() = schoolYearIntIterator.hasNext()
+
+    override fun next() = schoolYearIntIterator.next().schoolYear()
 }
