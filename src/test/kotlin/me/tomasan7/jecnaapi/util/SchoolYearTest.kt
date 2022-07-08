@@ -1,4 +1,4 @@
-package me.tomasan7.jecnaapi.data
+package me.tomasan7.jecnaapi.util
 
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.util.month
