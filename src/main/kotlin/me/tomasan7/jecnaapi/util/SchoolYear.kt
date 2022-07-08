@@ -24,6 +24,11 @@ data class SchoolYear(val firstCalendarYear: Int): Comparable<SchoolYear>
     }
 
     /**
+     * @return [SchoolYearRange] created as if it would be an [IntRange] from this [firstCalendarYear] to [that] [firstCalendarYear].
+     */
+    operator fun rangeTo(that: SchoolYear) = SchoolYearRange(this, that)
+
+    /**
      * Returns new [SchoolYear], which is [increment] years after this one.
      */
     operator fun plus(increment: Int) = SchoolYear(firstCalendarYear + increment)
