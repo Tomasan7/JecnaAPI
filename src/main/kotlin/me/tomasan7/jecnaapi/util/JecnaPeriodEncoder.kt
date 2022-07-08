@@ -71,22 +71,41 @@ object JecnaPeriodEncoder
     fun SchoolYear.Companion.jecnaDecode(id: Int) = decodeSchoolYear(id)
 
     /**
-     * @param firstHalf Is `true` for first half and `false` for second half.
+     * @param schoolYearHalf The [SchoolYearHalf] to encode.
      * @return School year half URL query parameter as [Pair] of a key and a value.
      */
-    fun encodeSchoolYearHalf(firstHalf: Boolean) = SCHOOL_YEAR_HALF_ID_KEY to if (firstHalf) FIRST_HALF_ID else SECOND_HALF_ID
+    fun encodeSchoolYearHalf(schoolYearHalf: SchoolYearHalf) = SCHOOL_YEAR_HALF_ID_KEY to when (schoolYearHalf)
+    {
+        SchoolYearHalf.FIRST -> FIRST_HALF_ID
+        SchoolYearHalf.SECOND -> SECOND_HALF_ID
+    }
+
+    /**
+     * @receiver The [SchoolYearHalf] to encode.
+     * @return School year half URL query parameter as [Pair] of a key and a value.
+     * @see encodeSchoolYearHalf
+     */
+    fun SchoolYearHalf.jecnaEncode() = encodeSchoolYearHalf(this)
 
     /**
      * @param id The id of the school year half.
-     * @return `true` for first half and `false` for second half.
+     * @return The corresponding [SchoolYearHalf].
      * @throws IllegalArgumentException when the [id] corresponds to neither half.
      */
     fun decodeSchoolYearHalf(id: Int) = when (id)
     {
-        FIRST_HALF_ID  -> true
-        SECOND_HALF_ID -> false
+        FIRST_HALF_ID  -> SchoolYearHalf.FIRST
+        SECOND_HALF_ID -> SchoolYearHalf.SECOND
         else           -> throw IllegalArgumentException("Id doesn't correspond to any year half. (got $id)")
     }
+
+    /**
+     * @param id The id of the school year half.
+     * @return The corresponding [SchoolYearHalf].
+     * @throws IllegalArgumentException when the [id] corresponds to neither half.
+     * @see decodeSchoolYearHalf
+     */
+    fun SchoolYearHalf.jecnaDecode(id: Int) = decodeSchoolYearHalf(id)
 
     /**
      * @return Month URL query parameter as [Pair] of a key and a value.

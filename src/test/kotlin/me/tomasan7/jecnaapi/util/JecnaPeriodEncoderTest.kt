@@ -35,15 +35,17 @@ internal class JecnaPeriodEncoderTest
     @Test
     fun testEncodeSchoolYearHalf()
     {
-        assertEquals(JecnaPeriodEncoder.SCHOOL_YEAR_HALF_ID_KEY to JecnaPeriodEncoder.FIRST_HALF_ID, JecnaPeriodEncoder.encodeSchoolYearHalf(true))
-        assertEquals(JecnaPeriodEncoder.SCHOOL_YEAR_HALF_ID_KEY to JecnaPeriodEncoder.SECOND_HALF_ID, JecnaPeriodEncoder.encodeSchoolYearHalf(false))
+        assertEquals(JecnaPeriodEncoder.SCHOOL_YEAR_HALF_ID_KEY to JecnaPeriodEncoder.FIRST_HALF_ID,
+                     JecnaPeriodEncoder.encodeSchoolYearHalf(SchoolYearHalf.FIRST))
+        assertEquals(JecnaPeriodEncoder.SCHOOL_YEAR_HALF_ID_KEY to JecnaPeriodEncoder.SECOND_HALF_ID,
+                     JecnaPeriodEncoder.encodeSchoolYearHalf(SchoolYearHalf.SECOND))
     }
 
     @Test
     fun testDecodeSchoolYearHalf()
     {
-        assertEquals(true, JecnaPeriodEncoder.decodeSchoolYearHalf(JecnaPeriodEncoder.FIRST_HALF_ID))
-        assertEquals(false, JecnaPeriodEncoder.decodeSchoolYearHalf(JecnaPeriodEncoder.SECOND_HALF_ID))
+        assertEquals(SchoolYearHalf.FIRST, JecnaPeriodEncoder.decodeSchoolYearHalf(JecnaPeriodEncoder.FIRST_HALF_ID))
+        assertEquals(SchoolYearHalf.SECOND, JecnaPeriodEncoder.decodeSchoolYearHalf(JecnaPeriodEncoder.SECOND_HALF_ID))
 
         val id = 20
         assertThrows<IllegalArgumentException>("Id doesn't correspond to any year half. (got $id)") {
