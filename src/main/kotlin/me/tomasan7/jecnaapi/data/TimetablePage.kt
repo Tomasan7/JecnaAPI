@@ -49,7 +49,7 @@ class TimetablePage private constructor(
     class Builder
     {
         private val timetable: MutableMap<String, MutableList<LessonSpot?>> = TreeMap(DayComparator())
-        private var lessonPeriods: MutableList<LessonPeriod> = ArrayList()
+        private val lessonPeriods: MutableList<LessonPeriod> = ArrayList()
 
         /**
          * Sets all the [LessonPeriods][LessonPeriod].
@@ -59,7 +59,10 @@ class TimetablePage private constructor(
          */
         fun setLessonPeriods(lessonPeriods: List<LessonPeriod>): Builder
         {
-            this.lessonPeriods = lessonPeriods.toMutableList()
+            this.lessonPeriods.apply {
+                clear()
+                addAll(lessonPeriods)
+            }
             return this
         }
 
