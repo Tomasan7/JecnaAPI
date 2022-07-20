@@ -25,6 +25,11 @@ class Grades private constructor(private val subjectPartsGrades: Map<String?, Li
         return true
     }
 
+    /**
+     * @return False, when there are no [grades][Grade] in any subject part.
+     */
+    fun isNotEmpty() = !isEmpty()
+
     operator fun get(subjectPart: String?) = subjectPartsGrades[subjectPart]
 
     /**
