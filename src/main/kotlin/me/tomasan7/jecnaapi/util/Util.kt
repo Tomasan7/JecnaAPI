@@ -25,3 +25,17 @@ fun <T : Comparable<T>> ClosedRange<T>.mapToIntRange(mappingFunction: (T) -> Int
 
     return startMapped..endMapped
 }
+
+/**
+ * Sets all [elements] to the [MutableList].
+ * Shorthand for
+ * ```
+ * mutableList.clear()
+ * mutableList.addAll(elements)
+ * ```
+ */
+fun <T> MutableCollection<T>.setAll(elements: Iterable<T>)
+{
+    clear()
+    addAll(elements)
+}
