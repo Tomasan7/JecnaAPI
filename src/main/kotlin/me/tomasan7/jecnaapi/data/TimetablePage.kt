@@ -15,8 +15,12 @@ class TimetablePage private constructor(private val timetable: Map<String, List<
     /**
      * @return All the days this timetable has [lessons][Lesson] in.
      */
-    val days = timetable.keys.sortedWith(DayComparator())
+    val days = timetable.keys
 
+    /**
+     * @return All the days this timetable has [lessons][Lesson] in. Sorted as it goes in a week.
+     */
+    val daysSorted = timetable.keys.sortedWith(DayComparator())
 
     /**
      * Returns all [lessons][LessonSpot] for the provided day.
