@@ -59,10 +59,7 @@ class TimetablePage private constructor(
          */
         fun setLessonPeriods(lessonPeriods: List<LessonPeriod>): Builder
         {
-            this.lessonPeriods.apply {
-                clear()
-                addAll(lessonPeriods)
-            }
+            this.lessonPeriods.setAll(lessonPeriods)
             return this
         }
 
