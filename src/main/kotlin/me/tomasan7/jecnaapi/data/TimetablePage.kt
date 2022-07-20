@@ -9,8 +9,10 @@ import kotlin.collections.ArrayList
 /**
  * Whole timetable containing [LessonSpot]s for each day and their [LessonPeriod]s.
  */
-class TimetablePage private constructor(private val timetable: Map<String, List<LessonSpot?>>,
-                                        val lessonPeriods: List<LessonPeriod>)
+class TimetablePage private constructor(
+    private val timetable: Map<String, List<LessonSpot?>>,
+    val lessonPeriods: List<LessonPeriod>
+)
 {
     /**
      * @return All the days this timetable has [lessons][Lesson] in.
@@ -140,7 +142,7 @@ class TimetablePage private constructor(private val timetable: Map<String, List<
         {
             /* Gets the list for the day, if none is present, creates a new list and puts it into the map. Then the lesson is added to that list. */
             timetable.computeIfAbsent(day) { emptyMutableLinkedList() }
-                .add(lesson?.let { LessonSpot(it) })
+                    .add(lesson?.let { LessonSpot(it) })
             return this
         }
 

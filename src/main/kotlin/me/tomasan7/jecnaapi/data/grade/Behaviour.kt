@@ -3,8 +3,10 @@ package me.tomasan7.jecnaapi.data.grade
 /**
  * Represents the behaviour row in the grades table.
  */
-data class Behaviour(val notifications: List<Notification>,
-                     val finalGrade: FinalGrade)
+data class Behaviour(
+    val notifications: List<Notification>,
+    val finalGrade: FinalGrade
+)
 {
     companion object
     {

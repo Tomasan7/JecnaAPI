@@ -10,12 +10,14 @@ import java.time.LocalDate
  * @property teacher     The teacher, who gave you the grade.
  * @property description Description of the grade.
  */
-data class Grade(val value: Int,
-                 val small: Boolean,
-                 val subject: Name? = null,
-                 val teacher: String? = null,
-                 val description: String? = null,
-                 val receiveDate: LocalDate? = null)
+data class Grade(
+    val value: Int,
+    val small: Boolean,
+    val subject: Name? = null,
+    val teacher: String? = null,
+    val description: String? = null,
+    val receiveDate: LocalDate? = null
+)
 {
     /**
      * Accepts value's representing char.
