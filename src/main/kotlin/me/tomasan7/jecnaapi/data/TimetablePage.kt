@@ -57,9 +57,9 @@ class TimetablePage private constructor(
          * @param lessonPeriods The [LessonPeriods][LessonPeriod] to use.
          * @return This [builder's][Builder] instance back.
          */
-        fun lessonHours(lessonPeriods: MutableList<LessonPeriod>): Builder
+        fun setLessonPeriods(lessonPeriods: List<LessonPeriod>): Builder
         {
-            this.lessonPeriods = lessonPeriods
+            this.lessonPeriods = lessonPeriods.toMutableList()
             return this
         }
 
@@ -161,7 +161,6 @@ class TimetablePage private constructor(
      */
     class DayComparator : Comparator<String>
     {
-
         override fun compare(s1: String, s2: String): Int
         {
             /* This method works by finding each day's position in a week using DAYS list and then subtracting their position. */
