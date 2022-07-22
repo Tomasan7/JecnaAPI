@@ -110,6 +110,7 @@ object JecnaPeriodEncoder
     fun SchoolYearHalf.jecnaDecode(id: Int) = decodeSchoolYearHalf(id)
 
     /**
+     * @param monthValue The value of the month to encode.
      * @return Month URL query parameter as [Pair] of a key and a value.
      * @throws IllegalArgumentException when the [monthValue] isn't a valid month.
      */
@@ -121,6 +122,7 @@ object JecnaPeriodEncoder
     }
 
     /**
+     * @param month The month to encode.
      * @return Month URL query parameter as [Pair] of a key and a value.
      */
     fun encodeMonth(month: Month) = encodeMonth(month.value)
