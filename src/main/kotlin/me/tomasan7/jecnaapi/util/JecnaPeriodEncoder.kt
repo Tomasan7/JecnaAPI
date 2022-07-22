@@ -1,5 +1,7 @@
 package me.tomasan7.jecnaapi.util
 
+import java.time.Month
+
 /**
  * Converts periods/times from Kotlin objects to a Jecna URL query parameters.
  */
@@ -117,4 +119,9 @@ object JecnaPeriodEncoder
 
         return MONTH_ID_KEY to monthValue
     }
+
+    /**
+     * @return Month URL query parameter as [Pair] of a key and a value.
+     */
+    fun encodeMonth(month: Month) = encodeMonth(month.value)
 }
