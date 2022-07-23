@@ -5,6 +5,7 @@ import me.tomasan7.jecnaapi.parser.ParseException
 import me.tomasan7.jecnaapi.util.Name
 import me.tomasan7.jecnaapi.util.emptyMutableLinkedList
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 
 /**
@@ -19,6 +20,8 @@ class HtmlTimetableParserImpl : HtmlTimetablePageParser
             val timetablePageBuilder = TimetablePage.builder()
 
             val document = Jsoup.parse(html)
+
+            timetablePageBuilder.setPeriodOptions(parsePeriodOptions(document))
 
             /* All the rows (tr) in the timetable table. */
             val rowEles = document.select("table.timetable > tbody > tr")
@@ -56,6 +59,30 @@ class HtmlTimetableParserImpl : HtmlTimetablePageParser
         {
             throw ParseException(e)
         }
+    }
+
+    /**
+     * Parses [PeriodOptions][TimetablePage.PeriodOption] from the form.
+     *
+     * @return List of [TimetablePage.PeriodOption] in the order as they appear in the form.
+     */
+    private fun parsePeriodOptions(document: Document): List<TimetablePage.PeriodOption>
+    {
+        val periodOptions = emptyMutableLinkedList<TimetablePage.PeriodOption>()
+
+        /* The form select element. */
+        val optionEles = document.select("#timetableId option")
+
+        for (optionEle in optionEles)
+        {
+            val id = optionEle.attr("value").toInt()
+            val value = optionEle.text()
+            val selected = optionEle.hasAttr("selected")
+
+            periodOptions.add(TimetablePage.PeriodOption(id, value, selected))
+        }
+
+        return periodOptions
     }
 
     /**

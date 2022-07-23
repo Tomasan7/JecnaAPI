@@ -1,5 +1,6 @@
 package me.tomasan7.jecnaapi.util
 
+import me.tomasan7.jecnaapi.data.TimetablePage
 import java.time.Month
 
 /**
@@ -31,6 +32,11 @@ object JecnaPeriodEncoder
      * URL query parameter key for the month.
      */
     const val MONTH_ID_KEY = "schoolYearPartMonthId"
+
+    /**
+     * URL query parameter key for the period.
+     */
+    val TIMETABLE_PERIOD_ID_KEY = "timetableId"
 
     /**
      * @param schoolYear The [SchoolYear] to encode.
@@ -126,4 +132,16 @@ object JecnaPeriodEncoder
      * @return Month URL query parameter as [Pair] of a key and a value.
      */
     fun encodeMonth(month: Month) = encodeMonth(month.value)
+
+    /**
+     * @param periodOption The [TimetablePage.PeriodOption] to encode.
+     * @return Timetable period URL query parameter as [Pair] of a key and a value.
+     */
+    fun encodeTimetablePeriod(periodOption: TimetablePage.PeriodOption) = TIMETABLE_PERIOD_ID_KEY to periodOption.id
+
+    /**
+     * @receiver The [TimetablePage.PeriodOption] to encode.
+     * @return Timetable period URL query parameter as [Pair] of a key and a value.
+     */
+    fun TimetablePage.PeriodOption.jecnaEncode() = encodeTimetablePeriod(this)
 }

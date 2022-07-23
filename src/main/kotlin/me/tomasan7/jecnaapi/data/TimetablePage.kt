@@ -2,16 +2,17 @@ package me.tomasan7.jecnaapi.data
 
 import me.tomasan7.jecnaapi.data.LessonSpot
 import me.tomasan7.jecnaapi.util.emptyMutableLinkedList
+import me.tomasan7.jecnaapi.util.setAll
 import java.util.*
 import kotlin.Comparator
-import kotlin.collections.ArrayList
 
 /**
  * Whole timetable containing [LessonSpot]s for each day and their [LessonPeriod]s.
  */
 class TimetablePage private constructor(
     private val timetable: Map<String, List<LessonSpot?>>,
-    val lessonPeriods: List<LessonPeriod>
+    val lessonPeriods: List<LessonPeriod>,
+    val periodOptions: List<PeriodOption> = emptyList()
 )
 {
     /**
@@ -46,10 +47,20 @@ class TimetablePage private constructor(
         fun builder() = Builder()
     }
 
+    /**
+     * Single period option in the Timetable page dropdown selection.
+     */
+    data class PeriodOption(
+        val id: Int,
+        val value: String,
+        val selected: Boolean = false
+    )
+
     class Builder
     {
         private val timetable: MutableMap<String, MutableList<LessonSpot?>> = TreeMap(DayComparator())
         private val lessonPeriods: MutableList<LessonPeriod> = emptyMutableLinkedList()
+        private val periodOptions: MutableList<PeriodOption> = emptyMutableLinkedList()
 
         /**
          * Sets all the [LessonPeriods][LessonPeriod].
@@ -146,11 +157,35 @@ class TimetablePage private constructor(
             return this
         }
 
+        /**
+         * Sets all the [PeriodOptions][PeriodOption].
+         *
+         * @param periodOptions The [PeriodOptions][PeriodOption] to use.
+         * @return This [builder's][Builder] instance back.
+         */
+        fun setPeriodOptions(periodOptions: List<PeriodOption>): Builder
+        {
+            this.periodOptions.setAll(periodOptions)
+            return this
+        }
+
+        /**
+         * Adds a [PeriodOption] to the [TimetablePage].
+         *
+         * @param periodOption The [PeriodOption] to add.
+         * @return This [builder's][Builder] instance back.
+         */
+        fun addPeriodOption(periodOption: PeriodOption): Builder
+        {
+            periodOptions.add(periodOption)
+            return this
+        }
+
         fun build(): TimetablePage
         {
             /* TODO: Maybe check if there is equal or more lessonPeriods than lessons in any day?
 			 * Because that would mean there is a lesson without specified LessonPeriod. */
-            return TimetablePage(timetable, lessonPeriods)
+            return TimetablePage(timetable, lessonPeriods, periodOptions)
         }
     }
 
