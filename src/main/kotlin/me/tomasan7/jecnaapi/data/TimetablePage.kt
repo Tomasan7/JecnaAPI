@@ -3,6 +3,8 @@ package me.tomasan7.jecnaapi.data
 import me.tomasan7.jecnaapi.data.LessonSpot
 import me.tomasan7.jecnaapi.util.emptyMutableLinkedList
 import me.tomasan7.jecnaapi.util.setAll
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.Comparator
 
@@ -52,9 +54,24 @@ class TimetablePage private constructor(
      */
     data class PeriodOption(
         val id: Int,
-        val value: String,
+        val from: LocalDate,
+        val to: LocalDate?,
         val selected: Boolean = false
     )
+    {
+        override fun toString(): String
+        {
+            val fromStr = DATE_FORMAT.format(from)
+            val toStr = to?.let { DATE_FORMAT.format(it) } ?: "???"
+
+            return "$fromStr - $toStr"
+        }
+
+        companion object
+        {
+            private val DATE_FORMAT = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+        }
+    }
 
     class Builder
     {

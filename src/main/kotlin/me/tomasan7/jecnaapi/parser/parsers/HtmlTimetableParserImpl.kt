@@ -7,6 +7,8 @@ import me.tomasan7.jecnaapi.util.emptyMutableLinkedList
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 /**
  * Parses correct HTML to [TimetablePage] instance.
@@ -76,13 +78,34 @@ class HtmlTimetableParserImpl : HtmlTimetablePageParser
         for (optionEle in optionEles)
         {
             val id = optionEle.attr("value").toInt()
-            val value = optionEle.text()
+            val text = optionEle.text()
             val selected = optionEle.hasAttr("selected")
 
-            periodOptions.add(TimetablePage.PeriodOption(id, value, selected))
+            val parsedDates = parsePeriodOptionTextDates(text)
+
+            periodOptions.add(TimetablePage.PeriodOption(id, parsedDates.first, parsedDates.second, selected))
         }
 
         return periodOptions
+    }
+
+    /**
+     * Parses the [LocalDates][LocalDate] from period option text.
+     *
+     * @param periodOptionText The text within the period option.
+     * @return A pair with the "from date" first and an optional (nullable) "to date" second.
+     */
+    private fun parsePeriodOptionTextDates(periodOptionText: String): Pair<LocalDate, LocalDate?>
+    {
+        /* Sublist because when splitting with "Od " it returns empty string (before "Od ") at index 0. */
+        val datesSplit = periodOptionText.split(PERIOD_OPTION_DATES_SPLIT_REGEX).let { it.subList(1, it.size) }
+        val fromStr = datesSplit[0]
+        val toStr = datesSplit.getOrNull(1)
+
+        val from = LocalDate.parse(fromStr, PERIOD_OPTION_DATE_FORMAT)
+        val to = toStr?.let { LocalDate.parse(it, PERIOD_OPTION_DATE_FORMAT) }
+
+        return from to to
     }
 
     /**
@@ -145,5 +168,15 @@ class HtmlTimetableParserImpl : HtmlTimetablePageParser
             classroom = lessonEle.selectFirst(".room")!!.text(),
             group = group
         )
+    }
+
+    companion object
+    {
+        val PERIOD_OPTION_DATE_FORMAT = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+
+        /**
+         * Matches " Od" or " do " in the period option text in the dropdown selection.
+         */
+        val PERIOD_OPTION_DATES_SPLIT_REGEX = Regex("""Od | do """)
     }
 }
