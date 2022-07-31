@@ -9,17 +9,17 @@ import java.util.*
  * Stores `0` or more grades for each subject.
  */
 class GradesPage private constructor(
-    private val grades: Map<Name, Subject>,
+    private val subjects: Map<Name, Subject>,
     val behaviour: Behaviour
 )
 {
     /** All subject names. */
-    val subjectNames = grades.keys
+    val subjectNames = subjects.keys
 
     /**
      * @return [Subject] with the passed [Name]. Can be `null`, when theres no subject with that name.
      */
-    fun getSubjectByName(subjectName: Name) = grades.getOrDefault(subjectName, null)
+    fun getSubjectByName(subjectName: Name) = subjects.getOrDefault(subjectName, null)
 
     /**
      * @return [Subject] with the passed [subjectName] as it's full name. Can be `null`, when theres no subject with that name.
@@ -42,11 +42,11 @@ class GradesPage private constructor(
      * This [GradesPage] as a [Map].
      * Key = subject [Name], value = [Subject].
      */
-    val asMap = grades
+    val asMap = subjects
 
     class Builder
     {
-        private val grades: MutableMap<Name, Subject> = HashMap()
+        private val subjects: MutableMap<Name, Subject> = HashMap()
         private lateinit var behaviour: Behaviour
 
         /**
@@ -56,7 +56,7 @@ class GradesPage private constructor(
          */
         fun addSubject(subject: Subject): Builder
         {
-            grades[subject.name] = subject
+            subjects[subject.name] = subject
             return this
         }
 
@@ -68,7 +68,7 @@ class GradesPage private constructor(
         fun build(): GradesPage
         {
             check(::behaviour.isInitialized) { "Behaviour has not been set." }
-            return GradesPage(grades, behaviour)
+            return GradesPage(subjects, behaviour)
         }
     }
 
