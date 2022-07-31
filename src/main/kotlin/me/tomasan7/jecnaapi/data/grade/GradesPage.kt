@@ -9,17 +9,22 @@ import java.util.*
  * Stores `0` or more grades for each subject.
  */
 class GradesPage private constructor(
-    private val subjects: Map<Name, Subject>,
+    private val subjectsMap: Map<Name, Subject>,
     val behaviour: Behaviour
 )
 {
     /** All subject names. */
-    val subjectNames = subjects.keys
+    val subjectNames = subjectsMap.keys
+
+    /**
+     * All subjects.
+     */
+    val subjects = subjectsMap.values
 
     /**
      * @return [Subject] with the passed [Name]. Can be `null`, when theres no subject with that name.
      */
-    fun getSubjectByName(subjectName: Name) = subjects.getOrDefault(subjectName, null)
+    fun getSubjectByName(subjectName: Name) = subjectsMap.getOrDefault(subjectName, null)
 
     /**
      * @return [Subject] with the passed [subjectName] as it's full name. Can be `null`, when theres no subject with that name.
@@ -42,7 +47,7 @@ class GradesPage private constructor(
      * This [GradesPage] as a [Map].
      * Key = subject [Name], value = [Subject].
      */
-    val asMap = subjects
+    val asMap = subjectsMap
 
     class Builder
     {
