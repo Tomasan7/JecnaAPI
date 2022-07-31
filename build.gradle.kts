@@ -1,6 +1,6 @@
 plugins {
-    kotlin("jvm") version "1.6.21"
-    id("org.jetbrains.dokka") version "1.6.21"
+    kotlin("jvm") version "1.7.10"
+    id("org.jetbrains.dokka") version "1.7.10"
     `java-library`
     `maven-publish`
 }
@@ -14,17 +14,17 @@ repositories {
 
 dependencies {
     /* Align versions of all Kotlin components. */
-    api(platform("org.jetbrains.kotlin:kotlin-bom"))
-    /* Use the Kotlin JDK 8 standard library. */
-    api(kotlin("stdlib-jdk8"))
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
+    /* Use the Kotlin standard library. */
+    implementation(kotlin("stdlib"))
     /* Kotlin Coroutines - for asynchronous programming. */
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
     /* Jsoup - for parsing HTML. */
-    api("org.jsoup:jsoup:1.15.1")
+    implementation("org.jsoup:jsoup:1.15.2")
     /* Ktor - for HTTP client. */
     val ktorVersion = "2.0.3"
-    api("io.ktor:ktor-client-core:$ktorVersion")
-    api("io.ktor:ktor-client-cio:$ktorVersion")
+    implementation("io.ktor:ktor-client-core:$ktorVersion")
+    implementation("io.ktor:ktor-client-cio:$ktorVersion")
 
     testImplementation(kotlin("test"))
 }
