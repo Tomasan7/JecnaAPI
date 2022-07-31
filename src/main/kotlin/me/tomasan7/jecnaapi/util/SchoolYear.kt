@@ -115,6 +115,11 @@ data class SchoolYear(val firstCalendarYear: Int): Comparable<SchoolYear>
 
             return SchoolYear(firstYear)
         }
+
+        /**
+         * @return Current [SchoolYear].
+         */
+        fun current() = SchoolYear(LocalDate.now())
     }
 }
 
