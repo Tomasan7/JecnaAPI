@@ -10,6 +10,12 @@ class LessonSpot(lessons: List<Lesson>) : Iterable<Lesson>
 {
     private val lessons: List<Lesson>
 
+    /**
+     * The number of lessons in this [LessonSpot].
+     */
+    val size: Int
+        get() = lessons.size
+
     constructor(lesson: Lesson) : this(listOf(lesson))
 
     init
