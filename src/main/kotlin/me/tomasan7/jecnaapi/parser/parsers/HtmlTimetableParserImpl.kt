@@ -127,7 +127,7 @@ class HtmlTimetableParserImpl : HtmlTimetablePageParser
             return null
 
         /* All the lessons in the lesson spot. */
-        val lessonEles = lessonSpotEle.getElementsByTag("div")
+        val lessonEles = lessonSpotEle.select("div:not(.lessonEmpty)")
 
         val lessons = emptyMutableLinkedList<Lesson>()
 
