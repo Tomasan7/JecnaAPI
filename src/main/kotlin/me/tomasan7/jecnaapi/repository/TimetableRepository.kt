@@ -14,5 +14,5 @@ interface TimetableRepository
      * @param schoolYear The [SchoolYear] to get the [TimetablePage] for.
      * @param periodOption The [TimetablePage.PeriodOption] in the school year to get [TimetablePage] for.
      */
-    suspend fun queryTimetablePage(schoolYear: SchoolYear, periodOption: TimetablePage.PeriodOption): TimetablePage
+    suspend fun queryTimetablePage(schoolYear: SchoolYear, periodOption: TimetablePage.PeriodOption? = null): TimetablePage
 }
