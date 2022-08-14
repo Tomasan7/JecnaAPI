@@ -49,9 +49,11 @@ class JecnaWebClient : AuthWebClient
      * @param block Additional modifications to the request.
      * @return The function.
      */
-    private fun newRequestBuilder(path: String,
-                                  parameters: Parameters? = null,
-                                  block: (HttpRequestBuilder.() -> Unit)? = null): HttpRequestBuilder.() -> Unit
+    private fun newRequestBuilder(
+        path: String,
+        parameters: Parameters? = null,
+        block: (HttpRequestBuilder.() -> Unit)? = null
+    ): HttpRequestBuilder.() -> Unit
     {
         return {
             if (block != null)
