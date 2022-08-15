@@ -11,11 +11,16 @@ enum class SchoolYearHalf
     companion object
     {
         /**
-         * @return Current [SchoolYearHalf].
+         * @return [SchoolYearHalf] that was on the month provided in [date].
          */
-        fun current() = if (LocalDate.now().month !in Month.FEBRUARY..Month.AUGUST)
+        fun fromDate(date: LocalDate) = if (date.month !in Month.FEBRUARY..Month.AUGUST)
             SchoolYearHalf.FIRST
         else
             SchoolYearHalf.SECOND
+
+        /**
+         * @return Current [SchoolYearHalf].
+         */
+        fun current() = fromDate(LocalDate.now())
     }
 }
