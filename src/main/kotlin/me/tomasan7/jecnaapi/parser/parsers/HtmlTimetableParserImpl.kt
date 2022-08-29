@@ -28,6 +28,9 @@ class HtmlTimetableParserImpl : HtmlTimetablePageParser
             /* All the rows (tr) in the timetable table. */
             val rowEles = document.select("table.timetable > tbody > tr")
 
+            if (rowEles.isEmpty())
+                return timetablePageBuilder.build()
+
             /* The row (tr) containing all the LessonPeriods details.
 			 * Each LessonPeriod is a 'th' with class 'period'. */
             val lessonPeriodsEle = rowEles[0]
