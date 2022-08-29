@@ -69,6 +69,7 @@ class HtmlTimetableParserImpl : HtmlTimetablePageParser
     /**
      * Parses [PeriodOptions][TimetablePage.PeriodOption] from the form.
      *
+     * @param document page [Document], from which the options will be taken.
      * @return List of [TimetablePage.PeriodOption] in the order as they appear in the form.
      */
     private fun parsePeriodOptions(document: Document): List<TimetablePage.PeriodOption>
@@ -79,36 +80,33 @@ class HtmlTimetableParserImpl : HtmlTimetablePageParser
         val optionEles = document.select("#timetableId option")
 
         for (optionEle in optionEles)
-        {
-            val id = optionEle.attr("value").toInt()
-            val text = optionEle.text()
-            val selected = optionEle.hasAttr("selected")
-
-            val parsedDates = parsePeriodOptionTextDates(text)
-
-            periodOptions.add(TimetablePage.PeriodOption(id, parsedDates.first, parsedDates.second, selected))
-        }
+            periodOptions.add(parsePeriodOption(optionEle))
 
         return periodOptions
     }
 
     /**
-     * Parses the [LocalDates][LocalDate] from period option text.
+     * Parses [TimetablePage.PeriodOption] from it's HTML element.
      *
-     * @param periodOptionText The text within the period option.
-     * @return A pair with the "from date" first and an optional (nullable) "to date" second.
+     * @return The parsed PeriodOption.
      */
-    private fun parsePeriodOptionTextDates(periodOptionText: String): Pair<LocalDate, LocalDate?>
+    private fun parsePeriodOption(periodOptionEle: Element): TimetablePage.PeriodOption
     {
+        val id = periodOptionEle.attr("value").toInt()
+        val text = periodOptionEle.text()
+        val selected = periodOptionEle.hasAttr("selected")
+
+        val header = PERIOD_OPTION_HEADER_REGEX.find(text)?.value
+
         /* Sublist because when splitting with "Od " it returns empty string (before "Od ") at index 0. */
-        val datesSplit = periodOptionText.split(PERIOD_OPTION_DATES_SPLIT_REGEX).let { it.subList(1, it.size) }
+        val datesSplit = text.split(PERIOD_OPTION_DATES_SPLIT_REGEX).let { it.subList(1, it.size) }
         val fromStr = datesSplit[0]
         val toStr = datesSplit.getOrNull(1)
 
         val from = LocalDate.parse(fromStr, PERIOD_OPTION_DATE_FORMAT)
         val to = toStr?.let { LocalDate.parse(it, PERIOD_OPTION_DATE_FORMAT) }
 
-        return from to to
+        return TimetablePage.PeriodOption(id, header, from, to, selected)
     }
 
     /**
@@ -175,11 +173,17 @@ class HtmlTimetableParserImpl : HtmlTimetablePageParser
 
     companion object
     {
-        val PERIOD_OPTION_DATE_FORMAT = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+        val PERIOD_OPTION_DATE_FORMAT = DateTimeFormatter.ofPattern("d.M.yyyy")
 
         /**
          * Matches " Od" or " do " in the period option text in the dropdown selection.
          */
-        val PERIOD_OPTION_DATES_SPLIT_REGEX = Regex("""Od | do """)
+        val PERIOD_OPTION_DATES_SPLIT_REGEX = Regex("""[Oo]d | do """)
+
+        /**
+         * Matches the text before the dates in the [TimetablePage.PeriodOption] text.
+         * Eg. "Mimořádný rozvrh" or "Dočasný rozvrh".
+         */
+        val PERIOD_OPTION_HEADER_REGEX = Regex("""^.*?(?= -)""")
     }
 }
