@@ -44,7 +44,7 @@ class HtmlGradesPageParserImpl : HtmlGradesPageParser
                 else
                     gradesPageBuilder.addSubject(Subject(subjectName,
                                                          parseSubjectGrades(mainColumnEle, subjectName),
-                                                         parseFinalGrade(rowEle.findFinalGradeEle()!!, subjectName)))
+                                                         rowEle.findFinalGradeEle()?.let { parseFinalGrade(it, subjectName) }))
             }
 
             gradesPageBuilder.setBehaviour(behaviour)
