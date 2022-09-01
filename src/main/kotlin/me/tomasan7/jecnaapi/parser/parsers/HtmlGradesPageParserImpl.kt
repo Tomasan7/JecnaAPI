@@ -148,7 +148,7 @@ class HtmlGradesPageParserImpl : HtmlGradesPageParser
 
         val teacher = TEACHER_REGEX.find(titleAttr)?.value
         val description = DESCRIPTION_REGEX.find(titleAttr)?.value
-        val receiveDate = DATE_REGEX.find(titleAttr)?.value?.let { LocalDate.parse(it, DateTimeFormatter.ofPattern("dd.MM.yyyy")) }
+        val receiveDate = DATE_REGEX.find(titleAttr)?.value?.let { LocalDate.parse(it, RECEIVE_DATE_FORMATTER) }
 
         return Grade(valueChar, small, subjectName, teacher, description, receiveDate)
     }
@@ -172,6 +172,11 @@ class HtmlGradesPageParserImpl : HtmlGradesPageParser
 
     companion object
     {
+        /**
+         * The format grades' receive date is in.
+         */
+        private val RECEIVE_DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+
         /**
          * Matches the description in a [Grade]'s HTML element title.
          *
