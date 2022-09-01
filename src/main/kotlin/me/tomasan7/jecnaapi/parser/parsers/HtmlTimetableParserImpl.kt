@@ -173,7 +173,7 @@ class HtmlTimetableParserImpl : HtmlTimetablePageParser
 
     companion object
     {
-        val PERIOD_OPTION_DATE_FORMAT = DateTimeFormatter.ofPattern("d.M.yyyy")
+        val PERIOD_OPTION_DATE_FORMAT: DateTimeFormatter = DateTimeFormatter.ofPattern("d.M.yyyy")
 
         /**
          * Matches " Od" or " do " in the period option text in the dropdown selection.
