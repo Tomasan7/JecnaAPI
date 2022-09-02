@@ -10,6 +10,7 @@ import org.jsoup.nodes.Element
 import java.time.LocalDate
 import java.time.format.DateTimeFormatterBuilder
 import java.time.temporal.ChronoField
+import java.util.*
 
 /**
  * Parses correct HTML to [ArticlesPage] instance.
@@ -68,6 +69,6 @@ class HtmlArticlesPageParserImpl : HtmlArticlesPageParser
             get() = DateTimeFormatterBuilder()
                     .appendPattern("d.MMMM")
                     .parseDefaulting(ChronoField.YEAR, LocalDate.now().year.toLong())
-                    .toFormatter()
+                    .toFormatter(Locale.forLanguageTag("cs-CZ"))
     }
 }
