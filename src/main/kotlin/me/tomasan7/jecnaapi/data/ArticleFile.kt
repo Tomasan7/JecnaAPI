@@ -7,5 +7,18 @@ package me.tomasan7.jecnaapi.data
  */
 data class ArticleFile(
     val label: String,
-    val downloadPath: String
+    val downloadPath: String,
+    val filename: String = downloadPath.split("/").last()
 )
+{
+    val fileNameNoExtension = filename.split(FILE_EXTENSION_DOT_REGEX)[0]
+    val fileExtension = filename.split(FILE_EXTENSION_DOT_REGEX)[1]
+
+    companion object
+    {
+        /**
+         * Matches the dot between file name and extension.
+         */
+        val FILE_EXTENSION_DOT_REGEX = Regex("""\.(?!.*\.)""")
+    }
+}
