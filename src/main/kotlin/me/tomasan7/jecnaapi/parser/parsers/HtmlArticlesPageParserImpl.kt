@@ -42,6 +42,7 @@ class HtmlArticlesPageParserImpl : HtmlArticlesPageParser
     {
         val title = articleEle.selectFirst(".name")!!.text()
         val content = articleEle.selectFirst(".text")!!.text()
+        val htmlContent = articleEle.selectFirst(".text")!!.html()
         val articleFileEles = articleEle.select(".files li a")
         val articleFiles = emptyMutableLinkedList<ArticleFile>()
 
@@ -52,7 +53,7 @@ class HtmlArticlesPageParserImpl : HtmlArticlesPageParser
         val (dateStr, author) = footer.split(" | ")
         val date = LocalDate.parse(dateStr, DATE_FORMATTER)
 
-        return Article(title, content, date, author, articleFiles)
+        return Article(title, content, htmlContent, date, author, articleFiles)
     }
 
     private fun parseArticleFile(articleFileEle: Element): ArticleFile

@@ -8,6 +8,7 @@ import java.time.LocalDate
 data class Article(
     val title: String,
     val content: String,
+    val htmlContent: String,
     val date: LocalDate,
     val author: String,
     val files: List<ArticleFile>
