@@ -23,7 +23,7 @@ dependencies {
     implementation("org.jsoup:jsoup:1.15.2")
     /* Ktor - for HTTP client. */
     val ktorVersion = "2.0.3"
-    implementation("io.ktor:ktor-client-core:$ktorVersion")
+    api("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
 
     testImplementation(kotlin("test"))
