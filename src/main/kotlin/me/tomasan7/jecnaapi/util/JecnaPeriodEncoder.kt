@@ -1,6 +1,6 @@
 package me.tomasan7.jecnaapi.util
 
-import me.tomasan7.jecnaapi.data.TimetablePage
+import me.tomasan7.jecnaapi.data.timetable.TimetablePage
 import java.time.Month
 
 /**

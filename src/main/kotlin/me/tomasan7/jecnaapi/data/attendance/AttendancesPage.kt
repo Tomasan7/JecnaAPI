@@ -1,4 +1,4 @@
-package me.tomasan7.jecnaapi.data
+package me.tomasan7.jecnaapi.data.attendance
 
 import me.tomasan7.jecnaapi.util.emptyMutableLinkedList
 import java.time.LocalDate

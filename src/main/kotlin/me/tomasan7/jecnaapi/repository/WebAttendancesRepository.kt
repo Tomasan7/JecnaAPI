@@ -1,7 +1,7 @@
 package me.tomasan7.jecnaapi.repository
 
 import io.ktor.http.*
-import me.tomasan7.jecnaapi.data.AttendancesPage
+import me.tomasan7.jecnaapi.data.attendance.AttendancesPage
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.parser.parsers.HtmlAttendancesPageParserImpl
 import me.tomasan7.jecnaapi.util.JecnaPeriodEncoder

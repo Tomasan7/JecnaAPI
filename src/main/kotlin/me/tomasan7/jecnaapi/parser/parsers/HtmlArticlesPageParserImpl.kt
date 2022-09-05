@@ -1,8 +1,8 @@
 package me.tomasan7.jecnaapi.parser.parsers
 
-import me.tomasan7.jecnaapi.data.Article
-import me.tomasan7.jecnaapi.data.ArticleFile
-import me.tomasan7.jecnaapi.data.ArticlesPage
+import me.tomasan7.jecnaapi.data.article.Article
+import me.tomasan7.jecnaapi.data.article.ArticleFile
+import me.tomasan7.jecnaapi.data.article.ArticlesPage
 import me.tomasan7.jecnaapi.parser.ParseException
 import me.tomasan7.jecnaapi.util.emptyMutableLinkedList
 import org.jsoup.Jsoup

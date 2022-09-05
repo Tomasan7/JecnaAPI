@@ -1,6 +1,6 @@
 package me.tomasan7.jecnaapi.parser.parsers
 
-import me.tomasan7.jecnaapi.data.TimetablePage
+import me.tomasan7.jecnaapi.data.timetable.TimetablePage
 
 /**
  * Is responsible for parsing HTML source code in [String] to [TimetablePage] instance.

@@ -1,6 +1,6 @@
 package me.tomasan7.jecnaapi.parser.parsers
 
-import me.tomasan7.jecnaapi.data.AttendancesPage
+import me.tomasan7.jecnaapi.data.attendance.AttendancesPage
 
 /**
  * Is responsible for parsing HTML source code in [String] to [AttendancesPage] instance.

@@ -1,4 +1,4 @@
-package me.tomasan7.jecnaapi.data
+package me.tomasan7.jecnaapi.data.article
 
 /**
  * An attachment file to the [articles][Article] on the main news page.

@@ -2,7 +2,7 @@ package me.tomasan7.jecnaapi.repository
 
 import io.ktor.http.*
 import me.tomasan7.jecnaapi.util.SchoolYear
-import me.tomasan7.jecnaapi.data.TimetablePage
+import me.tomasan7.jecnaapi.data.timetable.TimetablePage
 import me.tomasan7.jecnaapi.parser.parsers.HtmlTimetableParserImpl
 import me.tomasan7.jecnaapi.util.JecnaPeriodEncoder.jecnaEncode
 import me.tomasan7.jecnaapi.web.JecnaWebClient

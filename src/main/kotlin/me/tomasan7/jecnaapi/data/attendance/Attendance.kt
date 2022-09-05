@@ -1,7 +1,6 @@
-package me.tomasan7.jecnaapi.data
+package me.tomasan7.jecnaapi.data.attendance
 
 import java.time.LocalTime
-import java.time.format.DateTimeFormatter
 
 /**
  * Represents single pass by the school entrance.

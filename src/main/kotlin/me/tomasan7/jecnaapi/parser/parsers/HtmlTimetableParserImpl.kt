@@ -1,6 +1,9 @@
 package me.tomasan7.jecnaapi.parser.parsers
 
-import me.tomasan7.jecnaapi.data.*
+import me.tomasan7.jecnaapi.data.timetable.Lesson
+import me.tomasan7.jecnaapi.data.timetable.LessonPeriod
+import me.tomasan7.jecnaapi.data.timetable.LessonSpot
+import me.tomasan7.jecnaapi.data.timetable.TimetablePage
 import me.tomasan7.jecnaapi.parser.ParseException
 import me.tomasan7.jecnaapi.util.Name
 import me.tomasan7.jecnaapi.util.emptyMutableLinkedList

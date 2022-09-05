@@ -1,4 +1,4 @@
-package me.tomasan7.jecnaapi.data
+package me.tomasan7.jecnaapi.data.timetable
 
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter

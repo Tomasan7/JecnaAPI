@@ -1,6 +1,6 @@
-package me.tomasan7.jecnaapi.data
+package me.tomasan7.jecnaapi.data.timetable
 
-import me.tomasan7.jecnaapi.data.LessonSpot
+import me.tomasan7.jecnaapi.data.timetable.LessonSpot
 import me.tomasan7.jecnaapi.util.emptyMutableLinkedList
 import me.tomasan7.jecnaapi.util.setAll
 import java.time.LocalDate

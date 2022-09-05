@@ -1,4 +1,4 @@
-package me.tomasan7.jecnaapi.data
+package me.tomasan7.jecnaapi.data.timetable
 
 /**
  * Represents a spot for [lessons][Lesson] in a timetable.

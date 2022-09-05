@@ -1,4 +1,4 @@
-package me.tomasan7.jecnaapi.data
+package me.tomasan7.jecnaapi.data.timetable
 
 import me.tomasan7.jecnaapi.util.Name
 

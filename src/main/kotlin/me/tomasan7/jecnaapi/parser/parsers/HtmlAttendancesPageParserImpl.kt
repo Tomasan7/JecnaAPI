@@ -1,7 +1,7 @@
 package me.tomasan7.jecnaapi.parser.parsers
 
-import me.tomasan7.jecnaapi.data.Attendance
-import me.tomasan7.jecnaapi.data.AttendancesPage
+import me.tomasan7.jecnaapi.data.attendance.Attendance
+import me.tomasan7.jecnaapi.data.attendance.AttendancesPage
 import me.tomasan7.jecnaapi.parser.ParseException
 import me.tomasan7.jecnaapi.util.emptyMutableLinkedList
 import me.tomasan7.jecnaapi.util.month
