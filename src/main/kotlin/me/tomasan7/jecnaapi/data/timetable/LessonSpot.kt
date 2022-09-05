@@ -56,4 +56,12 @@ class LessonSpot(lessons: List<Lesson>) : Iterable<Lesson>
                "lessons=" + lessons +
                '}'
     }
+
+    companion object
+    {
+        /**
+         * Creates a [LessonSpot] with no [lessons][Lesson].
+         */
+        fun empty() = LessonSpot(listOf())
+    }
 }
