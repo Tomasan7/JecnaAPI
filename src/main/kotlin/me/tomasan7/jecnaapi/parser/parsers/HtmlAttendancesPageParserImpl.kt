@@ -1,6 +1,7 @@
 package me.tomasan7.jecnaapi.parser.parsers
 
 import me.tomasan7.jecnaapi.data.attendance.Attendance
+import me.tomasan7.jecnaapi.data.attendance.AttendanceType
 import me.tomasan7.jecnaapi.data.attendance.AttendancesPage
 import me.tomasan7.jecnaapi.parser.ParseException
 import me.tomasan7.jecnaapi.util.emptyMutableLinkedList
@@ -78,7 +79,7 @@ class HtmlAttendancesPageParserImpl : HtmlAttendancesPageParser
             /* Find the time and parse it to the LocalTime object. */
             val time = LocalTime.parse(TIME_REGEX.find(dayAttendanceStr)!!.value, TIME_FORMATTER)
 
-            attendanceList.add(Attendance(exit, time))
+            attendanceList.add(Attendance(if (exit) AttendanceType.EXIT else AttendanceType.ENTER, time))
         }
 
         return attendanceList
