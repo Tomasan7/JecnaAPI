@@ -20,7 +20,6 @@ class LessonSpot(lessons: List<Lesson>) : Iterable<Lesson>
 
     init
     {
-        require(lessons.isNotEmpty()) { "At least one lesson must be present." }
         require(!findDuplicateGroups(lessons)) { "Lessons cannot have duplicate groups." }
 
         this.lessons = lessons.sortedBy { it.group }
