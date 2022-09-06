@@ -106,8 +106,8 @@ class HtmlTimetableParserImpl : HtmlTimetablePageParser
         val fromStr = datesSplit[0]
         val toStr = datesSplit.getOrNull(1)
 
-        val from = LocalDate.parse(fromStr, PERIOD_OPTION_DATE_FORMAT)
-        val to = toStr?.let { LocalDate.parse(it, PERIOD_OPTION_DATE_FORMAT) }
+        val from = LocalDate.parse(fromStr, PERIOD_OPTION_DATE_FORMATTER)
+        val to = toStr?.let { LocalDate.parse(it, PERIOD_OPTION_DATE_FORMATTER) }
 
         return TimetablePage.PeriodOption(id, header, from, to, selected)
     }
@@ -176,7 +176,7 @@ class HtmlTimetableParserImpl : HtmlTimetablePageParser
 
     companion object
     {
-        val PERIOD_OPTION_DATE_FORMAT: DateTimeFormatter = DateTimeFormatter.ofPattern("d.M.yyyy")
+        val PERIOD_OPTION_DATE_FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern("d.M.yyyy")
 
         /**
          * Matches " Od" or " do " in the period option text in the dropdown selection.
