@@ -8,6 +8,7 @@ import me.tomasan7.jecnaapi.util.emptyMutableLinkedList
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
 import java.time.temporal.ChronoField
 import java.util.*
@@ -66,7 +67,7 @@ class HtmlArticlesPageParserImpl : HtmlArticlesPageParser
 
     companion object
     {
-        val DATE_FORMATTER
+        val DATE_FORMATTER: DateTimeFormatter
             get() = DateTimeFormatterBuilder()
                     .appendPattern("d.MMMM")
                     .parseDefaulting(ChronoField.YEAR, LocalDate.now().year.toLong())
