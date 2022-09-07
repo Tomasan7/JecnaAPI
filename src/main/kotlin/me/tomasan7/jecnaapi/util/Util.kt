@@ -1,5 +1,6 @@
 package me.tomasan7.jecnaapi.util
 
+import java.time.DayOfWeek
 import java.time.Month
 import java.util.LinkedList
 
@@ -39,3 +40,8 @@ fun <T> MutableCollection<T>.setAll(elements: Iterable<T>)
     clear()
     addAll(elements)
 }
+
+/**
+ * @return The next [day][DayOfWeek] after this one.
+ */
+fun DayOfWeek.next(): DayOfWeek = DayOfWeek.of(if (this.value == DayOfWeek.values().size) 1 else this.value + 1)

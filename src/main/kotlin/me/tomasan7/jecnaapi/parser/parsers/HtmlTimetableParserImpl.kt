@@ -1,15 +1,14 @@
 package me.tomasan7.jecnaapi.parser.parsers
 
-import me.tomasan7.jecnaapi.data.timetable.Lesson
-import me.tomasan7.jecnaapi.data.timetable.LessonPeriod
-import me.tomasan7.jecnaapi.data.timetable.LessonSpot
-import me.tomasan7.jecnaapi.data.timetable.TimetablePage
+import me.tomasan7.jecnaapi.data.timetable.*
 import me.tomasan7.jecnaapi.parser.ParseException
 import me.tomasan7.jecnaapi.util.Name
 import me.tomasan7.jecnaapi.util.emptyMutableLinkedList
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
+import java.text.Normalizer
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -45,7 +44,7 @@ class HtmlTimetableParserImpl : HtmlTimetablePageParser
 
             /* Add all the LessonPeriods to the timetable. */
             for (lessonPeriodEle in lessonPeriodEles)
-                timetablePageBuilder.addLessonPeriod(parseLessonPeriod(lessonPeriodEle))
+                timetablePageBuilder.timetableBuilder.addLessonPeriod(parseLessonPeriod(lessonPeriodEle))
 
             /* Removes the row with the LessonPeriods, so it leaves all the subjects. */
             rowEles.removeAt(0)
@@ -58,7 +57,7 @@ class HtmlTimetableParserImpl : HtmlTimetablePageParser
                 val lessonSpotEles = rowEle.select("td")
 
                 for (lessonSpotEle in lessonSpotEles)
-                    timetablePageBuilder.addLessonSpot(day, parseLessonSpot(lessonSpotEle))
+                    timetablePageBuilder.timetableBuilder.addLessonSpot(parseDayOfWeek(day)!!, parseLessonSpot(lessonSpotEle))
             }
 
             return timetablePageBuilder.build()
@@ -68,6 +67,27 @@ class HtmlTimetableParserImpl : HtmlTimetablePageParser
             throw ParseException(e)
         }
     }
+
+    /**
+     * Transform two-letter day abbreviation into a [String].
+     */
+    private fun parseDayOfWeek(dayOfWeekStr: String) = when (dayOfWeekStr.trim().lowercase().removeAccent())
+    {
+        "po" -> DayOfWeek.MONDAY
+        "ut" -> DayOfWeek.TUESDAY
+        "st" -> DayOfWeek.WEDNESDAY
+        "ct" -> DayOfWeek.THURSDAY
+        "pa" -> DayOfWeek.FRIDAY
+        "so" -> DayOfWeek.SATURDAY
+        "ne" -> DayOfWeek.SUNDAY
+        else -> null
+    }
+
+    /**
+     * Removes an accent from a [String].
+     * eg. Turns "Žluťoučký kůň" into "zlutoucky kun".
+     */
+    private fun String.removeAccent() = Normalizer.normalize(this, Normalizer.Form.NFKD).replace(Regex("""\p{M}"""), "")
 
     /**
      * Parses [PeriodOptions][TimetablePage.PeriodOption] from the form.
@@ -124,11 +144,11 @@ class HtmlTimetableParserImpl : HtmlTimetablePageParser
      *
      * @return The parsed [LessonSpot].
      */
-    private fun parseLessonSpot(lessonSpotEle: Element): LessonSpot?
+    private fun parseLessonSpot(lessonSpotEle: Element): LessonSpot
     {
         /* Skip if the lesson spot is empty, this leaves the lesson variable to null -> indicating no lesson. */
         if (lessonSpotEle.hasClass("empty"))
-            return null
+            return LessonSpot.empty()
 
         /* All the lessons in the lesson spot. */
         val lessonEles = lessonSpotEle.select("div:not(.lessonEmpty)")
