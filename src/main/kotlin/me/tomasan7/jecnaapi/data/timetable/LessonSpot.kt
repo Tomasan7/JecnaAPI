@@ -40,6 +40,11 @@ class LessonSpot(lessons: List<Lesson>) : Iterable<Lesson>
     }
 
     /**
+     * @return Whether this [LessonSpot] contains any [lessons][Lesson] or not. `true` if not, `false` if yes.
+     */
+    fun isEmpty() = size == 0
+
+    /**
      * @return A [Lesson] with the specified group. Or `null`, if there's no [Lesson] with that group.
      */
     fun getLessonByGroup(group: Int) = lessons.getOrNull(group)
