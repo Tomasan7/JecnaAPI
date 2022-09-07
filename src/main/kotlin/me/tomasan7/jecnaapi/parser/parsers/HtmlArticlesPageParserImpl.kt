@@ -51,10 +51,13 @@ class HtmlArticlesPageParserImpl : HtmlArticlesPageParser
             articleFiles.add(parseArticleFile(articleFileEle))
 
         val footer = articleEle.selectFirst(".footer")!!.text()
-        val (dateStr, author) = footer.split(" | ")
+        val footerSplit = footer.split(" | ")
+        val dateStr = footerSplit[0]
+        val author = footerSplit[1]
+        val schoolOnly = footerSplit.size == 3
         val date = LocalDate.parse(dateStr, DATE_FORMATTER)
 
-        return Article(title, content, htmlContent, date, author, articleFiles)
+        return Article(title, content, htmlContent, date, author, schoolOnly, articleFiles)
     }
 
     private fun parseArticleFile(articleFileEle: Element): ArticleFile

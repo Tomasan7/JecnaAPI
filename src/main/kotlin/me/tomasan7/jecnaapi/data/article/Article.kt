@@ -11,5 +11,6 @@ data class Article(
     val htmlContent: String,
     val date: LocalDate,
     val author: String,
+    val schoolOnly: Boolean,
     val files: List<ArticleFile>
 )
