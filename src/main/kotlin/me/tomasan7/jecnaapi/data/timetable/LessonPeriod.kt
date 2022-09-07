@@ -8,12 +8,16 @@ import java.time.format.DateTimeFormatter
  * @param from Lesson's starting time.
  * @param to Lesson's ending time.
  */
-data class LessonPeriod(val from: LocalTime, val to: LocalTime)
+data class LessonPeriod(val from: LocalTime, val to: LocalTime) : ClosedRange<LocalTime>
 {
-    override fun toString(): String
-    {
-        return from.format(formatter) + " - " + to.format(formatter)
-    }
+    override val start: LocalTime
+        get() = from
+
+    override val endInclusive: LocalTime
+        get() = to
+
+    override fun toString() = from.format(formatter) + " - " + to.format(formatter)
+
 
     companion object
     {
