@@ -34,7 +34,7 @@ class JecnaWebClient : AuthWebClient
     override suspend fun isLoggedIn(): Boolean
     {
         /* Responds with status 302 (redirect to login page) when user is not logged in. */
-        return httpClient.get(newRequestBuilder(LOGIN_TEST_ENDPOINT)).status != HttpStatusCode.Found
+        return query(LOGIN_TEST_ENDPOINT).status != HttpStatusCode.Found
     }
 
     override suspend fun query(path: String, parameters: Parameters?) = httpClient.get(newRequestBuilder(path, parameters))
