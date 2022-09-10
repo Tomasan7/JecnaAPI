@@ -6,6 +6,7 @@ data class Menu(private val menu: Map<LocalDate, DayMenu>)
 {
     val days = menu.keys
     val daysSorted = menu.keys.sorted()
+    val dayMenus = menu.values
 
     fun getDayMenu(day: LocalDate) = menu[day]
 
