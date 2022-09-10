@@ -37,10 +37,7 @@ class ICanteenWebClient : AuthWebClient
         return !loginPostResponse.headers["Location"]!!.startsWith("/faces/login.jsp")
     }
 
-    override suspend fun isLoggedIn(): Boolean
-    {
-        TODO("Not yet implemented")
-    }
+    override suspend fun isLoggedIn() = !query("/faces/secured/main.jsp").headers.contains("Location")
 
     override suspend fun query(path: String, parameters: Parameters?) = httpClient.get(newRequestBuilder(path))
 
