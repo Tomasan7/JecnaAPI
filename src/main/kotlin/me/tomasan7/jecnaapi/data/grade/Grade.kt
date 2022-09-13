@@ -26,15 +26,15 @@ data class Grade(
      */
     constructor(valueChar: Char,
                 small: Boolean,
-                subject: Name?,
-                teacher: String?,
-                description: String?,
-                receiveDate: LocalDate?) : this(valueCharToValue(valueChar),
-                                                small,
-                                                subject,
-                                                teacher,
-                                                description,
-                                                receiveDate)
+                subject: Name? = null,
+                teacher: String? = null,
+                description: String? = null,
+                receiveDate: LocalDate? = null) : this(valueCharToValue(valueChar),
+                                                       small,
+                                                       subject,
+                                                       teacher,
+                                                       description,
+                                                       receiveDate)
 
     init
     {
