@@ -2,7 +2,7 @@ package me.tomasan7.jecnaapi.parser.parsers
 
 import me.tomasan7.jecnaapi.data.article.Article
 import me.tomasan7.jecnaapi.data.article.ArticleFile
-import me.tomasan7.jecnaapi.data.article.ArticlesPage
+import me.tomasan7.jecnaapi.data.article.NewsPage
 import me.tomasan7.jecnaapi.parser.ParseException
 import me.tomasan7.jecnaapi.util.emptyMutableLinkedList
 import org.jsoup.Jsoup
@@ -14,24 +14,24 @@ import java.time.temporal.ChronoField
 import java.util.*
 
 /**
- * Parses correct HTML to [ArticlesPage] instance.
+ * Parses correct HTML to [NewsPage] instance.
  */
-class HtmlArticlesPageParserImpl : HtmlArticlesPageParser
+class HtmlNewsPageParserImpl : HtmlNewsPageParser
 {
-    override fun parse(html: String): ArticlesPage
+    override fun parse(html: String): NewsPage
     {
         try
         {
-            val articlesPageBuilder = ArticlesPage.builder()
+            val newsPageBuilder = NewsPage.builder()
 
             val document = Jsoup.parse(html)
 
             val articleEles = document.select(".event")
 
             for (articleEle in articleEles)
-                articlesPageBuilder.addArticle(parseArticle(articleEle))
+                newsPageBuilder.addArticle(parseArticle(articleEle))
 
-            return articlesPageBuilder.build()
+            return newsPageBuilder.build()
         }
         catch (e: Exception)
         {

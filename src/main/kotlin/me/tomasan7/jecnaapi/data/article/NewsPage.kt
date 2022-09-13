@@ -6,7 +6,7 @@ import me.tomasan7.jecnaapi.util.setAll
 /**
  * Holds all the [articles][Article] on the main news page.
  */
-class ArticlesPage(val articles: List<Article>)
+class NewsPage(val articles: List<Article>)
 {
     companion object
     {
@@ -29,6 +29,6 @@ class ArticlesPage(val articles: List<Article>)
             return this
         }
 
-        fun build() = ArticlesPage(articles)
+        fun build() = NewsPage(articles)
     }
 }

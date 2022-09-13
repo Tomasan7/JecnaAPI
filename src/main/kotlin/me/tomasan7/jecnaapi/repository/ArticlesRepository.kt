@@ -1,11 +1,11 @@
 package me.tomasan7.jecnaapi.repository
 
-import me.tomasan7.jecnaapi.data.article.ArticlesPage
+import me.tomasan7.jecnaapi.data.article.NewsPage
 
 /**
- * Retrieves [ArticlesPage] from any kind of data source.
+ * Retrieves [NewsPage] from any kind of data source.
  */
 interface ArticlesRepository
 {
-    suspend fun queryArticlesPage(): ArticlesPage
+    suspend fun queryArticlesPage(): NewsPage
 }
