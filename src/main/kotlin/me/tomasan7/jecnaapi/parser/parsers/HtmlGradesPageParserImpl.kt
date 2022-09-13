@@ -195,7 +195,7 @@ class HtmlGradesPageParserImpl : HtmlGradesPageParser
         }
 
         /**
-         * Matches the whole name of a subject. Match contains capturing groups listed in [GradeDetailsRegexGroups].
+         * Matches the whole name of a subject. Match contains capturing groups listed in [SubjectNameRegexGroups].
          */
         private val SUBJECT_NAME_REGEX = Regex("""(?<${SubjectNameRegexGroups.FULL}>.*?)(?:\((?<${SubjectNameRegexGroups.SHORT}>\w{1,4})\))?${'$'}""")
 
