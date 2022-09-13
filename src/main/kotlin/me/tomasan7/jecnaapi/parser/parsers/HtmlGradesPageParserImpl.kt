@@ -146,9 +146,11 @@ class HtmlGradesPageParserImpl : HtmlGradesPageParser
         /* The title attribute of the grade element, which contains all the details. (description, date and teacher) */
         val titleAttr = gradeEle.attr("title")
 
-        val teacher = TEACHER_REGEX.find(titleAttr)?.value
-        val description = DESCRIPTION_REGEX.find(titleAttr)?.value
-        val receiveDate = DATE_REGEX.find(titleAttr)?.value?.let { LocalDate.parse(it, RECEIVE_DATE_FORMATTER) }
+        val detailsMatch = GRADE_DETAILS_REGEX.find(titleAttr) ?: return Grade(valueChar, small)
+
+        val description = detailsMatch.groups[GradeDetailsRegexGroups.DESCRIPTION]!!.value
+        val receiveDate = detailsMatch.groups[GradeDetailsRegexGroups.DATE]!!.value.let { LocalDate.parse(it, RECEIVE_DATE_FORMATTER) }
+        val teacher = detailsMatch.groups[GradeDetailsRegexGroups.TEACHER]!!.value
 
         return Grade(valueChar, small, subjectName, teacher, description, receiveDate)
     }
@@ -160,14 +162,12 @@ class HtmlGradesPageParserImpl : HtmlGradesPageParser
      */
     private fun parseSubjectName(subjectNameStr: String): Name
     {
-        val subjectSplit = subjectNameStr.split(SUBJECT_SHORT_SPLIT_REGEX, 2)
-        val subjectFullName = subjectSplit[0]
-        /* example value: "(IT)" */
-        val subjectShortNameWithBrackets = subjectSplit.getOrNull(1)
-        /* Removes the brackets from the string. (IT) -> IT */
-        val subjectShortName = subjectShortNameWithBrackets?.substring(1, subjectShortNameWithBrackets.length - 1)
+        val subjectNameMatch = SUBJECT_NAME_REGEX.find(subjectNameStr)!!
 
-        return Name(subjectFullName, subjectShortName)
+        val full = subjectNameMatch.groups[SubjectNameRegexGroups.FULL]!!.value
+        val short = subjectNameMatch.groups[SubjectNameRegexGroups.SHORT]?.value
+
+        return Name(full, short)
     }
 
     companion object
@@ -178,30 +178,34 @@ class HtmlGradesPageParserImpl : HtmlGradesPageParser
         private val RECEIVE_DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy")
 
         /**
-         * Matches the description in a [Grade]'s HTML element title.
-         *
-         * Matches everything before last '(' preceded by a space.
+         * Matches the [Grade]'s HTML element title. Match contains capturing groups listed in [GradeDetailsRegexGroups].
          */
-        private val DESCRIPTION_REGEX = Regex(""".*(?= \((?!.*\())""", RegexOption.DOT_MATCHES_ALL)
+        private val GRADE_DETAILS_REGEX = Regex("""
+            (?<${GradeDetailsRegexGroups.DESCRIPTION}>.*) \((?<${GradeDetailsRegexGroups.DATE}>\d{2}\.\d{2}\.\d{4}), (?<${GradeDetailsRegexGroups.TEACHER}>.*)\)${'$'}"""
+                                                        .trimIndent(), RegexOption.DOT_MATCHES_ALL)
 
         /**
-         * Matches the date in a [Grade]'s HTML element title.
-         *
-         * Matches everything between last '(' and first ',' after it.
+         * Contains names of regex capture groups inside [GRADE_DETAILS_REGEX].
          */
-        private val DATE_REGEX = Regex("""(?<=\((?!.{0,100}\())[^,]*(?=,)""", RegexOption.DOT_MATCHES_ALL)
+        object GradeDetailsRegexGroups
+        {
+            const val DESCRIPTION = "description"
+            const val DATE = "date"
+            const val TEACHER = "teacher"
+        }
 
         /**
-         * Matches the teacher in a [Grade]'s HTML element title.
-         *
-         * Matches everything between the first ',' followed by a space after last '(' and ending ')'
+         * Matches the whole name of a subject. Match contains capturing groups listed in [GradeDetailsRegexGroups].
          */
-        private val TEACHER_REGEX = Regex("""(?<=(?<=\((?!.{0,100}\()[^,]{0,100}), ).*(?=\)${'$'})""", RegexOption.DOT_MATCHES_ALL)
+        private val SUBJECT_NAME_REGEX = Regex("""(?<${SubjectNameRegexGroups.FULL}>.*?)(?:\((?<${SubjectNameRegexGroups.SHORT}>\w{1,4})\))?${'$'}""")
 
         /**
-         *  Matches the space between subject name and it's short name in brackets.
-         *  Used for splitting the name into full and short.
+         * Contains names of regex capture groups inside [GRADE_DETAILS_REGEX].
          */
-        private val SUBJECT_SHORT_SPLIT_REGEX = Regex(""" (?=\(\w{1,4}\)${'$'})""")
+        object SubjectNameRegexGroups
+        {
+            const val FULL = "full"
+            const val SHORT = "short"
+        }
     }
 }
