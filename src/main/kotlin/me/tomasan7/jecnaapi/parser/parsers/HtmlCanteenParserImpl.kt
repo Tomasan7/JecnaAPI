@@ -11,7 +11,7 @@ import org.jsoup.nodes.Element
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-class HtmlCanteenParserImpl : HtmlCanteenParser
+object HtmlCanteenParserImpl : HtmlCanteenParser
 {
     override fun parse(html: String): Menu
     {
@@ -78,8 +78,5 @@ class HtmlCanteenParserImpl : HtmlCanteenParser
         )
     }
 
-    companion object
-    {
-        private val DATE_FORMAT: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
-    }
+    private val DATE_FORMAT: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
 }

@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter
  * Parses correct HTML to [GradesPage] instance.
  * **Beware: The grade's subject is taken from the table's row name, not from the grade's page!**
  */
-class HtmlGradesPageParserImpl : HtmlGradesPageParser
+object HtmlGradesPageParserImpl : HtmlGradesPageParser
 {
     override fun parse(html: String): GradesPage
     {
@@ -170,42 +170,39 @@ class HtmlGradesPageParserImpl : HtmlGradesPageParser
         return Name(full, short)
     }
 
-    companion object
+    /**
+     * The format grades' receive date is in.
+     */
+    private val RECEIVE_DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+
+    /**
+     * Matches the [Grade]'s HTML element title. Match contains capturing groups listed in [GradeDetailsRegexGroups].
+     */
+    private val GRADE_DETAILS_REGEX = Regex("""
+     (?<${GradeDetailsRegexGroups.DESCRIPTION}>.*) \((?<${GradeDetailsRegexGroups.DATE}>\d{2}\.\d{2}\.\d{4}), (?<${GradeDetailsRegexGroups.TEACHER}>.*)\)${'$'}"""
+                                                    .trimIndent(), RegexOption.DOT_MATCHES_ALL)
+
+    /**
+     * Contains names of regex capture groups inside [GRADE_DETAILS_REGEX].
+     */
+    object GradeDetailsRegexGroups
     {
-        /**
-         * The format grades' receive date is in.
-         */
-        private val RECEIVE_DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+        const val DESCRIPTION = "description"
+        const val DATE = "date"
+        const val TEACHER = "teacher"
+    }
 
-        /**
-         * Matches the [Grade]'s HTML element title. Match contains capturing groups listed in [GradeDetailsRegexGroups].
-         */
-        private val GRADE_DETAILS_REGEX = Regex("""
-            (?<${GradeDetailsRegexGroups.DESCRIPTION}>.*) \((?<${GradeDetailsRegexGroups.DATE}>\d{2}\.\d{2}\.\d{4}), (?<${GradeDetailsRegexGroups.TEACHER}>.*)\)${'$'}"""
-                                                        .trimIndent(), RegexOption.DOT_MATCHES_ALL)
+    /**
+     * Matches the whole name of a subject. Match contains capturing groups listed in [SubjectNameRegexGroups].
+     */
+    private val SUBJECT_NAME_REGEX = Regex("""(?<${SubjectNameRegexGroups.FULL}>.*?)(?:\((?<${SubjectNameRegexGroups.SHORT}>\w{1,4})\))?${'$'}""")
 
-        /**
-         * Contains names of regex capture groups inside [GRADE_DETAILS_REGEX].
-         */
-        object GradeDetailsRegexGroups
-        {
-            const val DESCRIPTION = "description"
-            const val DATE = "date"
-            const val TEACHER = "teacher"
-        }
-
-        /**
-         * Matches the whole name of a subject. Match contains capturing groups listed in [SubjectNameRegexGroups].
-         */
-        private val SUBJECT_NAME_REGEX = Regex("""(?<${SubjectNameRegexGroups.FULL}>.*?)(?:\((?<${SubjectNameRegexGroups.SHORT}>\w{1,4})\))?${'$'}""")
-
-        /**
-         * Contains names of regex capture groups inside [GRADE_DETAILS_REGEX].
-         */
-        object SubjectNameRegexGroups
-        {
-            const val FULL = "full"
-            const val SHORT = "short"
-        }
+    /**
+     * Contains names of regex capture groups inside [GRADE_DETAILS_REGEX].
+     */
+    object SubjectNameRegexGroups
+    {
+        const val FULL = "full"
+        const val SHORT = "short"
     }
 }

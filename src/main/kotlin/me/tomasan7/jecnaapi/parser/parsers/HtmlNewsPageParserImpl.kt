@@ -16,7 +16,7 @@ import java.util.*
 /**
  * Parses correct HTML to [NewsPage] instance.
  */
-class HtmlNewsPageParserImpl : HtmlNewsPageParser
+object HtmlNewsPageParserImpl : HtmlNewsPageParser
 {
     override fun parse(html: String): NewsPage
     {
@@ -68,12 +68,9 @@ class HtmlNewsPageParserImpl : HtmlNewsPageParser
         return ArticleFile(label, downloadPath)
     }
 
-    companion object
-    {
-        val DATE_FORMATTER: DateTimeFormatter
-            get() = DateTimeFormatterBuilder()
-                    .appendPattern("d.MMMM")
-                    .parseDefaulting(ChronoField.YEAR, LocalDate.now().year.toLong())
-                    .toFormatter(Locale.forLanguageTag("cs-CZ"))
-    }
+    val DATE_FORMATTER: DateTimeFormatter
+        get() = DateTimeFormatterBuilder()
+                .appendPattern("d.MMMM")
+                .parseDefaulting(ChronoField.YEAR, LocalDate.now().year.toLong())
+                .toFormatter(Locale.forLanguageTag("cs-CZ"))
 }

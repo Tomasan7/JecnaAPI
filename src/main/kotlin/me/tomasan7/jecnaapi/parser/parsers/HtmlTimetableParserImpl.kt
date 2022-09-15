@@ -15,7 +15,7 @@ import java.time.format.DateTimeFormatter
 /**
  * Parses correct HTML to [TimetablePage] instance.
  */
-class HtmlTimetableParserImpl : HtmlTimetablePageParser
+object HtmlTimetableParserImpl : HtmlTimetablePageParser
 {
     override fun parse(html: String): TimetablePage
     {
@@ -194,19 +194,16 @@ class HtmlTimetableParserImpl : HtmlTimetablePageParser
         )
     }
 
-    companion object
-    {
-        val PERIOD_OPTION_DATE_FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern("d.M.yyyy")
+    val PERIOD_OPTION_DATE_FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern("d.M.yyyy")
 
-        /**
-         * Matches " Od" or " do " in the period option text in the dropdown selection.
-         */
-        val PERIOD_OPTION_DATES_SPLIT_REGEX = Regex("""[Oo]d | do """)
+    /**
+     * Matches " Od" or " do " in the period option text in the dropdown selection.
+     */
+    val PERIOD_OPTION_DATES_SPLIT_REGEX = Regex("""[Oo]d | do """)
 
-        /**
-         * Matches the text before the dates in the [TimetablePage.PeriodOption] text.
-         * Eg. "Mimořádný rozvrh" or "Dočasný rozvrh".
-         */
-        val PERIOD_OPTION_HEADER_REGEX = Regex("""^.*?(?= -)""")
-    }
+    /**
+     * Matches the text before the dates in the [TimetablePage.PeriodOption] text.
+     * Eg. "Mimořádný rozvrh" or "Dočasný rozvrh".
+     */
+    val PERIOD_OPTION_HEADER_REGEX = Regex("""^.*?(?= -)""")
 }

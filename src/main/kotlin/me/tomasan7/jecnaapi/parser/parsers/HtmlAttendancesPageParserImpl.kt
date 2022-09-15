@@ -19,7 +19,7 @@ import java.time.temporal.ChronoField
 /**
  * Parses correct HTML to [AttendancesPage] instance.
  */
-class HtmlAttendancesPageParserImpl : HtmlAttendancesPageParser
+object HtmlAttendancesPageParserImpl : HtmlAttendancesPageParser
 {
     override fun parse(html: String): AttendancesPage
     {
@@ -107,30 +107,27 @@ class HtmlAttendancesPageParserImpl : HtmlAttendancesPageParser
             .toFormatter())
     }
 
-    companion object
-    {
-        /**
-         * Matches the day date in the first column.
-         *
-         * Matches a date in 'dd.MM.' format. (for speed and simplicity, it also matches non-existing dates)
-         */
-        private val DATE_REGEX = Regex("""[0-3]?\d\.[0-1]?\d\.""", RegexOption.DOT_MATCHES_ALL)
+    /**
+     * Matches the day date in the first column.
+     *
+     * Matches a date in 'dd.MM.' format. (for speed and simplicity, it also matches non-existing dates)
+     */
+    private val DATE_REGEX = Regex("""[0-3]?\d\.[0-1]?\d\.""", RegexOption.DOT_MATCHES_ALL)
 
-        /**
-         *  Matches "Odchod" **only** => if it's a leave.
-         */
-        private val LEAVE_REGEX = Regex("""Odchod""")
+    /**
+     *  Matches "Odchod" **only** => if it's a leave.
+     */
+    private val LEAVE_REGEX = Regex("""Odchod""")
 
-        /**
-         * Matches the time in each attendance.
-         *
-         * Matches time in hh:mm format.
-         */
-        private val TIME_REGEX = Regex("""(?:[0-1]?\d|2[0-3]):[0-5]\d""", RegexOption.DOT_MATCHES_ALL)
+    /**
+     * Matches the time in each attendance.
+     *
+     * Matches time in hh:mm format.
+     */
+    private val TIME_REGEX = Regex("""(?:[0-1]?\d|2[0-3]):[0-5]\d""", RegexOption.DOT_MATCHES_ALL)
 
-        /**
-         * Formats from/into `"H:mm"` format.
-         */
-        private val TIME_FORMATTER = DateTimeFormatter.ofPattern("H:mm")
-    }
+    /**
+     * Formats from/into `"H:mm"` format.
+     */
+    private val TIME_FORMATTER = DateTimeFormatter.ofPattern("H:mm")
 }
