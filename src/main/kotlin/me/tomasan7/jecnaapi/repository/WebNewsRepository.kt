@@ -4,9 +4,12 @@ import me.tomasan7.jecnaapi.parser.parsers.HtmlNewsPageParserImpl
 import me.tomasan7.jecnaapi.web.JecnaWebClient
 
 /**
- * Retrieves [ArticlesRepository] from the Ječná web.
+ * Retrieves [NewsRepository] from the Ječná web.
  */
-class WebArticlesRepository(private val webClient: JecnaWebClient) : ArticlesRepository
+class WebNewsRepository(
+    private val webClient: JecnaWebClient,
+    private val htmlArticlesParser
+) : NewsRepository
 {
     private val articlesParser = HtmlNewsPageParserImpl()
 
