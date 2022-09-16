@@ -10,6 +10,7 @@ import java.util.LinkedList
 class Grades private constructor(private val subjectPartsGrades: Map<String?, List<Grade>>)
 {
     val subjectParts = subjectPartsGrades.keys
+    val count = subjectParts.flatMap { subjectPartsGrades[it]!! }.size
 
     /**
      * @return True, when there are no [grades][Grade] in any subject part.
