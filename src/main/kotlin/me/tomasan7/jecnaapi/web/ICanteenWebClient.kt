@@ -34,7 +34,7 @@ class ICanteenWebClient : AuthWebClient
         }))
 
         /* If the login was unsuccessful, the web redirects back to the login page. */
-        return !loginPostResponse.headers["Location"]!!.startsWith("/faces/login.jsp")
+        return !loginPostResponse.headers[HttpHeaders.Location]!!.startsWith("/faces/login.jsp")
     }
 
     override suspend fun isLoggedIn() = !query("/faces/secured/main.jsp").headers.contains("Location")
