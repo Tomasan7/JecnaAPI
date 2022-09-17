@@ -11,7 +11,7 @@ class WebNewsRepository(
     private val newsParser: HtmlNewsPageParser
 ) : NewsRepository
 {
-    override suspend fun queryArticlesPage() = newsParser.parse(webClient.queryStringBody(WEB_PATH))
+    override suspend fun queryNewsPage() = newsParser.parse(webClient.queryStringBody(WEB_PATH))
 
     companion object
     {

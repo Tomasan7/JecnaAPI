@@ -7,5 +7,5 @@ import me.tomasan7.jecnaapi.data.article.NewsPage
  */
 interface NewsRepository
 {
-    suspend fun queryArticlesPage(): NewsPage
+    suspend fun queryNewsPage(): NewsPage
 }
