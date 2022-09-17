@@ -2,7 +2,7 @@ package me.tomasan7.jecnaapi.util
 
 import java.time.DayOfWeek
 import java.time.Month
-import java.util.LinkedList
+import java.util.*
 
 /**
  * Creates a new empty mutable [LinkedList].

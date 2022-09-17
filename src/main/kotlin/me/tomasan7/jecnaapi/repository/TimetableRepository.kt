@@ -1,7 +1,7 @@
 package me.tomasan7.jecnaapi.repository
 
-import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.data.timetable.TimetablePage
+import me.tomasan7.jecnaapi.util.SchoolYear
 
 /**
  * Retrieves [TimetablePage] from any kind of data source.

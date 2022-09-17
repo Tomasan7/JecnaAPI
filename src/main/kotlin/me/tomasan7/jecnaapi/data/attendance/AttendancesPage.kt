@@ -2,7 +2,6 @@ package me.tomasan7.jecnaapi.data.attendance
 
 import me.tomasan7.jecnaapi.util.emptyMutableLinkedList
 import java.time.LocalDate
-import kotlin.collections.HashMap
 
 /**
  * Holds all [attendances][Attendance] for each day.

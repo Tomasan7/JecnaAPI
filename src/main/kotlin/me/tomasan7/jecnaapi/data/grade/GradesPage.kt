@@ -2,7 +2,6 @@ package me.tomasan7.jecnaapi.data.grade
 
 import me.tomasan7.jecnaapi.util.Name
 import me.tomasan7.jecnaapi.util.toName
-import java.util.*
 
 /**
  * Representing grades table.

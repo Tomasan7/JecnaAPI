@@ -3,9 +3,7 @@ package me.tomasan7.jecnaapi.parser.parsers
 import me.tomasan7.jecnaapi.data.canteen.DayMenu
 import me.tomasan7.jecnaapi.data.canteen.Menu
 import me.tomasan7.jecnaapi.data.canteen.MenuItem
-import me.tomasan7.jecnaapi.data.grade.GradesPage
 import me.tomasan7.jecnaapi.parser.ParseException
-import me.tomasan7.jecnaapi.util.emptyMutableLinkedList
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.time.LocalDate

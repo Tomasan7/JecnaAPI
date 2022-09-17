@@ -7,6 +7,7 @@ import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import me.tomasan7.jecnaapi.web.JecnaWebClient.AuthenticationException
 
 /**
  * Http client for accessing the Ječná web.

@@ -1,8 +1,8 @@
 package me.tomasan7.jecnaapi.parser.parsers
 
-import me.tomasan7.jecnaapi.util.Name
 import me.tomasan7.jecnaapi.data.grade.*
 import me.tomasan7.jecnaapi.parser.ParseException
+import me.tomasan7.jecnaapi.util.Name
 import me.tomasan7.jecnaapi.util.emptyMutableLinkedList
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element

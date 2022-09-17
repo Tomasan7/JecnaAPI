@@ -1,7 +1,7 @@
 package me.tomasan7.jecnaapi.data.grade
 
 import me.tomasan7.jecnaapi.util.emptyMutableLinkedList
-import java.util.LinkedList
+import java.util.*
 
 /**
  * @property subjectPartsGrades Map of all [grades][Grade] for each subject part. (eg. "Teorie, Cvičení")

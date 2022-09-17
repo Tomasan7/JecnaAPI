@@ -1,5 +1,6 @@
 package me.tomasan7.jecnaapi.web
 
+import me.tomasan7.jecnaapi.web.Auth.Companion.decrypt
 import java.nio.charset.StandardCharsets
 
 /**

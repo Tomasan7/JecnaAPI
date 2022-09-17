@@ -4,7 +4,6 @@ import me.tomasan7.jecnaapi.util.emptyMutableLinkedList
 import me.tomasan7.jecnaapi.util.setAll
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import kotlin.Comparator
 
 /**
  * Whole timetable containing [LessonSpot]s for each day and their [LessonPeriod]s.
