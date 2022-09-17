@@ -5,10 +5,20 @@ import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.cookies.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
+import io.ktor.client.statement.*
 import io.ktor.http.*
 
-class JecnaWebClient : AuthWebClient
+/**
+ * Http client for accessing the Ječná web.
+ *
+ * @param autoLogin Saves provided [Auth] on each [login] call.
+ * Then when calling [query] and it fails because of [AuthenticationException], [login] is called with the saved [Auth] and the request retried.
+ * If it fails again, [AuthenticationException] is thrown.
+ */
+class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
 {
+    private var lastLoginAuth: Auth? = null
+
     private val cookieStorage = AcceptAllCookiesStorage()
 
     private val httpClient = HttpClient(CIO) {
@@ -21,6 +31,8 @@ class JecnaWebClient : AuthWebClient
 
     override suspend fun login(auth: Auth): Boolean
     {
+        lastLoginAuth = auth
+
         /* The user login request. */
         return httpClient.submitForm(
             block = newRequestBuilder("/user/login"),
@@ -37,7 +49,32 @@ class JecnaWebClient : AuthWebClient
         return query(LOGIN_TEST_ENDPOINT).status != HttpStatusCode.Found
     }
 
-    override suspend fun query(path: String, parameters: Parameters?) = httpClient.get(newRequestBuilder(path, parameters))
+    /**
+     * @throws AuthenticationException When the query fails because user is not authenticated.
+     */
+    override suspend fun query(path: String, parameters: Parameters?): HttpResponse {
+        val response = httpClient.get(newRequestBuilder(path, parameters))
+
+        /* No redirect to login. */
+        val locationHeader = response.headers[HttpHeaders.Location] ?: return response
+
+        /* Redirect to login. */
+        if (locationHeader.startsWith("$ENDPOINT/user/need-login"))
+        {
+            if (autoLogin && lastLoginAuth != null)
+            {
+                /* Login and retry request. */
+                login(lastLoginAuth!!)
+                /* Throws AuthenticationException if the request still fails because of Auth. */
+                return query(path, parameters)
+            }
+            else
+                /* AutoLogin not provided, throwing exception.  */
+                throw AuthenticationException()
+        }
+
+        return response
+    }
 
     /**
      * Returns a function modifying [HttpRequestBuilder] used by Ktor HttpClient.
@@ -69,6 +106,8 @@ class JecnaWebClient : AuthWebClient
             header(HttpHeaders.UserAgent, "Mozilla/5.0")
         }
     }
+
+    class AuthenticationException : RuntimeException("User has to be authenticated to perform this action.")
 
     companion object
     {
