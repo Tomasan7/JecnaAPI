@@ -4,6 +4,7 @@ import me.tomasan7.jecnaapi.data.attendance.Attendance
 import me.tomasan7.jecnaapi.data.attendance.AttendanceType
 import me.tomasan7.jecnaapi.data.attendance.AttendancesPage
 import me.tomasan7.jecnaapi.parser.ParseException
+import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.util.emptyMutableLinkedList
 import me.tomasan7.jecnaapi.util.month
 import me.tomasan7.jecnaapi.util.toSchoolYear
@@ -98,7 +99,7 @@ object HtmlAttendancesPageParserImpl : HtmlAttendancesPageParser
         val monthOfYear = date.split(".")[1].toInt()
 
         /* Finds the current calendar year from the year dropdown selection. */
-        val schoolYear = document.selectFirst("#schoolYearId > option")!!.text().toSchoolYear()
+        val schoolYear = document.selectFirst("#schoolYearId > option[selected]")?.text()?.toSchoolYear() ?: SchoolYear.current()
         val resultYear = schoolYear.getCalendarYear(monthOfYear.month()).toLong()
 
         return LocalDate.parse(date, DateTimeFormatterBuilder()
