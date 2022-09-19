@@ -39,6 +39,9 @@ tasks {
     compileTestKotlin {
         kotlinOptions.jvmTarget = "1.8"
     }
+    publishToMavenLocal {
+        dependsOn(test)
+    }
 }
 
 // https://github.com/Kotlin/dokka/blob/master/examples/gradle/dokka-library-publishing-example/build.gradle.kts
