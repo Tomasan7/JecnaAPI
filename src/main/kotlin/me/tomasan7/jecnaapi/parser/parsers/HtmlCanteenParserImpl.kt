@@ -1,6 +1,7 @@
 package me.tomasan7.jecnaapi.parser.parsers
 
 import me.tomasan7.jecnaapi.data.canteen.DayMenu
+import me.tomasan7.jecnaapi.data.canteen.ItemDescription
 import me.tomasan7.jecnaapi.data.canteen.Menu
 import me.tomasan7.jecnaapi.data.canteen.MenuItem
 import me.tomasan7.jecnaapi.parser.ParseException
@@ -55,10 +56,11 @@ object HtmlCanteenParserImpl : HtmlCanteenParser
         val eles = menuItemEle.select("> span > span")
         val orderButtonEle = eles[0].selectFirst("a")
         val foodNameEle = eles[1]
-        val foodName = foodNameEle.ownText()
+        val itemDescriptionStr = foodNameEle.ownText()
+        val itemDescriptionMatch = ITEM_DESCRIPTION_REGEX.find(itemDescriptionStr) ?: return null
 
-        if (foodName.isBlank())
-            return null
+        val itemDescriptionSoup = itemDescriptionMatch.groups[ItemDescriptionRegexGroups.SOUP]!!.value
+        val itemDescriptionRest = itemDescriptionMatch.groups[ItemDescriptionRegexGroups.REST]!!.value
 
         val allergensText = foodNameEle.selectFirst(".textGrey")!!.text()
         val allergens = allergensText.substring(1, allergensText.length - 1).split(", ")
@@ -66,7 +68,7 @@ object HtmlCanteenParserImpl : HtmlCanteenParser
         val onclick = orderButtonEle!!.attr("onclick")
 
         return MenuItem(
-            foodName,
+            ItemDescription(itemDescriptionSoup, itemDescriptionRest),
             allergens,
             /* Substring to remove the " Kč" suffix. */
             orderButtonEle.selectFirst(".important.warning.button-link-align")!!.text().let { it.substring(0, it.length - 3) }.toFloat(),
@@ -77,4 +79,18 @@ object HtmlCanteenParserImpl : HtmlCanteenParser
     }
 
     private val DATE_FORMAT: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+
+    /**
+     * Matches the whole item description. Match contains capturing groups listed in [ItemDescriptionRegexGroups].
+     */
+    private val ITEM_DESCRIPTION_REGEX = Regex("""^(?<${ItemDescriptionRegexGroups.SOUP}>.*?) , ;(?<${ItemDescriptionRegexGroups.REST}>.*)""")
+
+    /**
+     * Contains names of regex capture groups inside [ITEM_DESCRIPTION_REGEX].
+     */
+    object ItemDescriptionRegexGroups
+    {
+        const val SOUP = "soup"
+        const val REST = "rest"
+    }
 }
