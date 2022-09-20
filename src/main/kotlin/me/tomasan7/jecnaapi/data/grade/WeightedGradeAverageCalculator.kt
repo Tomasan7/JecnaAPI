@@ -5,7 +5,7 @@ package me.tomasan7.jecnaapi.data.grade
  */
 object WeightedGradeAverageCalculator : GradeAverageCalculator
 {
-    override fun calculate(grades: Grades): Float
+    override fun calculate(grades: Grades): Float?
     {
         var weightedSum = 0
         var weightSum = 0
@@ -25,6 +25,9 @@ object WeightedGradeAverageCalculator : GradeAverageCalculator
                 weightSum += weight
             }
         }
+
+        if (weightedSum == 0 || weightSum == 0)
+            return null
 
         return weightedSum.toFloat() / weightSum
     }
