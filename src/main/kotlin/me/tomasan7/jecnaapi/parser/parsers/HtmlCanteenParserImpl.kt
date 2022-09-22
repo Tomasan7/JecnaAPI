@@ -36,6 +36,12 @@ object HtmlCanteenParserImpl : HtmlCanteenParser
         }
     }
 
+    override fun parseDayMenu(html: String): DayMenu
+    {
+        val element = Jsoup.parse(html).selectFirst("body")!!
+        return parseDayMenu(element)
+    }
+
     private fun parseDayMenu(dayMenuEle: Element): DayMenu
     {
         val dayStr = dayMenuEle.selectFirst("div > strong > .important")!!.text()
@@ -68,13 +74,13 @@ object HtmlCanteenParserImpl : HtmlCanteenParser
         val onclick = orderButtonEle!!.attr("onclick")
 
         return MenuItem(
-            ItemDescription(itemDescriptionSoup, itemDescriptionRest),
-            allergens,
+            description = ItemDescription(itemDescriptionSoup, itemDescriptionRest),
+            allergens = allergens,
             /* Substring to remove the " Kč" suffix. */
-            orderButtonEle.selectFirst(".important.warning.button-link-align")!!.text().let { it.substring(0, it.length - 3) }.toFloat(),
-            orderButtonEle.hasClass("enabled"),
-            orderButtonEle.hasClass("ordered"),
-            onclick.substring(90, onclick.length - 29)
+            price = orderButtonEle.selectFirst(".important.warning.button-link-align")!!.text().let { it.substring(0, it.length - 3) }.toFloat(),
+            enabled = !orderButtonEle.hasClass("disabled"),
+            ordered = orderButtonEle.hasClass("ordered"),
+            orderURL = onclick.substring(90, onclick.length - 29)
         )
     }
 

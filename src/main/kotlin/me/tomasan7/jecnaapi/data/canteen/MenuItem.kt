@@ -6,5 +6,5 @@ data class MenuItem(
     val price: Float,
     val enabled: Boolean,
     val ordered: Boolean,
-    val orderURL: String
+    var orderURL: String
 )
