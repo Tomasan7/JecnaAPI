@@ -1,9 +1,6 @@
 package me.tomasan7.jecnaapi.parser.parsers
 
-import me.tomasan7.jecnaapi.data.canteen.DayMenu
-import me.tomasan7.jecnaapi.data.canteen.ItemDescription
-import me.tomasan7.jecnaapi.data.canteen.Menu
-import me.tomasan7.jecnaapi.data.canteen.MenuItem
+import me.tomasan7.jecnaapi.data.canteen.*
 import me.tomasan7.jecnaapi.parser.ParseException
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
@@ -12,7 +9,7 @@ import java.time.format.DateTimeFormatter
 
 object HtmlCanteenParserImpl : HtmlCanteenParser
 {
-    override fun parse(html: String): Menu
+    override fun parse(html: String): MenuPage
     {
         try
         {
@@ -28,7 +25,10 @@ object HtmlCanteenParserImpl : HtmlCanteenParser
                 menuBuilder.addDayMenu(dayMenu.day, dayMenu)
             }
 
-            return menuBuilder.build()
+            /* Substring to remove the " Kč" suffix. */
+            val credit = document.selectFirst("#Kredit")!!.text().replace(',', '.').let { it.substring(0, it.length - 3) }.toFloat()
+
+            return MenuPage(menuBuilder.build(), credit)
         }
         catch (e: Exception)
         {

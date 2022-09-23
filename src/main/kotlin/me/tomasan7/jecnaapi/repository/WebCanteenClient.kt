@@ -1,8 +1,8 @@
 package me.tomasan7.jecnaapi.repository
 
 import io.ktor.http.*
-import me.tomasan7.jecnaapi.data.canteen.Menu
 import me.tomasan7.jecnaapi.data.canteen.MenuItem
+import me.tomasan7.jecnaapi.data.canteen.MenuPage
 import me.tomasan7.jecnaapi.parser.parsers.HtmlCanteenParser
 import me.tomasan7.jecnaapi.web.ICanteenWebClient
 import org.jsoup.Jsoup
@@ -14,7 +14,7 @@ class WebCanteenClient(
     private val canteenParser: HtmlCanteenParser
 ) : CanteenClient
 {
-    override suspend fun getMenu() = canteenParser.parse(webClient.queryStringBody(WEB_PATH))
+    override suspend fun getMenuPage() = canteenParser.parse(webClient.queryStringBody(WEB_PATH))
 
     override suspend fun order(menuItem: MenuItem): Boolean
     {
@@ -27,7 +27,7 @@ class WebCanteenClient(
         return response.startsWith('<')
     }
 
-    override suspend fun order(menuItem: MenuItem, dayMenuDay: LocalDate, menu: Menu): Boolean
+    override suspend fun order(menuItem: MenuItem, dayMenuDay: LocalDate, menuPage: MenuPage): Boolean
     {
         if (!menuItem.enabled)
             return false
@@ -43,11 +43,16 @@ class WebCanteenClient(
         val newDayMenuHtml = webClient.queryStringBody("/faces/secured/db/dbJidelnicekOnDayView.jsp", Parameters.build { append("day", dayStr) })
         val newDayMenu = canteenParser.parseDayMenu(newDayMenuHtml)
 
-        menu.replace(dayMenuDay, newDayMenu)
+        menuPage.menu.replace(dayMenuDay, newDayMenu)
 
-        val newTime = Jsoup.parse(response).selectFirst("#time")?.text()?.toLong() ?: return false
+        val responseDocument = Jsoup.parse(response)
+        val newTime = responseDocument.selectFirst("#time")?.text()?.toLong() ?: return false
+        /* Substring to remove the " Kč" suffix. */
+        val newCredit = responseDocument.selectFirst("#Kredit")!!.text().replace(',', '.').let { it.substring(0, it.length - 3) }.toFloat()
 
-        val menuItems = menu.dayMenus.flatMap { it.items }
+        menuPage.credit = newCredit
+
+        val menuItems = menuPage.menu.dayMenus.flatMap { it.items }
 
         /* Updating time on all menu items. */
         menuItems.forEach {
