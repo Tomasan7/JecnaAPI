@@ -23,7 +23,7 @@ interface CanteenClient
 
     /**
      * Orders the [menuItem].
-     * And updates whole [Menu] accordingly.
+     * And updates whole [MenuPage] accordingly.
      *
      * @param menuItem The [MenuItem] to order.
      * @param dayMenuDay the [day][LocalDate] of the [DayMenu] the [menuItem] is in.
@@ -34,7 +34,7 @@ interface CanteenClient
 
     /**
      * Orders the [menuItem].
-     * And updates whole [Menu] accordingly.
+     * And updates whole [MenuPage] accordingly.
      * Use [order] with [dayMenuDay][LocalDate] parameter, if you have it.
      * This function finds the [day][LocalDate] of the [menuItem] in the [menuPage].
      *
@@ -47,7 +47,7 @@ interface CanteenClient
 
     /**
      * Orders the [menuItem].
-     * And updates whole [Menu] accordingly.
+     * And updates whole [MenuPage] accordingly.
      * Use [order] with [dayMenuDay][LocalDate] parameter, if you have it.
      * This function finds the [day][LocalDate] of the [menuItem] in the [menuPage].
      *
