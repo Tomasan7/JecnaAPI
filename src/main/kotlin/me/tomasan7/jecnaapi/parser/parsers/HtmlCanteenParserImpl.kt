@@ -26,7 +26,7 @@ object HtmlCanteenParserImpl : HtmlCanteenParser
             }
 
             /* Substring to remove the " Kč" suffix. */
-            val credit = document.selectFirst("#Kredit")!!.text().replace(',', '.').let { it.substring(0, it.length - 3) }.toFloat()
+            val credit = document.selectFirst("#Kredit")!!.text().replace(',', '.').replace(" ", "").let { it.substring(0, it.length - 3) }.toFloat()
 
             return MenuPage(menuBuilder.build(), credit)
         }

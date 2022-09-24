@@ -48,7 +48,7 @@ class WebCanteenClient(
         val responseDocument = Jsoup.parse(response)
         val newTime = responseDocument.selectFirst("#time")?.text()?.toLong() ?: return false
         /* Substring to remove the " Kč" suffix. */
-        val newCredit = responseDocument.selectFirst("#Kredit")!!.text().replace(',', '.').let { it.substring(0, it.length - 3) }.toFloat()
+        val newCredit = responseDocument.selectFirst("#Kredit")!!.text().replace(',', '.').replace(" ", "").let { it.substring(0, it.length - 3) }.toFloat()
 
         menuPage.credit = newCredit
 
