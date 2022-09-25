@@ -5,7 +5,6 @@ import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.cookies.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
-import io.ktor.client.statement.*
 import io.ktor.http.*
 import me.tomasan7.jecnaapi.web.JecnaWebClient.Companion.ENDPOINT
 import org.jsoup.Jsoup
@@ -25,15 +24,16 @@ class ICanteenWebClient : AuthWebClient
     override suspend fun login(auth: Auth): Boolean
     {
         val loginFormHtmlResponse = queryStringBody("/faces/login.jsp")
-        val loginPostResponse = httpClient.post(newRequestBuilder("/j_spring_security_check", Parameters.build {
-            append("j_username", auth.username)
-            append("j_password", auth.password)
-            append("terminal", false.toString())
-            append("type", "web")
-            append("_csrf", Jsoup.parse(loginFormHtmlResponse)
-                    .select("#signup-user-col > div > form > ul > li > input[name=_csrf]").attr("value"))
-            append("targetUrl", "/faces/secured/main.jsp?terminal=false&status=true&printer=&keyboard=")
-        }))
+        val loginPostResponse = httpClient.submitForm(
+            block = newRequestBuilder("/j_spring_security_check"),
+            formParameters = Parameters.build {
+                append("j_username", auth.username)
+                append("j_password", auth.password)
+                append("terminal", false.toString())
+                append("type", "web")
+                append("_csrf", Jsoup.parse(loginFormHtmlResponse).select("#signup-user-col > div > form > ul > li > input[name=_csrf]").attr("value"))
+                append("targetUrl", "/faces/secured/main.jsp?terminal=false&status=true&printer=&keyboard=")
+            })
 
         /* If the login was unsuccessful, the web redirects back to the login page. */
         return !loginPostResponse.headers[HttpHeaders.Location]!!.startsWith("/faces/login.jsp")
@@ -41,17 +41,18 @@ class ICanteenWebClient : AuthWebClient
 
     override suspend fun logout()
     {
-        val mainPage = queryStringBody("/faces/secured/mobile.jsp")
+        val logoutFormHtmlResponse = queryStringBody("/faces/secured/mobile.jsp")
         httpClient.submitForm(
             block = newRequestBuilder("/j_spring_security_logout"),
             formParameters = Parameters.build {
-                append("_csrf", Jsoup.parse(mainPage).selectFirst("#logout > input[name=_csrf]")!!.attr("value"))
+                append("_csrf", Jsoup.parse(logoutFormHtmlResponse).selectFirst("#logout > input[name=_csrf]")!!.attr("value"))
             })
     }
 
     override suspend fun isLoggedIn() = !query("/faces/secured/main.jsp").headers.contains("Location")
 
-    override suspend fun query(path: String, parameters: Parameters?) = httpClient.get(newRequestBuilder(path, parameters))
+    override suspend fun query(path: String, parameters: Parameters?) =
+        httpClient.get(newRequestBuilder(path, parameters))
 
     /**
      * Returns a function modifying [HttpRequestBuilder] used by Ktor HttpClient.
