@@ -5,6 +5,7 @@ import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.cookies.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
+import io.ktor.client.statement.*
 import io.ktor.http.*
 import me.tomasan7.jecnaapi.web.JecnaWebClient.Companion.ENDPOINT
 import org.jsoup.Jsoup
@@ -41,11 +42,18 @@ class ICanteenWebClient : AuthWebClient
 
     override suspend fun logout()
     {
-        val logoutFormHtmlResponse = queryStringBody("/faces/secured/mobile.jsp")
+        val logoutFormResponse = query("/faces/secured/mobile.jsp")
+
+        val locationHeader = logoutFormResponse.headers[HttpHeaders.Location]
+
+        /* Is true when no one is logged in. */
+        if (locationHeader != null && locationHeader.endsWith("/faces/login.jsp"))
+            return
+
         httpClient.submitForm(
             block = newRequestBuilder("/j_spring_security_logout"),
             formParameters = Parameters.build {
-                append("_csrf", Jsoup.parse(logoutFormHtmlResponse).selectFirst("#logout > input[name=_csrf]")!!.attr("value"))
+                append("_csrf", Jsoup.parse(logoutFormResponse.bodyAsText()).selectFirst("#logout > input[name=_csrf]")!!.attr("value"))
             })
     }
 
