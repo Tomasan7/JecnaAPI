@@ -79,7 +79,8 @@ object HtmlCanteenParserImpl : HtmlCanteenParser
             /* Substring to remove the " Kč" suffix. */
             price = orderButtonEle.selectFirst(".important.warning.button-link-align")!!.text().let { it.substring(0, it.length - 3) }.toFloat(),
             enabled = !orderButtonEle.hasClass("disabled"),
-            ordered = orderButtonEle.hasClass("ordered"),
+            /* Query for the check mark in the button ele. */
+            ordered = orderButtonEle.selectFirst(".fa.fa-check.fa-2x") != null,
             orderURL = onclick.substring(90, onclick.length - 29)
         )
     }
