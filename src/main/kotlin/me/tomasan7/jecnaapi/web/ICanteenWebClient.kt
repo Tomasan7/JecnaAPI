@@ -4,6 +4,8 @@ import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.cookies.*
 import io.ktor.client.request.*
+import io.ktor.client.request.forms.*
+import io.ktor.client.statement.*
 import io.ktor.http.*
 import me.tomasan7.jecnaapi.web.JecnaWebClient.Companion.ENDPOINT
 import org.jsoup.Jsoup
@@ -35,6 +37,16 @@ class ICanteenWebClient : AuthWebClient
 
         /* If the login was unsuccessful, the web redirects back to the login page. */
         return !loginPostResponse.headers[HttpHeaders.Location]!!.startsWith("/faces/login.jsp")
+    }
+
+    override suspend fun logout()
+    {
+        val mainPage = queryStringBody("/faces/secured/mobile.jsp")
+        httpClient.submitForm(
+            block = newRequestBuilder("/j_spring_security_logout"),
+            formParameters = Parameters.build {
+                append("_csrf", Jsoup.parse(mainPage).selectFirst("#logout > input[name=_csrf]")!!.attr("value"))
+            })
     }
 
     override suspend fun isLoggedIn() = !query("/faces/secured/main.jsp").headers.contains("Location")

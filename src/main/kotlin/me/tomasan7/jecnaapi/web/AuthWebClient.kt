@@ -25,6 +25,13 @@ interface AuthWebClient
     suspend fun login(username: String, password: String) = login(Auth(username, password))
 
     /**
+     * Logouts the client.
+     *
+     * @see [login]
+     */
+    suspend fun logout()
+
+    /**
      * @return Whether this [client][AuthWebClient] is logged in or not.
      */
     suspend fun isLoggedIn(): Boolean

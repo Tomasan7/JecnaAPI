@@ -44,6 +44,11 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
             }).status == HttpStatusCode.Found
     }
 
+    override suspend fun logout()
+    {
+        query("/user/logout")
+    }
+
     override suspend fun isLoggedIn(): Boolean
     {
         /* Responds with status 302 (redirect to login page) when user is not logged in. */
