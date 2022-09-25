@@ -148,7 +148,8 @@ object HtmlGradesPageParserImpl : HtmlGradesPageParser
 
         val detailsMatch = GRADE_DETAILS_REGEX.find(titleAttr) ?: return Grade(valueChar, small)
 
-        val description = detailsMatch.groups[GradeDetailsRegexGroups.DESCRIPTION]!!.value
+        /* Just description is optional, the rest is always there. */
+        val description = detailsMatch.groups[GradeDetailsRegexGroups.DESCRIPTION]?.value
         val receiveDate = detailsMatch.groups[GradeDetailsRegexGroups.DATE]!!.value.let { LocalDate.parse(it, RECEIVE_DATE_FORMATTER) }
         val teacher = detailsMatch.groups[GradeDetailsRegexGroups.TEACHER]!!.value
 
@@ -179,7 +180,7 @@ object HtmlGradesPageParserImpl : HtmlGradesPageParser
      * Matches the [Grade]'s HTML element title. Match contains capturing groups listed in [GradeDetailsRegexGroups].
      */
     private val GRADE_DETAILS_REGEX = Regex("""
-     (?<${GradeDetailsRegexGroups.DESCRIPTION}>.*) \((?<${GradeDetailsRegexGroups.DATE}>\d{2}\.\d{2}\.\d{4}), (?<${GradeDetailsRegexGroups.TEACHER}>.*)\)${'$'}"""
+     (?:(?<${GradeDetailsRegexGroups.DESCRIPTION}>.*) )?\((?<${GradeDetailsRegexGroups.DATE}>\d{2}\.\d{2}\.\d{4}), (?<${GradeDetailsRegexGroups.TEACHER}>.*)\)${'$'}"""
                                                     .trimIndent(), RegexOption.DOT_MATCHES_ALL)
 
     /**
