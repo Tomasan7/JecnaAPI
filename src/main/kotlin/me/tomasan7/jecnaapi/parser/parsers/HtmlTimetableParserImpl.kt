@@ -192,7 +192,7 @@ object HtmlTimetableParserImpl : HtmlTimetablePageParser
         return Lesson(
             subjectName = subjectName,
             teacherName = teacherName,
-            classroom = lessonEle.selectFirst(".room")!!.text(),
+            classroom = lessonEle.selectFirst(".room")?.text(),
             group = group
         )
     }
