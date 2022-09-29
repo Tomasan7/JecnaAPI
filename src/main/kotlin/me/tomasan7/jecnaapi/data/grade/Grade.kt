@@ -14,7 +14,7 @@ data class Grade(
     val value: Int,
     val small: Boolean,
     val subject: Name? = null,
-    val teacher: String? = null,
+    val teacher: Name? = null,
     val description: String? = null,
     val receiveDate: LocalDate? = null
 )
@@ -27,7 +27,7 @@ data class Grade(
     constructor(valueChar: Char,
                 small: Boolean,
                 subject: Name? = null,
-                teacher: String? = null,
+                teacher: Name? = null,
                 description: String? = null,
                 receiveDate: LocalDate? = null) : this(valueCharToValue(valueChar),
                                                        small,

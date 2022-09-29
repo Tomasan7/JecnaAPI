@@ -143,6 +143,8 @@ object HtmlGradesPageParserImpl : HtmlGradesPageParser
         val valueChar = gradeEle.selectFirst(".value")!!.text()[0]
         val small = gradeEle.classNames().contains("scoreSmall")
 
+        val teacherShort = gradeEle.selectFirst(".employee")!!.text()
+
         /* The title attribute of the grade element, which contains all the details. (description, date and teacher) */
         val titleAttr = gradeEle.attr("title")
 
@@ -151,9 +153,11 @@ object HtmlGradesPageParserImpl : HtmlGradesPageParser
         /* Just description is optional, the rest is always there. */
         val description = detailsMatch.groups[GradeDetailsRegexGroups.DESCRIPTION]?.value
         val receiveDate = detailsMatch.groups[GradeDetailsRegexGroups.DATE]!!.value.let { LocalDate.parse(it, RECEIVE_DATE_FORMATTER) }
-        val teacher = detailsMatch.groups[GradeDetailsRegexGroups.TEACHER]!!.value
+        val teacherFull = detailsMatch.groups[GradeDetailsRegexGroups.TEACHER]!!.value
 
-        return Grade(valueChar, small, subjectName, teacher, description, receiveDate)
+        val teacherName = Name(teacherFull, teacherShort)
+
+        return Grade(valueChar, small, subjectName, teacherName, description, receiveDate)
     }
 
     /**
