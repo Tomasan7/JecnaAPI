@@ -197,16 +197,16 @@ object HtmlTimetableParserImpl : HtmlTimetablePageParser
         )
     }
 
-    val PERIOD_OPTION_DATE_FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern("d.M.yyyy")
+    private val PERIOD_OPTION_DATE_FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern("d.M.yyyy")
 
     /**
      * Matches " Od" or " do " in the period option text in the dropdown selection.
      */
-    val PERIOD_OPTION_DATES_SPLIT_REGEX = Regex("""[Oo]d | do """)
+    private val PERIOD_OPTION_DATES_SPLIT_REGEX = Regex("""[Oo]d | do """)
 
     /**
      * Matches the text before the dates in the [TimetablePage.PeriodOption] text.
      * Eg. "Mimořádný rozvrh" or "Dočasný rozvrh".
      */
-    val PERIOD_OPTION_HEADER_REGEX = Regex("""^.*?(?= -)""")
+    private val PERIOD_OPTION_HEADER_REGEX = Regex("""^.*?(?= -)""")
 }
