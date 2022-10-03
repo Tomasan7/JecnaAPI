@@ -4,6 +4,7 @@ import io.ktor.http.*
 import me.tomasan7.jecnaapi.data.canteen.MenuItem
 import me.tomasan7.jecnaapi.data.canteen.MenuPage
 import me.tomasan7.jecnaapi.parser.parsers.HtmlCanteenParser
+import me.tomasan7.jecnaapi.parser.parsers.HtmlCanteenParserImpl
 import me.tomasan7.jecnaapi.web.ICanteenWebClient
 import org.jsoup.Jsoup
 import java.time.LocalDate
@@ -11,7 +12,7 @@ import java.time.format.DateTimeFormatter
 
 class WebCanteenClient(
     private val webClient: ICanteenWebClient,
-    private val canteenParser: HtmlCanteenParser
+    private val canteenParser: HtmlCanteenParser = HtmlCanteenParserImpl
 ) : CanteenClient
 {
     override suspend fun getMenuPage() = canteenParser.parse(webClient.queryStringBody(WEB_PATH))

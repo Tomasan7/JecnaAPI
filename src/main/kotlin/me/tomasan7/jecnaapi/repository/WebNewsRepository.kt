@@ -1,6 +1,7 @@
 package me.tomasan7.jecnaapi.repository
 
 import me.tomasan7.jecnaapi.parser.parsers.HtmlNewsPageParser
+import me.tomasan7.jecnaapi.parser.parsers.HtmlNewsPageParserImpl
 import me.tomasan7.jecnaapi.web.JecnaWebClient
 
 /**
@@ -8,7 +9,7 @@ import me.tomasan7.jecnaapi.web.JecnaWebClient
  */
 class WebNewsRepository(
     private val webClient: JecnaWebClient,
-    private val newsParser: HtmlNewsPageParser
+    private val newsParser: HtmlNewsPageParser = HtmlNewsPageParserImpl
 ) : NewsRepository
 {
     override suspend fun queryNewsPage() = newsParser.parse(webClient.queryStringBody(WEB_PATH))
