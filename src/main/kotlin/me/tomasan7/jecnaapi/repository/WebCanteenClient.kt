@@ -11,10 +11,11 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class WebCanteenClient(
-    private val webClient: ICanteenWebClient,
-    private val canteenParser: HtmlCanteenParser = HtmlCanteenParserImpl
+    private val webClient: ICanteenWebClient
 ) : CanteenClient
 {
+    private val canteenParser: HtmlCanteenParser = HtmlCanteenParserImpl
+
     override suspend fun getMenuPage() = canteenParser.parse(webClient.queryStringBody(WEB_PATH))
 
     override suspend fun order(menuItem: MenuItem): Boolean
