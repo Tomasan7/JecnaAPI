@@ -16,6 +16,9 @@ class JecnaClient
 {
     private val webClient = JecnaWebClient()
 
+    /**
+     * The [Auth], that was last used in a call to [login]. (also the one with two parameters)
+     */
     val lastLoginAuth: Auth?
         get() = webClient.lastLoginAuth
 
