@@ -16,7 +16,7 @@ import java.util.*
 /**
  * Parses correct HTML to [NewsPage] instance.
  */
-object HtmlNewsPageParserImpl : HtmlNewsPageParser
+internal object HtmlNewsPageParserImpl : HtmlNewsPageParser
 {
     override fun parse(html: String): NewsPage
     {

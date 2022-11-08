@@ -7,7 +7,7 @@ import me.tomasan7.jecnaapi.data.canteen.MenuPage
 /**
  * Is responsible for parsing HTML source code in [String] to [Menu] instance.
  */
-interface HtmlCanteenParser
+internal interface HtmlCanteenParser
 {
     /**
      * @throws me.tomasan7.jecnaapi.parser.ParseException When the HTML source isn't in correct format.

@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter
  * Parses correct HTML to [GradesPage] instance.
  * **Beware: The grade's subject is taken from the table's row name, not from the grade's page!**
  */
-object HtmlGradesPageParserImpl : HtmlGradesPageParser
+internal object HtmlGradesPageParserImpl : HtmlGradesPageParser
 {
     override fun parse(html: String): GradesPage
     {
