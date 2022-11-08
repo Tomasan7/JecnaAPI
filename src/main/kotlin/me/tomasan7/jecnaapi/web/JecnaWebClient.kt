@@ -18,7 +18,8 @@ import me.tomasan7.jecnaapi.web.JecnaWebClient.AuthenticationException
  */
 class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
 {
-    private var lastLoginAuth: Auth? = null
+    var lastLoginAuth: Auth? = null
+        private set
 
     private val cookieStorage = AcceptAllCookiesStorage()
 
