@@ -59,7 +59,8 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
     /**
      * @throws AuthenticationException When the query fails because user is not authenticated.
      */
-    override suspend fun query(path: String, parameters: Parameters?): HttpResponse {
+    override suspend fun query(path: String, parameters: Parameters?): HttpResponse
+    {
         val response = httpClient.get(newRequestBuilder(path, parameters))
 
         /* No redirect to login. */
