@@ -7,7 +7,6 @@ import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import me.tomasan7.jecnaapi.web.JecnaWebClient.AuthenticationException
 
 /**
  * Http client for accessing the Ječná web.
@@ -18,7 +17,8 @@ import me.tomasan7.jecnaapi.web.JecnaWebClient.AuthenticationException
  */
 class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
 {
-    private var lastLoginAuth: Auth? = null
+    var lastLoginAuth: Auth? = null
+        private set
 
     private val cookieStorage = AcceptAllCookiesStorage()
 
@@ -55,10 +55,8 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
         return query(LOGIN_TEST_ENDPOINT).status != HttpStatusCode.Found
     }
 
-    /**
-     * @throws AuthenticationException When the query fails because user is not authenticated.
-     */
-    override suspend fun query(path: String, parameters: Parameters?): HttpResponse {
+    override suspend fun query(path: String, parameters: Parameters?): HttpResponse
+    {
         val response = httpClient.get(newRequestBuilder(path, parameters))
 
         /* No redirect to login. */
@@ -112,8 +110,6 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
             header(HttpHeaders.UserAgent, "Mozilla/5.0")
         }
     }
-
-    class AuthenticationException : RuntimeException("User has to be authenticated to perform this action.")
 
     companion object
     {

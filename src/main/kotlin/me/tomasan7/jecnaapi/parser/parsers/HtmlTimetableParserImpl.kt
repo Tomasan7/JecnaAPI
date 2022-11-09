@@ -18,7 +18,7 @@ import java.time.format.DateTimeFormatter
 /**
  * Parses correct HTML to [TimetablePage] instance.
  */
-object HtmlTimetableParserImpl : HtmlTimetablePageParser
+internal object HtmlTimetableParserImpl : HtmlTimetablePageParser
 {
     override fun parse(html: String): TimetablePage
     {

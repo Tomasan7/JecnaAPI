@@ -7,7 +7,7 @@ import org.jsoup.nodes.Element
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-object HtmlCanteenParserImpl : HtmlCanteenParser
+internal object HtmlCanteenParserImpl : HtmlCanteenParser
 {
     override fun parse(html: String): MenuPage
     {

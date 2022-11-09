@@ -20,7 +20,7 @@ import java.time.temporal.ChronoField
 /**
  * Parses correct HTML to [AttendancesPage] instance.
  */
-object HtmlAttendancesPageParserImpl : HtmlAttendancesPageParser
+internal object HtmlAttendancesPageParserImpl : HtmlAttendancesPageParser
 {
     override fun parse(html: String): AttendancesPage
     {

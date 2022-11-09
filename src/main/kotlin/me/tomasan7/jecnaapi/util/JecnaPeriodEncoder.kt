@@ -6,7 +6,7 @@ import java.time.Month
 /**
  * Converts periods/times from Kotlin objects to a Jecna URL query parameters.
  */
-object JecnaPeriodEncoder
+internal object JecnaPeriodEncoder
 {
     /**
      * School year, whose id is `0`.
