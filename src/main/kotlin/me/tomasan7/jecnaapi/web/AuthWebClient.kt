@@ -37,7 +37,7 @@ interface AuthWebClient
     suspend fun isLoggedIn(): Boolean
 
     /**
-     * Makes a request to the provided path. Response may vary depending on whether user is logged in or not.
+     * Makes a request to the provided path. Responses may vary depending on whether user is logged in or not.
      *
      * @param path Relative path from the domain. Must include first slash.
      * @param parameters HTTP parameters, which will be sent URL encoded.
@@ -46,7 +46,7 @@ interface AuthWebClient
     suspend fun queryStringBody(path: String, parameters: Parameters? = null) = query(path, parameters).body<String>()
 
     /**
-     * Makes a request to the provided path. Response may vary depending on whether user is logged in or not.
+     * Makes a request to the provided path. Responses may vary depending on whether user is logged in or not.
      *
      * @param path Relative path from the domain. Must include first slash.
      * @param parameters HTTP parameters, which will be sent URL encoded.

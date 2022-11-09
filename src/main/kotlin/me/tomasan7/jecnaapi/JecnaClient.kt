@@ -74,7 +74,7 @@ class JecnaClient(autoLogin: Boolean = false)
     suspend fun getAttendancesPage() = attendancesPageParser.parse(queryStringBody(PageWebPath.attendances))
 
     /**
-     * Makes a request to the provided path. Response may vary depending on whether user is logged in or not.
+     * Makes a request to the provided path. Responses may vary depending on whether user is logged in or not.
      *
      * @param path Relative path from the domain. Must include first slash.
      * @param parameters HTTP parameters, which will be sent URL encoded.
@@ -83,7 +83,7 @@ class JecnaClient(autoLogin: Boolean = false)
     suspend fun query(path: String, parameters: Parameters? = null) = webClient.query(path, parameters)
 
     /**
-     * Makes a request to the provided path. Response may vary depending on whether user is logged in or not.
+     * Makes a request to the provided path. Responses may vary depending on whether user is logged in or not.
      *
      * @param path Relative path from the domain. Must include first slash.
      * @param parameters HTTP parameters, which will be sent URL encoded.
