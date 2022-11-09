@@ -1,5 +1,6 @@
 package me.tomasan7.jecnaapi
 
+import io.ktor.client.statement.*
 import io.ktor.http.*
 import me.tomasan7.jecnaapi.data.timetable.TimetablePage
 import me.tomasan7.jecnaapi.parser.parsers.*
@@ -62,6 +63,24 @@ class JecnaClient
         }))
 
     suspend fun getAttendancesPage() = attendancesPageParser.parse(webClient.queryStringBody(PageWebPath.attendances))
+
+    /**
+     * Makes a request to the provided path. May vary depending on whether user is logged in or not.
+     *
+     * @param path Relative path from the domain. Must include first slash.
+     * @param parameters HTTP parameters, which will be sent URL encoded.
+     * @return The [HttpResponse].
+     */
+    suspend fun query(path: String, parameters: Parameters? = null) = webClient.query(path, parameters)
+
+    /**
+     * Makes a request to the provided path. May vary depending on whether user is logged in or not.
+     *
+     * @param path Relative path from the domain. Must include first slash.
+     * @param parameters HTTP parameters, which will be sent URL encoded.
+     * @return The [HttpResponse].
+     */
+    suspend fun queryStringBody(path: String, parameters: Parameters? = null) = webClient.queryStringBody(path, parameters)
 
     companion object
     {
