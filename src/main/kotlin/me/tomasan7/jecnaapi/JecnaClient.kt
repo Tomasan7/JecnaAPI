@@ -10,12 +10,21 @@ import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.util.SchoolYearHalf
 import me.tomasan7.jecnaapi.web.Auth
 import me.tomasan7.jecnaapi.web.JecnaWebClient
+import me.tomasan7.jecnaapi.web.JecnaWebClient.AuthenticationException
 import me.tomasan7.jecnaapi.web.append
 import java.time.Month
 
-class JecnaClient
+/**
+ * A client to access Jecna Web data.
+ *
+ * @param autoLogin Saves provided [Auth] on each [login] call.
+ * Then when calling [query] and it fails because of [AuthenticationException], [login] is called with the saved [Auth] and the request retried.
+ */
+class JecnaClient(autoLogin: Boolean = false)
 {
-    private val webClient = JecnaWebClient()
+    private val webClient = JecnaWebClient(autoLogin)
+
+    var autoLogin: Boolean by webClient::autoLogin
 
     /**
      * The [Auth], that was last used in a call to [login]. (also the one with two parameters)
