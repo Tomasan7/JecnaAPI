@@ -36,33 +36,33 @@ class JecnaClient
 
     suspend fun isLoggedIn() = webClient.isLoggedIn()
 
-    suspend fun getNewsPage() = newsPageParser.parse(webClient.queryStringBody(PageWebPath.news))
+    suspend fun getNewsPage() = newsPageParser.parse(queryStringBody(PageWebPath.news))
 
     suspend fun getGradesPage(schoolYear: SchoolYear, schoolYearHalf: SchoolYearHalf) =
-        gradesPageParser.parse(webClient.queryStringBody(PageWebPath.grades, Parameters.build {
+        gradesPageParser.parse(queryStringBody(PageWebPath.grades, Parameters.build {
             append(schoolYear.jecnaEncode())
             append(schoolYearHalf.jecnaEncode())
         }))
 
-    suspend fun getGradesPage() = gradesPageParser.parse(webClient.queryStringBody(PageWebPath.grades))
+    suspend fun getGradesPage() = gradesPageParser.parse(queryStringBody(PageWebPath.grades))
 
     suspend fun getTimetablePage(schoolYear: SchoolYear, periodOption: TimetablePage.PeriodOption? = null) =
-        timetablePageParser.parse(webClient.queryStringBody(PageWebPath.timetable, Parameters.build {
+        timetablePageParser.parse(queryStringBody(PageWebPath.timetable, Parameters.build {
             append(schoolYear.jecnaEncode())
             periodOption?.let { append(it.jecnaEncode()) }
         }))
 
-    suspend fun getTimetablePage() = timetablePageParser.parse(webClient.queryStringBody(PageWebPath.timetable))
+    suspend fun getTimetablePage() = timetablePageParser.parse(queryStringBody(PageWebPath.timetable))
 
     suspend fun getAttendancesPage(schoolYear: SchoolYear, month: Month) = getAttendancesPage(schoolYear, month.value)
 
     suspend fun getAttendancesPage(schoolYear: SchoolYear, month: Int) =
-        attendancesPageParser.parse(webClient.queryStringBody(PageWebPath.attendances, Parameters.build {
+        attendancesPageParser.parse(queryStringBody(PageWebPath.attendances, Parameters.build {
             append(schoolYear.jecnaEncode())
             append(JecnaPeriodEncoder.encodeMonth(month))
         }))
 
-    suspend fun getAttendancesPage() = attendancesPageParser.parse(webClient.queryStringBody(PageWebPath.attendances))
+    suspend fun getAttendancesPage() = attendancesPageParser.parse(queryStringBody(PageWebPath.attendances))
 
     /**
      * Makes a request to the provided path. May vary depending on whether user is logged in or not.
