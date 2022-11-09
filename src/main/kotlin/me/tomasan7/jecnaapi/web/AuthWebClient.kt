@@ -41,6 +41,7 @@ interface AuthWebClient
      *
      * @param path Relative path from the domain. Must include first slash.
      * @param parameters HTTP parameters, which will be sent URL encoded.
+     * @throws AuthenticationException When the query fails because user is not authenticated.
      * @return The [HttpResponse].
      */
     suspend fun query(path: String, parameters: Parameters? = null): HttpResponse
@@ -50,6 +51,7 @@ interface AuthWebClient
      *
      * @param path Relative path from the domain. Must include first slash.
      * @param parameters HTTP parameters, which will be sent URL encoded.
+     * @throws AuthenticationException When the query fails because user is not authenticated.
      * @return The HTTP response's body as [String].
      */
     suspend fun queryStringBody(path: String, parameters: Parameters? = null) = query(path, parameters).body<String>()

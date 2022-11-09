@@ -78,6 +78,7 @@ class JecnaClient(autoLogin: Boolean = false)
      *
      * @param path Relative path from the domain. Must include first slash.
      * @param parameters HTTP parameters, which will be sent URL encoded.
+     * @throws AuthenticationException When the query fails because user is not authenticated.
      * @return The [HttpResponse].
      */
     suspend fun query(path: String, parameters: Parameters? = null) = webClient.query(path, parameters)
@@ -87,6 +88,7 @@ class JecnaClient(autoLogin: Boolean = false)
      *
      * @param path Relative path from the domain. Must include first slash.
      * @param parameters HTTP parameters, which will be sent URL encoded.
+     * @throws AuthenticationException When the query fails because user is not authenticated.
      * @return The [HttpResponse].
      */
     suspend fun queryStringBody(path: String, parameters: Parameters? = null) = webClient.queryStringBody(path, parameters)

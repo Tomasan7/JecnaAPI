@@ -55,9 +55,6 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
         return query(LOGIN_TEST_ENDPOINT).status != HttpStatusCode.Found
     }
 
-    /**
-     * @throws AuthenticationException When the query fails because user is not authenticated.
-     */
     override suspend fun query(path: String, parameters: Parameters?): HttpResponse
     {
         val response = httpClient.get(newRequestBuilder(path, parameters))
