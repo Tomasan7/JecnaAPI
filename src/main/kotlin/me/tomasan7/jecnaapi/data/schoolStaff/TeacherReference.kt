@@ -26,4 +26,6 @@ class TeacherReference(
         result = 31 * result + tag.hashCode()
         return result
     }
+
+    override fun toString() = "$fullName ($tag)"
 }
