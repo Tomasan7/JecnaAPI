@@ -36,6 +36,7 @@ class JecnaClient(autoLogin: Boolean = false)
     private val gradesPageParser: HtmlGradesPageParser = HtmlGradesPageParserImpl
     private val timetablePageParser: HtmlTimetablePageParser = HtmlTimetableParserImpl
     private val attendancesPageParser: HtmlAttendancesPageParser = HtmlAttendancesPageParserImpl
+    private val teachersPageParser: HtmlTeachersPageParser = HtmlTeachersPageParserImpl
 
     suspend fun login(username: String, password: String) = login(Auth(username, password))
 
@@ -73,6 +74,8 @@ class JecnaClient(autoLogin: Boolean = false)
 
     suspend fun getAttendancesPage() = attendancesPageParser.parse(queryStringBody(PageWebPath.attendances))
 
+    suspend fun getTeachersPage() = teachersPageParser.parse(queryStringBody(PageWebPath.teachers))
+
     /**
      * Makes a request to the provided path. Responses may vary depending on whether user is logged in or not.
      *
@@ -101,6 +104,7 @@ class JecnaClient(autoLogin: Boolean = false)
             const val grades = "/score/student"
             const val timetable = "/timetable/class"
             const val attendances = "/absence/passing-student"
+            const val teachers = "/ucitel"
         }
     }
 }
