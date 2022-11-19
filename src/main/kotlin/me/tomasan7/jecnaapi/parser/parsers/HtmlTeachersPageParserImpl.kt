@@ -5,7 +5,7 @@ import me.tomasan7.jecnaapi.data.schoolStaff.TeachersPage
 import me.tomasan7.jecnaapi.parser.ParseException
 import org.jsoup.Jsoup
 
-object HtmlTeachersPageParserImpl : HtmlTeachersPageParser
+internal object HtmlTeachersPageParserImpl : HtmlTeachersPageParser
 {
     override fun parse(html: String): TeachersPage
     {

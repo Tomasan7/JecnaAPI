@@ -6,7 +6,7 @@ import me.tomasan7.jecnaapi.data.schoolStaff.TeachersPage
 /**
  * Is responsible for parsing HTML source code in [String] to [TeachersPage] instance.
  */
-interface HtmlTeachersPageParser
+internal interface HtmlTeachersPageParser
 {
     /**
      * @throws ParseException When the HTML source isn't in correct format.
