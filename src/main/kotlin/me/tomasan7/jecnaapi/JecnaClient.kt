@@ -2,6 +2,7 @@ package me.tomasan7.jecnaapi
 
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import me.tomasan7.jecnaapi.data.schoolStaff.TeacherReference
 import me.tomasan7.jecnaapi.data.timetable.TimetablePage
 import me.tomasan7.jecnaapi.parser.parsers.*
 import me.tomasan7.jecnaapi.util.JecnaPeriodEncoder
@@ -37,6 +38,7 @@ class JecnaClient(autoLogin: Boolean = false)
     private val timetablePageParser: HtmlTimetablePageParser = HtmlTimetableParserImpl
     private val attendancesPageParser: HtmlAttendancesPageParser = HtmlAttendancesPageParserImpl
     private val teachersPageParser: HtmlTeachersPageParser = HtmlTeachersPageParserImpl
+    private val teacherParser: HtmlTeacherParser = HtmlTeacherParserImpl
 
     suspend fun login(username: String, password: String) = login(Auth(username, password))
 
@@ -75,6 +77,10 @@ class JecnaClient(autoLogin: Boolean = false)
     suspend fun getAttendancesPage() = attendancesPageParser.parse(queryStringBody(PageWebPath.attendances))
 
     suspend fun getTeachersPage() = teachersPageParser.parse(queryStringBody(PageWebPath.teachers))
+
+    suspend fun getTeacher(teacherTag: String) = teacherParser.parse(queryStringBody("${PageWebPath.teachers}/$teacherTag"))
+
+    suspend fun getTeacher(teacherReference: TeacherReference) = teacherParser.parse(queryStringBody("${PageWebPath.teachers}/${teacherReference.tag}"))
 
     /**
      * Makes a request to the provided path. Responses may vary depending on whether user is logged in or not.
