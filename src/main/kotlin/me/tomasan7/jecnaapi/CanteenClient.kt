@@ -77,18 +77,15 @@ class CanteenClient
 
         menuPage.menu.replace(dayMenuDay, newDayMenu)
 
-        val responseDocument = Jsoup.parse(response)
-        val newTime = responseDocument.selectFirst("#time")?.text()?.toLong() ?: return false
-        /* Substring to remove the " Kč" suffix. */
-        val newCredit = responseDocument.selectFirst("#Kredit")!!.text().replace(',', '.').replace(" ", "").let { it.substring(0, it.length - 3) }.toFloat()
+       val orderResponse = canteenParser.parseOrderResponse(response)
 
-        menuPage.credit = newCredit
+        menuPage.credit = orderResponse.credit
 
         val menuItems = menuPage.menu.dayMenus.flatMap { it.items }
 
         /* Updating time on all menu items. */
         menuItems.forEach {
-            it.orderURL = it.orderURL.replace(TIME_REPLACE_REGEX, newTime.toString())
+            it.orderURL = it.orderURL.replace(TIME_REPLACE_REGEX, orderResponse.time.toString())
         }
 
         return true

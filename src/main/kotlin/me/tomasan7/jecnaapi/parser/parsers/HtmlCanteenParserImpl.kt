@@ -25,8 +25,7 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
                 menuBuilder.addDayMenu(dayMenu.day, dayMenu)
             }
 
-            /* Substring to remove the " Kč" suffix. */
-            val credit = document.selectFirst("#Kredit")!!.text().replace(',', '.').replace(" ", "").let { it.substring(0, it.length - 3) }.toFloat()
+           val credit = parseCredit(document.selectFirst("#Kredit")!!.text())
 
             return MenuPage(menuBuilder.build(), credit)
         }
@@ -40,6 +39,27 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
     {
         val element = Jsoup.parse(html).selectFirst("body")!!
         return parseDayMenu(element)
+    }
+
+    override fun parseOrderResponse(orderResponseHtml: String): OrderResponse
+    {
+        val document = Jsoup.parse(orderResponseHtml)
+
+        val creditEle = document.selectFirst("#Kredit")!!
+        val timeEle = document.selectFirst("#time")!!
+
+        val credit = parseCredit(creditEle.text())
+        val time = timeEle.text().toLong()
+
+        return OrderResponse(credit, time)
+    }
+
+    private fun parseCredit(creditEleText: String): Float
+    {
+        /* Substring to remove the " Kč" suffix. */
+        /* Comma replaced with dot to make conversion to float possible. */
+        /* Space removed, because there might be one between the thousand and so digits. */
+        return creditEleText.let { it.substring(0, it.length - 3) }.replace(',', '.').replace(" ", "").toFloat()
     }
 
     private fun parseDayMenu(dayMenuEle: Element): DayMenu

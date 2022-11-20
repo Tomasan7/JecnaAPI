@@ -3,6 +3,7 @@ package me.tomasan7.jecnaapi.parser.parsers
 import me.tomasan7.jecnaapi.data.canteen.DayMenu
 import me.tomasan7.jecnaapi.data.canteen.Menu
 import me.tomasan7.jecnaapi.data.canteen.MenuPage
+import me.tomasan7.jecnaapi.data.canteen.OrderResponse
 import me.tomasan7.jecnaapi.parser.ParseException
 
 /**
@@ -16,4 +17,6 @@ internal interface HtmlCanteenParser
     fun parse(html: String): MenuPage
 
     fun parseDayMenu(html: String): DayMenu
+
+    fun parseOrderResponse(orderResponseHtml: String): OrderResponse
 }
