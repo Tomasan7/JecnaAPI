@@ -83,18 +83,25 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
         val orderButtonEle = eles[0].selectFirst("a")
         val foodNameEle = eles[1]
         val itemDescriptionStr = foodNameEle.ownText()
-        val itemDescriptionMatch = ITEM_DESCRIPTION_REGEX.find(itemDescriptionStr) ?: return null
 
-        val itemDescriptionSoup = itemDescriptionMatch.groups[ItemDescriptionRegexGroups.SOUP]!!.value
-        val itemDescriptionRest = itemDescriptionMatch.groups[ItemDescriptionRegexGroups.REST]!!.value
+        val itemDescription = if (itemDescriptionStr.isNotEmpty())
+        {
+            val itemDescriptionMatch = ITEM_DESCRIPTION_REGEX.find(itemDescriptionStr)
 
-        val allergensText = foodNameEle.selectFirst(".textGrey")!!.text()
-        val allergens = allergensText.substring(1, allergensText.length - 1).split(", ")
+            val soup = itemDescriptionMatch?.groups?.get(ItemDescriptionRegexGroups.SOUP)?.value
+            val rest = itemDescriptionMatch?.groups?.get(ItemDescriptionRegexGroups.REST)?.value
+
+            rest?.let { ItemDescription(soup, it) }
+        }
+        else null
+
+        val allergensText = foodNameEle.selectFirst(".textGrey")?.text()
+        val allergens = allergensText?.substring(1, allergensText.length - 1)?.split(", ")
 
         val onclick = orderButtonEle!!.attr("onclick")
 
         return MenuItem(
-            description = ItemDescription(itemDescriptionSoup, itemDescriptionRest),
+            description = itemDescription,
             allergens = allergens,
             /* Substring to remove the " Kč" suffix. */
             price = orderButtonEle.selectFirst(".important.warning.button-link-align")!!.text().let { it.substring(0, it.length - 3) }.toFloat(),
