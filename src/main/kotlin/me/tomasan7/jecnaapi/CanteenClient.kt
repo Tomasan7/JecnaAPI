@@ -94,12 +94,10 @@ class CanteenClient
     /**
      * Orders the [menuItem].
      * And updates whole [MenuPage] accordingly.
-     * Use [order] with [dayMenuDay][LocalDate] parameter, if you have it.
-     * This function finds the [day][LocalDate] of the [menuItem] in the [menuPage].
      *
      * @param menuItem The [MenuItem] to order.
-     * @param dayMenu The [DayMenu] the [menuItem] is in.
-     * @param menuPage The [MenuPage] the [menuItem] is in.
+     * @param dayMenuDay the [day][LocalDate] of the [DayMenu] the [menuItem] is in.
+     * @param menuPage The [Menu] the [menuItem] is in.
      * @return Whether the order was successful or not.
      */
     suspend fun order(menuItem: MenuItem, dayMenu: DayMenu, menuPage: MenuPage) = order(menuItem, dayMenu.day, menuPage)
