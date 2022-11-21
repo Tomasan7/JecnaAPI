@@ -81,6 +81,11 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
     }
 
     /**
+     * Closes the HTTP client.
+     */
+    fun close() = httpClient.close()
+
+    /**
      * Returns a function modifying [HttpRequestBuilder] used by Ktor HttpClient.
      * Sets the url relative to [ENDPOINT].
      * Adds a User-Agent header, since the web requires it. (uses Mozilla/5.0)

@@ -102,6 +102,11 @@ class JecnaClient(autoLogin: Boolean = false)
      */
     suspend fun queryStringBody(path: String, parameters: Parameters? = null) = webClient.queryStringBody(path, parameters)
 
+    /**
+     * Closes the HTTP client.
+     */
+    fun close() = webClient.close()
+
     companion object
     {
         private object PageWebPath
