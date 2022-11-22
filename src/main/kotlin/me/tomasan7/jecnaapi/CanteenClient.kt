@@ -44,7 +44,7 @@ class CanteenClient
         if (!menuItem.enabled)
             return false
 
-        val response = webClient.queryStringBody("/faces/secured/" + menuItem.orderURL)
+        val response = webClient.queryStringBody("/faces/secured/" + menuItem.orderPath)
 
         /* Server responds with HTML, when everything went right or JSON error if something went wrong. */
         return response.startsWith('<')
@@ -64,7 +64,7 @@ class CanteenClient
         if (!menuItem.enabled)
             return false
 
-        val response = webClient.queryStringBody("/faces/secured/" + menuItem.orderURL)
+        val response = webClient.queryStringBody("/faces/secured/" + menuItem.orderPath)
 
         /* Server responds with HTML, when everything went right or JSON error if something went wrong. */
         if (!response.startsWith('<'))
@@ -85,7 +85,7 @@ class CanteenClient
 
         /* Updating time on all menu items. */
         menuItems.forEach {
-            it.orderURL = it.orderURL.replace(TIME_REPLACE_REGEX, orderResponse.time.toString())
+            it.orderPath = it.orderPath.replace(TIME_REPLACE_REGEX, orderResponse.time.toString())
         }
 
         return true

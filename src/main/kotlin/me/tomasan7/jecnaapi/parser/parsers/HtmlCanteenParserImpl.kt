@@ -108,7 +108,7 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
             enabled = !orderButtonEle.hasClass("disabled"),
             /* Query for the check mark in the button ele. */
             ordered = orderButtonEle.selectFirst(".fa.fa-check.fa-2x") != null,
-            orderURL = onclick.substring(90, onclick.length - 29)
+            orderPath = onclick.substring(90, onclick.length - 29)
         )
     }
 
