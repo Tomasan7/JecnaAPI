@@ -84,9 +84,7 @@ class CanteenClient
         val menuItems = menuPage.menu.dayMenus.flatMap { it.items }
 
         /* Updating time on all menu items. */
-        menuItems.forEach {
-            it.orderPath = it.orderPath.replace(TIME_REPLACE_REGEX, orderResponse.time.toString())
-        }
+        menuItems.forEach { it.updateTime(orderResponse.time) }
 
         return true
     }
@@ -135,7 +133,6 @@ class CanteenClient
     companion object
     {
         private const val WEB_PATH = "/faces/secured/mobile.jsp"
-        private val TIME_REPLACE_REGEX = Regex("""(?<=time=)\d{13}""")
         private val DAY_MENU_DAY_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd")
     }
 }
