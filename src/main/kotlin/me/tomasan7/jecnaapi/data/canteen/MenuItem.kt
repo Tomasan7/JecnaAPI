@@ -6,15 +6,17 @@ data class MenuItem(
     val price: Float,
     val enabled: Boolean,
     val ordered: Boolean,
-    var orderPath: String
+    var orderPath: String,
+    var putOnExchangePath: String? = null,
 )
 {
     /**
-     * Updates the [orderPath] with the new [time].
+     * Updates the [orderPath] and possibly [putOnExchangePath] with the new [time].
      */
     fun updateTime(time: Long)
     {
        orderPath = orderPath.replace(TIME_REPLACE_REGEX, time.toString())
+       putOnExchangePath = putOnExchangePath?.replace(TIME_REPLACE_REGEX, time.toString())
     }
 
     companion object
