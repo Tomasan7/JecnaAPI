@@ -100,7 +100,7 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
 
         val onclick = orderButtonEle!!.attr("onclick")
 
-        val putOnExchangeButtonEle = menuItemEle.getElementById("icons14712")?.selectFirst("a")
+        val putOnExchangeButtonEle = menuItemEle.selectFirst(".icons")?.allElements?.find { it.ownText() in arrayOf("do burzy >", "z burzy <") }
         val putOnExchangeOnClick = putOnExchangeButtonEle?.attr("onclick")
 
         return MenuItem(
