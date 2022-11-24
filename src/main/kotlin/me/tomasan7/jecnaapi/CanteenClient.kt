@@ -60,19 +60,7 @@ class CanteenClient
         if (!menuItem.enabled)
             return false
 
-        val response = webClient.queryStringBody("/faces/secured/" + menuItem.orderPath)
-
-        /* Same check as on the official website. */
-        if (response.contains("error"))
-            return false
-
-        requestAndUpdateDayMenu(dayMenuDay, menuPage.menu)
-
-        val orderResponse = canteenParser.parseOrderResponse(response)
-
-        menuPage.update(orderResponse)
-
-        return true
+        return ajaxOrder(menuItem.orderPath, dayMenuDay, menuPage)
     }
 
     /**
@@ -100,19 +88,37 @@ class CanteenClient
 
     suspend fun putOnExchange(menuItem: MenuItem, dayMenuDay: LocalDate, menuPage: MenuPage): Boolean
     {
-        val response = webClient.queryStringBody("/faces/secured/" + menuItem.putOnExchangePath)
+        return menuItem.putOnExchangePath?.let { ajaxOrder(it, dayMenuDay, menuPage) } ?: false
+    }
 
-        /* Same check as on the official website. */
-        if (response.contains("error"))
+    suspend fun putOnExchange(menuItem: MenuItem, menuPage: MenuPage) = putOnExchange(menuItem, menuPage.menu.dayMenus.find { it.items.contains(menuItem) }!!.day, menuPage)
+
+    private suspend fun ajaxOrder(url: String, dayMenuDay: LocalDate, menuPage: MenuPage): Boolean
+    {
+        val ajaxOrderRequestResult = ajaxOrderRequest(url)
+
+        if (!ajaxOrderRequestResult.first)
             return false
 
         requestAndUpdateDayMenu(dayMenuDay, menuPage.menu)
 
-        val orderResponse = canteenParser.parseOrderResponse(response)
+        val responseStr = ajaxOrderRequestResult.second
+        val orderResponse = canteenParser.parseOrderResponse(responseStr)
 
         menuPage.update(orderResponse)
 
         return true
+    }
+
+    private suspend fun ajaxOrderRequest(url: String): Pair<Boolean, String>
+    {
+        val response = webClient.queryStringBody("/faces/secured/$url")
+
+        /* Same check as on the official website. */
+        if (response.contains("error"))
+            return false to response
+
+        return true to response
     }
 
     private fun MenuPage.update(orderResponse: OrderResponse)
