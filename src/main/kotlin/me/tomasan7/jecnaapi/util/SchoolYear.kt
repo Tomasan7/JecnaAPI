@@ -8,11 +8,6 @@ data class SchoolYear(val firstCalendarYear: Int): Comparable<SchoolYear>
     val secondCalendarYear: Int = firstCalendarYear + 1
 
     /**
-     * Constructs a [SchoolYear] this [date] belongs to. Considers the summer holidays as a part of the ending [SchoolYear].
-     */
-    constructor(date: LocalDate) : this(if (date.month in FIRST_CALENDAR_YEAR_MONTHS) date.year else date.year - 1)
-
-    /**
      * Returns a calendar year the [month] is in based on this [SchoolYear]. Considers the summer holidays as a part of the ending [SchoolYear].
      */
     fun getCalendarYear(month: Month): Int
@@ -89,6 +84,11 @@ data class SchoolYear(val firstCalendarYear: Int): Comparable<SchoolYear>
         private val SECOND_CALENDAR_YEAR_MONTHS_VALUES = SECOND_CALENDAR_YEAR_MONTHS.mapToIntRange { it.value }
 
         /**
+         * Constructs a [SchoolYear] this [date] belongs to. Considers the summer holidays as a part of the ending [SchoolYear].
+         */
+        fun fromDate(date: LocalDate) = SchoolYear(if (date.month in FIRST_CALENDAR_YEAR_MONTHS) date.year else date.year - 1)
+
+        /**
          * @return [SchoolYear] represented in [String]. The [string] **must be in `"firstYear/secondYear"` format.** (eg. 2021/2022)
          * @throws IllegalArgumentException When the [string] [String] is not in the correct format.
          * @see [SchoolYear.toString]
@@ -119,7 +119,7 @@ data class SchoolYear(val firstCalendarYear: Int): Comparable<SchoolYear>
         /**
          * @return Current [SchoolYear].
          */
-        fun current() = SchoolYear(LocalDate.now())
+        fun current() = fromDate(LocalDate.now())
     }
 }
 
@@ -139,4 +139,4 @@ fun String.toSchoolYear() = SchoolYear.fromString(this)
 /**
  * Constructs a [SchoolYear] this [LocalDate] belongs to. Considers the summer holidays as a part of the ending [SchoolYear].
  */
-fun LocalDate.schoolYear() = SchoolYear(this)
+fun LocalDate.schoolYear() = SchoolYear.fromDate(this)
