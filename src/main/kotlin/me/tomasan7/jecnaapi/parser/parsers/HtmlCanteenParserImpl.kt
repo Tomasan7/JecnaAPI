@@ -111,8 +111,8 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
             enabled = !orderButtonEle.hasClass("disabled"),
             /* Query for the check mark in the button ele. */
             ordered = orderButtonEle.selectFirst(".fa.fa-check.fa-2x") != null,
-            orderPath = onclick.substring(90, onclick.length - 29), // ajaxOrder(this, 'db/dbProcessOrder.jsp?time=undefined&token=Ceuj7lb%2F636XwFz%2FkMJ0t5Ou7RBy9Xz5pPvdubjucP4%3D&ID=1&day=2022-11-25&type=make&week=&terminal=false&keyboard=false&printer=false', '2022-11-25', 'enabled');
-            putOnExchangePath = putOnExchangeOnClick?.substring(17, putOnExchangeOnClick.length - 28) // ajaxOrder(this, 'db/dbProcessOrder.jsp?time=undefined&token=fSngzd9eNbXDfIwk7VRTSQ4dzDQ2dwzLy8eaR5HG%2FG4%3D&ID=5029311&day=2022-11-23&type=minusburza&week=&terminal=false&keyboard=false&printer=false', '2022-11-23', 'allowed');
+            orderPath = onclick.substring(90, onclick.length - 29),
+            putOnExchangePath = putOnExchangeOnClick?.substring(17, putOnExchangeOnClick.length - 28)
         )
     }
 
