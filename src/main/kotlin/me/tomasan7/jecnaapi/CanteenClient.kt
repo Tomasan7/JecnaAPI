@@ -62,25 +62,15 @@ class CanteenClient
 
         val response = webClient.queryStringBody("/faces/secured/" + menuItem.orderPath)
 
-        /* Server responds with HTML, when everything went right or JSON error if something went wrong. */
-        if (!response.startsWith('<'))
+        /* Same check as on the official website. */
+        if (response.contains("error"))
             return false
 
-        /* The day string formatted as the server accepts it. */
-        val dayStr = dayMenuDay.format(DAY_MENU_DAY_FORMATTER)
-        val newDayMenuHtml = webClient.queryStringBody("/faces/secured/db/dbJidelnicekOnDayView.jsp", Parameters.build { append("day", dayStr) })
-        val newDayMenu = canteenParser.parseDayMenu(newDayMenuHtml)
+        requestAndUpdateDayMenu(dayMenuDay, menuPage.menu)
 
-        menuPage.menu.replace(dayMenuDay, newDayMenu)
+        val orderResponse = canteenParser.parseOrderResponse(response)
 
-       val orderResponse = canteenParser.parseOrderResponse(response)
-
-        menuPage.credit = orderResponse.credit
-
-        val menuItems = menuPage.menu.dayMenus.flatMap { it.items }
-
-        /* Updating time on all menu items. */
-        menuItems.forEach { it.updateTime(orderResponse.time) }
+        menuPage.update(orderResponse)
 
         return true
     }
@@ -112,27 +102,40 @@ class CanteenClient
     {
         val response = webClient.queryStringBody("/faces/secured/" + menuItem.putOnExchangePath)
 
-        /* Server responds with HTML, when everything went right or JSON error if something went wrong. */
-        if (!response.startsWith('<'))
+        /* Same check as on the official website. */
+        if (response.contains("error"))
             return false
 
-        /* The day string formatted as the server accepts it. */
-        val dayStr = dayMenuDay.format(DAY_MENU_DAY_FORMATTER)
-        val newDayMenuHtml = webClient.queryStringBody("/faces/secured/db/dbJidelnicekOnDayView.jsp", Parameters.build { append("day", dayStr) })
-        val newDayMenu = canteenParser.parseDayMenu(newDayMenuHtml)
-
-        menuPage.menu.replace(dayMenuDay, newDayMenu)
+        requestAndUpdateDayMenu(dayMenuDay, menuPage.menu)
 
         val orderResponse = canteenParser.parseOrderResponse(response)
 
-        menuPage.credit = orderResponse.credit
-
-        val menuItems = menuPage.menu.dayMenus.flatMap { it.items }
-
-        /* Updating time on all menu items. */
-        menuItems.forEach { it.updateTime(orderResponse.time) }
+        menuPage.update(orderResponse)
 
         return true
+    }
+
+    private fun MenuPage.update(orderResponse: OrderResponse)
+    {
+        credit = orderResponse.credit
+
+        /* Updating time on all menu items. */
+        menu.dayMenus.forEach { dayMenu -> dayMenu.items.forEach{ it.updateTime(orderResponse.time) } }
+    }
+
+    private suspend fun requestAndUpdateDayMenu(dayMenuDay: LocalDate, menu: Menu)
+    {
+        val newDayMenu = requestDayMenu(dayMenuDay)
+        menu.replace(dayMenuDay, newDayMenu)
+    }
+
+    private suspend fun requestDayMenu(dayMenuDay: LocalDate): DayMenu
+    {
+        /* The day string formatted as the server accepts it. */
+        val dayStr = dayMenuDay.format(DAY_MENU_DAY_FORMATTER)
+        val newDayMenuHtml = webClient.queryStringBody("/faces/secured/db/dbJidelnicekOnDayView.jsp", Parameters.build { append("day", dayStr) })
+
+        return canteenParser.parseDayMenu(newDayMenuHtml)
     }
 
     /**
