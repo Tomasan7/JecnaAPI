@@ -50,6 +50,8 @@ internal object HtmlNewsPageParserImpl : HtmlNewsPageParser
         for (articleFileEle in articleFileEles)
             articleFiles.add(parseArticleFile(articleFileEle))
 
+        val images = parseImages(articleEle)
+
         val footer = articleEle.selectFirst(".footer")!!.text()
         val footerSplit = footer.split(" | ")
         val dateStr = footerSplit[0]
@@ -57,7 +59,7 @@ internal object HtmlNewsPageParserImpl : HtmlNewsPageParser
         val schoolOnly = footerSplit.size == 3
         val date = LocalDate.parse(dateStr, DATE_FORMATTER)
 
-        return Article(title, content, htmlContent, date, author, schoolOnly, articleFiles)
+        return Article(title, content, htmlContent, date, author, schoolOnly, articleFiles, images)
     }
 
     private fun parseArticleFile(articleFileEle: Element): ArticleFile
@@ -66,6 +68,17 @@ internal object HtmlNewsPageParserImpl : HtmlNewsPageParser
         val downloadPath = articleFileEle.attr("href")
 
         return ArticleFile(label, downloadPath)
+    }
+
+    private fun parseImages(articleEle: Element): List<String>
+    {
+        val imageEles = articleEle.select(".images").flatMap { it.select("a") }
+        val images = emptyMutableLinkedList<String>()
+
+        for (imageEle in imageEles)
+            images.add(imageEle.attr("href"))
+
+        return images
     }
 
     val DATE_FORMATTER: DateTimeFormatter

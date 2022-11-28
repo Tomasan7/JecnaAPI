@@ -12,5 +12,9 @@ data class Article(
     val date: LocalDate,
     val author: String,
     val schoolOnly: Boolean,
-    val files: List<ArticleFile>
+    val files: List<ArticleFile>,
+    /**
+     * Images as url paths from the root page.
+     */
+    val images: List<String>
 )
