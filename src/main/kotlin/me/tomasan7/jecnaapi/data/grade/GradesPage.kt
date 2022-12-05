@@ -1,6 +1,8 @@
 package me.tomasan7.jecnaapi.data.grade
 
 import me.tomasan7.jecnaapi.util.Name
+import me.tomasan7.jecnaapi.util.SchoolYear
+import me.tomasan7.jecnaapi.util.SchoolYearHalf
 import me.tomasan7.jecnaapi.util.toName
 
 /**
@@ -9,7 +11,9 @@ import me.tomasan7.jecnaapi.util.toName
  */
 class GradesPage private constructor(
     private val subjectsMap: Map<Name, Subject>,
-    val behaviour: Behaviour
+    val behaviour: Behaviour,
+    val selectedSchoolYear: SchoolYear,
+    val selectedSchoolYearHalf: SchoolYearHalf
 )
 {
     /** All subject names. */
@@ -52,6 +56,8 @@ class GradesPage private constructor(
     {
         private val subjects: MutableMap<Name, Subject> = HashMap()
         private lateinit var behaviour: Behaviour
+        private lateinit var selectedSchoolYear: SchoolYear
+        private lateinit var selectedSchoolYearHalf: SchoolYearHalf
 
         /**
          * Adds [Subject].
@@ -69,10 +75,25 @@ class GradesPage private constructor(
             this.behaviour = behaviour
         }
 
+        fun setSelectedSchoolYear(selectedSchoolYear: SchoolYear): Builder
+        {
+            this.selectedSchoolYear = selectedSchoolYear
+            return this
+        }
+
+        fun setSelectedSchoolYearHalf(selectedSchoolYearHalf: SchoolYearHalf): Builder
+        {
+            this.selectedSchoolYearHalf = selectedSchoolYearHalf
+            return this
+        }
+
         fun build(): GradesPage
         {
             check(::behaviour.isInitialized) { "Behaviour has not been set." }
-            return GradesPage(subjects, behaviour)
+            check(::selectedSchoolYear.isInitialized) { "Selected school year has not been set." }
+            check(::selectedSchoolYearHalf.isInitialized) { "Selected school year half has not been set." }
+
+            return GradesPage(subjects, behaviour, selectedSchoolYear, selectedSchoolYearHalf)
         }
     }
 

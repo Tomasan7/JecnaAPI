@@ -1,5 +1,6 @@
 package me.tomasan7.jecnaapi.data.timetable
 
+import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.util.emptyMutableLinkedList
 import me.tomasan7.jecnaapi.util.setAll
 import java.time.LocalDate
@@ -10,7 +11,8 @@ import java.time.format.DateTimeFormatter
  */
 class TimetablePage private constructor(
     val timetable: Timetable,
-    val periodOptions: List<PeriodOption> = emptyList()
+    val periodOptions: List<PeriodOption> = emptyList(),
+    val selectedSchoolYear: SchoolYear
 )
 {
     override fun toString() = "TimetablePage(timetable=$timetable, periodOptions=$periodOptions)"
@@ -58,6 +60,7 @@ class TimetablePage private constructor(
     {
         var timetableBuilder = Timetable.builder()
         private val periodOptions: MutableList<PeriodOption> = emptyMutableLinkedList()
+        private lateinit var selectedSchoolYear: SchoolYear
 
         /**
          * Sets all the [PeriodOptions][PeriodOption].
@@ -83,8 +86,18 @@ class TimetablePage private constructor(
             return this
         }
 
-        fun build() = TimetablePage(timetableBuilder.build(), periodOptions)
+        fun setSetSelectedSchoolYear(selectedSchoolYear: SchoolYear): Builder
+        {
+            this.selectedSchoolYear = selectedSchoolYear
+            return this
+        }
 
+        fun build(): TimetablePage
+        {
+            check(::selectedSchoolYear.isInitialized) { "selectedSchoolYear has not been se.t" }
+
+            return TimetablePage(timetableBuilder.build(), periodOptions, selectedSchoolYear)
+        }
     }
 
     /**

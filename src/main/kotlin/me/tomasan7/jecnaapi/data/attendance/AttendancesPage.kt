@@ -1,12 +1,18 @@
 package me.tomasan7.jecnaapi.data.attendance
 
+import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.util.emptyMutableLinkedList
 import java.time.LocalDate
+import java.time.Month
 
 /**
  * Holds all [attendances][Attendance] for each day.
  */
-class AttendancesPage private constructor(private val attendances: Map<LocalDate, List<Attendance>>)
+class AttendancesPage private constructor(
+    private val attendances: Map<LocalDate, List<Attendance>>,
+    val selectedSchoolYear: SchoolYear,
+    val selectedMonth: Month
+)
 {
     /**
      * All days, this [AttendancesPage] has data for.
@@ -21,6 +27,8 @@ class AttendancesPage private constructor(private val attendances: Map<LocalDate
     class Builder
     {
         private val attendances: MutableMap<LocalDate, MutableList<Attendance>> = HashMap()
+        private lateinit var selectedSchoolYear: SchoolYear
+        private lateinit var selectedMonth: Month
 
         /**
          * Adds [Attendance].
@@ -44,7 +52,25 @@ class AttendancesPage private constructor(private val attendances: Map<LocalDate
             return this
         }
 
-        fun build() = AttendancesPage(attendances)
+        fun setSelectedSchoolYear(selectedSchoolYear: SchoolYear): Builder
+        {
+            this.selectedSchoolYear = selectedSchoolYear
+            return this
+        }
+
+        fun setSelectedMonth(selectedMonth: Month): Builder
+        {
+            this.selectedMonth = selectedMonth
+            return this
+        }
+
+        fun build(): AttendancesPage
+        {
+            check(::selectedSchoolYear.isInitialized) { "selectedSchoolYear has not been set." }
+            check(::selectedMonth.isInitialized) { "selectedMonth  has not been set." }
+
+            return AttendancesPage(attendances, selectedSchoolYear, selectedMonth)
+        }
     }
 
     companion object

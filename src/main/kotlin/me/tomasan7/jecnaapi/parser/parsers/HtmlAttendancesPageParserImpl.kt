@@ -47,6 +47,9 @@ internal object HtmlAttendancesPageParserImpl : HtmlAttendancesPageParser
                     attendancesPageBuilder.setAttendances(day, attendanceList)
             }
 
+            attendancesPageBuilder.setSelectedSchoolYear(HtmlCommonParser.parseSelectedSchoolYear(document))
+            attendancesPageBuilder.setSelectedMonth(HtmlCommonParser.parseSelectedMonth(document))
+
             return attendancesPageBuilder.build()
         }
         catch (e: Exception)
@@ -107,6 +110,8 @@ internal object HtmlAttendancesPageParserImpl : HtmlAttendancesPageParser
             .parseDefaulting(ChronoField.YEAR, resultYear)
             .toFormatter())
     }
+
+
 
     /**
      * Matches the day date in the first column.

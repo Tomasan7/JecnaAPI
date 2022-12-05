@@ -3,8 +3,10 @@ package me.tomasan7.jecnaapi.parser.parsers
 import me.tomasan7.jecnaapi.data.grade.*
 import me.tomasan7.jecnaapi.parser.ParseException
 import me.tomasan7.jecnaapi.util.Name
+import me.tomasan7.jecnaapi.util.SchoolYearHalf
 import me.tomasan7.jecnaapi.util.emptyMutableLinkedList
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -48,6 +50,9 @@ internal object HtmlGradesPageParserImpl : HtmlGradesPageParser
             }
 
             gradesPageBuilder.setBehaviour(behaviour)
+
+            gradesPageBuilder.setSelectedSchoolYear(HtmlCommonParser.parseSelectedSchoolYear(document))
+            gradesPageBuilder.setSelectedSchoolYearHalf(parseSelectedSchoolYearHalf(document))
 
             return gradesPageBuilder.build()
         }
@@ -173,6 +178,23 @@ internal object HtmlGradesPageParserImpl : HtmlGradesPageParser
         val short = subjectNameMatch.groups[SubjectNameRegexGroups.SHORT]?.value
 
         return Name(full, short)
+    }
+
+    private fun parseSelectedSchoolYearHalf(document: Document): SchoolYearHalf
+    {
+        val selectedSchoolYearHalfEle = HtmlCommonParser.getSelectSelectedValue(document, "schoolYearHalfId")
+
+        return getSchoolYearHalfByName(selectedSchoolYearHalfEle!!.text())
+    }
+
+    private fun getSchoolYearHalfByName(name: String): SchoolYearHalf
+    {
+        return when (name)
+        {
+            "1. pololetí" -> SchoolYearHalf.FIRST
+            "2. pololetí" -> SchoolYearHalf.SECOND
+            else          -> throw IllegalArgumentException("Unknown SchoolYearHalfName: $name")
+        }
     }
 
     /**

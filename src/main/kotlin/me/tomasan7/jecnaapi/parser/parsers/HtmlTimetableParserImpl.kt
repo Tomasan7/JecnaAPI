@@ -63,6 +63,8 @@ internal object HtmlTimetableParserImpl : HtmlTimetablePageParser
                     timetablePageBuilder.timetableBuilder.addLessonSpot(parseDayOfWeek(day)!!, parseLessonSpot(lessonSpotEle))
             }
 
+            timetablePageBuilder.setSetSelectedSchoolYear(HtmlCommonParser.parseSelectedSchoolYear(document))
+
             return timetablePageBuilder.build()
         }
         catch (e: Exception)
