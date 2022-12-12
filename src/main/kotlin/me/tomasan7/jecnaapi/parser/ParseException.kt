@@ -4,7 +4,7 @@ package me.tomasan7.jecnaapi.parser
  * Is thrown, when there's some error during parsing.
  * Could be wrong or incomplete source.
  */
-class ParseException : RuntimeException
+open class ParseException : RuntimeException
 {
     constructor()
 
