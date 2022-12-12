@@ -1,8 +1,10 @@
 package me.tomasan7.jecnaapi.parser.parsers
 
+import me.tomasan7.jecnaapi.parser.HtmlElementNotFoundException
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.util.toSchoolYear
 import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
 import java.text.SimpleDateFormat
 import java.time.Month
 import java.util.*
@@ -45,3 +47,5 @@ object HtmlCommonParser
 
     private val MONTH_DATE_FORMAT = SimpleDateFormat("MMMM", Locale.forLanguageTag("cs-CZ"))
 }
+
+fun Element.selectFirstOrThrow(selector: String) = selectFirst(selector) ?: throw HtmlElementNotFoundException(selector)
