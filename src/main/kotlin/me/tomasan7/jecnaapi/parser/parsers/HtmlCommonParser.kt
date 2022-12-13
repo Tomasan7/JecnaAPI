@@ -48,6 +48,8 @@ object HtmlCommonParser
     private val MONTH_DATE_FORMAT = SimpleDateFormat("MMMM", Locale.forLanguageTag("cs-CZ"))
 }
 
-fun Element.selectFirstOrThrow(selector: String) = selectFirst(selector) ?: throw HtmlElementNotFoundException.bySelector(selector)
+fun Element.selectFirstOrThrow(selector: String) =
+    selectFirst(selector) ?: throw HtmlElementNotFoundException.bySelector(this.cssSelector(), selector)
 
-fun Element.selectFirstOrThrow(selector: String, selectedElementName: String) = selectFirst(selector) ?: throw HtmlElementNotFoundException.byName(selectedElementName)
+fun Element.selectFirstOrThrow(selector: String, selectedElementName: String) =
+    selectFirst(selector) ?: throw HtmlElementNotFoundException.byName(selectedElementName)
