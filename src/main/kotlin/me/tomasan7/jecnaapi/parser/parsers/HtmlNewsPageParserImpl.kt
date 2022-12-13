@@ -80,7 +80,7 @@ internal object HtmlNewsPageParserImpl : HtmlNewsPageParser
         return imageEles.map { it.attr("href") }
     }
 
-    val DATE_FORMATTER: DateTimeFormatter
+    private val DATE_FORMATTER: DateTimeFormatter
         get() = DateTimeFormatterBuilder()
                 .appendPattern("d.MMMM")
                 .parseDefaulting(ChronoField.YEAR, LocalDate.now().year.toLong())
