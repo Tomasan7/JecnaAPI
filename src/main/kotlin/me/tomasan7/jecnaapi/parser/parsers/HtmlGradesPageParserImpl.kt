@@ -1,6 +1,7 @@
 package me.tomasan7.jecnaapi.parser.parsers
 
 import me.tomasan7.jecnaapi.data.grade.*
+import me.tomasan7.jecnaapi.parser.HtmlElementNotFoundException
 import me.tomasan7.jecnaapi.parser.ParseException
 import me.tomasan7.jecnaapi.util.Name
 import me.tomasan7.jecnaapi.util.SchoolYearHalf
@@ -33,16 +34,16 @@ internal object HtmlGradesPageParserImpl : HtmlGradesPageParser
             for (rowEle in rowEles)
             {
                 /* The first column (th; the header column) containing the subject name. */
-                val subjectEle = rowEle.selectFirst("th")!!
+                val subjectEle = rowEle.selectFirstOrThrow("th")
                 /* The second column (td; the first body column) with the main content. (subject parts, grades, commendations) */
-                val mainColumnEle = rowEle.selectFirst("td")!!
+                val mainColumnEle = rowEle.selectFirstOrThrow("td")
 
                 val subjectName = parseSubjectName(subjectEle.text())
 
                 /* If this row's subject name is the behaviour one, parse this row as behaviour. */
                 if (subjectName.full == Behaviour.SUBJECT_NAME)
                     behaviour = Behaviour(parseBehaviourNotifications(mainColumnEle),
-                                          parseFinalGrade(rowEle.findFinalGradeEle()!!, subjectName))
+                                          parseFinalGrade(rowEle.findFinalGradeEle().expectElement("behaviour final grade"), subjectName))
                 else
                     gradesPageBuilder.addSubject(Subject(subjectName,
                                                          parseSubjectGrades(mainColumnEle, subjectName),
@@ -56,9 +57,13 @@ internal object HtmlGradesPageParserImpl : HtmlGradesPageParser
 
             return gradesPageBuilder.build()
         }
+        catch (e: ParseException)
+        {
+            throw e
+        }
         catch (e: Exception)
         {
-            throw ParseException(e)
+            throw ParseException("Failed to parse grades page.", e)
         }
     }
 
@@ -74,7 +79,7 @@ internal object HtmlGradesPageParserImpl : HtmlGradesPageParser
         val subjectGradesBuilder = Grades.builder()
 
         /* All the elements in the main content column. (either grade or subject part) */
-        val columnContentEles = gradesColumnEle.selectFirst("td")!!.children()
+        val columnContentEles = gradesColumnEle.selectFirstOrThrow("td").children()
 
         /* The last encountered subject part, so we know where the following grades belong. */
         var lastSubjectPart: String? = null
@@ -107,7 +112,7 @@ internal object HtmlGradesPageParserImpl : HtmlGradesPageParser
         for (notificationEle in notificationEles)
         {
             /* The element of the icon (tick or cross) */
-            val iconEle = notificationEle.selectFirst(".sprite-icon-16")!!
+            val iconEle = notificationEle.selectFirstOrThrow(".sprite-icon-16")
 
             /* Choosing type based on it's icon. (tick = good; cross = bad) */
             val type = if (iconEle.classNames().contains("sprite-icon-tick-16"))
@@ -115,7 +120,7 @@ internal object HtmlGradesPageParserImpl : HtmlGradesPageParser
             else
                 Behaviour.NotificationType.BAD
 
-            val message = notificationEle.selectFirst(".label")!!.text()
+            val message = notificationEle.selectFirstOrThrow(".label").text()
 
             notifications.add(Behaviour.Notification(type, message))
         }
@@ -145,10 +150,10 @@ internal object HtmlGradesPageParserImpl : HtmlGradesPageParser
      */
     private fun parseGrade(gradeEle: Element, subjectName: Name): Grade
     {
-        val valueChar = gradeEle.selectFirst(".value")!!.text()[0]
+        val valueChar = gradeEle.selectFirstOrThrow(".value").text()[0]
         val small = gradeEle.classNames().contains("scoreSmall")
 
-        val teacherShort = gradeEle.selectFirst(".employee")!!.text()
+        val teacherShort = gradeEle.selectFirstOrThrow(".employee").text()
 
         /* The title attribute of the grade element, which contains all the details. (description, date and teacher) */
         val titleAttr = gradeEle.attr("title")
@@ -183,8 +188,9 @@ internal object HtmlGradesPageParserImpl : HtmlGradesPageParser
     private fun parseSelectedSchoolYearHalf(document: Document): SchoolYearHalf
     {
         val selectedSchoolYearHalfEle = HtmlCommonParser.getSelectSelectedValue(document, "schoolYearHalfId")
+            ?: throw HtmlElementNotFoundException.bySelector("#schoolYearHalfId")
 
-        return getSchoolYearHalfByName(selectedSchoolYearHalfEle!!.text())
+        return getSchoolYearHalfByName(selectedSchoolYearHalfEle.text())
     }
 
     private fun getSchoolYearHalfByName(name: String): SchoolYearHalf
