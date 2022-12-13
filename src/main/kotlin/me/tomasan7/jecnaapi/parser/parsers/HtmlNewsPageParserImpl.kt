@@ -41,14 +41,14 @@ internal object HtmlNewsPageParserImpl : HtmlNewsPageParser
 
     private fun parseArticle(articleEle: Element): Article
     {
-        val title = articleEle.selectFirst(".name")!!.text()
-        val content = articleEle.selectFirst(".text")!!.text()
-        val htmlContent = articleEle.selectFirst(".text")!!.html()
+        val title = articleEle.selectFirstOrThrow(".name").text()
+        val content = articleEle.selectFirstOrThrow(".text").text()
+        val htmlContent = articleEle.selectFirstOrThrow(".text").html()
 
         val articleFiles = parseArticleFiles(articleEle)
         val images = parseImages(articleEle)
 
-        val footer = articleEle.selectFirst(".footer")!!.text()
+        val footer = articleEle.selectFirstOrThrow(".footer").text()
         val footerSplit = footer.split(" | ")
         val dateStr = footerSplit[0]
         val author = footerSplit[1]
@@ -67,7 +67,7 @@ internal object HtmlNewsPageParserImpl : HtmlNewsPageParser
 
     private fun parseArticleFile(articleFileEle: Element): ArticleFile
     {
-        val label = articleFileEle.selectFirst(".label")!!.text()
+        val label = articleFileEle.selectFirstOrThrow(".label").text()
         val downloadPath = articleFileEle.attr("href")
 
         return ArticleFile(label, downloadPath)
