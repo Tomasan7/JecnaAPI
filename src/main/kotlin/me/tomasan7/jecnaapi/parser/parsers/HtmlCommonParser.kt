@@ -53,3 +53,5 @@ fun Element.selectFirstOrThrow(selector: String) =
 
 fun Element.selectFirstOrThrow(selector: String, selectedElementName: String) =
     selectFirst(selector) ?: throw HtmlElementNotFoundException.byName(selectedElementName)
+
+fun Element?.expectElement(name: String) = this ?: throw HtmlElementNotFoundException.byName(name)
