@@ -36,8 +36,8 @@ internal object HtmlAttendancesPageParserImpl : HtmlAttendancesPageParser
             for (rowEle in rowEles)
             {
                 /* The first column in the row, which contains the day date. */
-                val dayEle = rowEle.selectFirst(".date")
-                val day = parseDayDate(dayEle!!.text(), document)
+                val dayEle = rowEle.selectFirstOrThrow(".date")
+                val day = parseDayDate(dayEle.text(), document)
                 /* The second column in the row, which contains all the attendances. */
                 val mainColumnEle = rowEle.select("td")[1]
 
@@ -52,9 +52,13 @@ internal object HtmlAttendancesPageParserImpl : HtmlAttendancesPageParser
 
             return attendancesPageBuilder.build()
         }
+        catch (e: ParseException)
+        {
+            throw e
+        }
         catch (e: Exception)
         {
-            throw ParseException(e)
+            throw ParseException("Failed to parse attendances page.", e)
         }
     }
 
