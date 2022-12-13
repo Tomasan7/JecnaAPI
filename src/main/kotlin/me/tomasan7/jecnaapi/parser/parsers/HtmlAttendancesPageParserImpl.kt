@@ -95,6 +95,7 @@ internal object HtmlAttendancesPageParserImpl : HtmlAttendancesPageParser
 
     /**
      * Parses a date from the string and then uses the data from a different part of the page to determine the year.
+     * Uses current year if the page does not contain it.
      * @param dayStr The text to parse the date from.
      * @param document The document, because the method needs to find the year on the page.
      * @return The parsed [LocalDate] object.
