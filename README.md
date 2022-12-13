@@ -38,18 +38,24 @@ runBlocking {
 ### Čtení dat
 
 ```kotlin
-val newsPage = jecnaClient.getNewsPage()
-val gradesPage = jecnaClient.getGradesPage()
-val timetablePage = jecnaClient.getTimetablePage()
-val attendancePage = jecnaClient.getAttendancePage()
-val teachersPage = jecnaClient.getTeachersPage()
+/* runBlocking, nebo jiný coroutine scope. */
+runBlocking {
+  val newsPage = jecnaClient.getNewsPage()
+  val gradesPage = jecnaClient.getGradesPage()
+  val timetablePage = jecnaClient.getTimetablePage()
+  val attendancePage = jecnaClient.getAttendancePage()
+  val teachersPage = jecnaClient.getTeachersPage()
+}
 ```
 
 Některé metody berou obdoví (např. rok) jako parametr.
 
 ```kotlin
+/* runBlocking, nebo jiný coroutine scope. */
+runBlocking {
 /* Získání známek z roku 2021/2022 z druhého pololetí.  */
-val gradesPage = jecnaClient.getGradesPage(SchoolYear(2021), SchoolYearHalf.SECOND)
+  val gradesPage = jecnaClient.getGradesPage(SchoolYear(2021), SchoolYearHalf.SECOND)
+}
 ```
 
 Více příkladů najdete ve složce [examples](/src/main/kotlin/examples).
