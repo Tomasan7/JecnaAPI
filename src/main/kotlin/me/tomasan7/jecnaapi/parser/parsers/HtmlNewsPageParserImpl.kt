@@ -44,18 +44,34 @@ internal object HtmlNewsPageParserImpl : HtmlNewsPageParser
         val title = articleEle.selectFirstOrThrow(".name").text()
         val content = articleEle.selectFirstOrThrow(".text").text()
         val htmlContent = articleEle.selectFirstOrThrow(".text").html()
+        val dateEle = articleEle.selectFirst(".date")
 
         val articleFiles = parseArticleFiles(articleEle)
         val images = parseImages(articleEle)
 
         val footer = articleEle.selectFirstOrThrow(".footer").text()
         val footerSplit = footer.split(" | ")
-        val dateStr = footerSplit[0]
-        val author = footerSplit[1]
-        val schoolOnly = footerSplit.size == 3
-        val date = LocalDate.parse(dateStr, DATE_FORMATTER)
 
-        return Article(title, content, htmlContent, date, author, schoolOnly, articleFiles, images)
+        /* The date either has its own element, or is embedded in footer. */
+
+        if (dateEle == null)
+        {
+            val dateStr = footerSplit[0]
+            val author = footerSplit[1]
+            val schoolOnly = footerSplit.size == 3
+            val date = LocalDate.parse(dateStr, DATE_FORMATTER)
+
+            return Article(title, content, htmlContent, date, author, schoolOnly, articleFiles, images)
+        }
+        else
+        {
+            val date = LocalDate.parse(dateEle.text(), DATE_FORMATTER)
+
+            val author = footerSplit[0]
+            val schoolOnly = footerSplit.size == 2
+
+            return Article(title, content, htmlContent, date, author, schoolOnly, articleFiles, images)
+        }
     }
 
     private fun parseArticleFiles(articleEle: Element): List<ArticleFile>
