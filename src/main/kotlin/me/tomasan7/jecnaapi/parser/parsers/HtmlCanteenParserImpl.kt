@@ -68,8 +68,8 @@ object HtmlCanteenParserImpl : HtmlCanteenParser
         val itemDescriptionSoup = itemDescriptionMatch.groups[ItemDescriptionRegexGroups.SOUP]!!.value
         val itemDescriptionRest = itemDescriptionMatch.groups[ItemDescriptionRegexGroups.REST]!!.value
 
-        val allergensText = foodNameEle.selectFirst(".textGrey")!!.text()
-        val allergens = allergensText.substring(1, allergensText.length - 1).split(", ")
+        val allergensText = foodNameEle.selectFirst(".textGrey")?.text()
+        val allergens = allergensText?.substring(1, allergensText.length - 1)?.split(", ")
 
         val onclick = orderButtonEle!!.attr("onclick")
 
