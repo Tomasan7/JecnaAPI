@@ -44,6 +44,7 @@ object HtmlNewsPageParserImpl : HtmlNewsPageParser
         val title = articleEle.selectFirst(".name")!!.text()
         val content = articleEle.selectFirst(".text")!!.text()
         val htmlContent = articleEle.selectFirst(".text")!!.html()
+        val dateEle = articleEle.selectFirst(".date")
         val articleFileEles = articleEle.select(".files li a")
         val articleFiles = emptyMutableLinkedList<ArticleFile>()
 
@@ -52,12 +53,27 @@ object HtmlNewsPageParserImpl : HtmlNewsPageParser
 
         val footer = articleEle.selectFirst(".footer")!!.text()
         val footerSplit = footer.split(" | ")
-        val dateStr = footerSplit[0]
-        val author = footerSplit[1]
-        val schoolOnly = footerSplit.size == 3
-        val date = LocalDate.parse(dateStr, DATE_FORMATTER)
 
-        return Article(title, content, htmlContent, date, author, schoolOnly, articleFiles)
+        /* The date either has its own element, or is embedded in footer. */
+
+        if (dateEle == null)
+        {
+            val dateStr = footerSplit[0]
+            val author = footerSplit[1]
+            val schoolOnly = footerSplit.size == 3
+            val date = LocalDate.parse(dateStr, DATE_FORMATTER)
+
+            return Article(title, content, htmlContent, date, author, schoolOnly, articleFiles)
+        }
+        else
+        {
+            val date = LocalDate.parse(dateEle.text(), DATE_FORMATTER)
+
+            val author = footerSplit[0]
+            val schoolOnly = footerSplit.size == 2
+
+            return Article(title, content, htmlContent, date, author, schoolOnly, articleFiles)
+        }
     }
 
     private fun parseArticleFile(articleFileEle: Element): ArticleFile
