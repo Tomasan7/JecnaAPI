@@ -62,6 +62,7 @@ class LessonSpot(lessons: List<Lesson>, val periodSpan: Int) : Iterable<Lesson>
     {
         return "LessonSpot{" +
                "lessons=" + lessons +
+                ", periodSpan=" + periodSpan +
                '}'
     }
 
