@@ -133,7 +133,23 @@ internal object HtmlGradesPageParserImpl : HtmlGradesPageParser
      *
      * @return The parsed [FinalGrade].
      */
-    private fun parseFinalGrade(finalGradeEle: Element, subjectName: Name) = FinalGrade(finalGradeEle.text().toInt(), subjectName)
+    private fun parseFinalGrade(finalGradeEle: Element, subjectName: Name): FinalGrade
+    {
+        val textContent = finalGradeEle.text()
+
+        return if (finalGradeEle.hasClass("scoreValueWarning"))
+            when (textContent)
+            {
+                "5?" -> FinalGrade.GradesWarning
+                "N?" -> FinalGrade.AbsenceWarning
+                /* Element#text() returns normalized text. That's why we use space here and not newline, which originally is there. */
+                "5? N?",
+                "N? 5?" -> FinalGrade.GradesAndAbsenceWarning
+                else -> throw ParseException("Unknown final grade warning: $textContent")
+            }
+        else
+            FinalGrade.Grade(textContent.toInt(), subjectName)
+    }
 
     /**
      * Finds the [FinalGrade]'s HTML element in the subject row element.
