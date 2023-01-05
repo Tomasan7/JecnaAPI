@@ -44,8 +44,6 @@ object HtmlCommonParser
         "prosinec" -> Month.DECEMBER
         else -> throw IllegalArgumentException("Unknown month name: $monthName")
     }
-
-    private val MONTH_DATE_FORMAT = SimpleDateFormat("MMMM", Locale.forLanguageTag("cs-CZ"))
 }
 
 fun Element.selectFirstOrThrow(selector: String) =
