@@ -90,7 +90,7 @@ internal object HtmlTimetableParserImpl : HtmlTimetablePageParser
 
     /**
      * Removes an accent from a [String].
-     * eg. Turns "Žluťoučký kůň" into "zlutoucky kun".
+     * eg. Turns "Žluťoučký kůň" into "Zlutoucky kun".
      */
     private fun String.removeAccent() = Normalizer.normalize(this, Normalizer.Form.NFKD).replace(Regex("""\p{M}"""), "")
 
