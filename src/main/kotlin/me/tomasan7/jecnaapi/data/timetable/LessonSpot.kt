@@ -5,9 +5,15 @@ package me.tomasan7.jecnaapi.data.timetable
  * That spot can contain multiple [lessons][Lesson].
  * For example some lessons are split into more groups.
  * This class indicates the one whole lesson and contains the lessons for each group.
+ *
+ * @property periodSpan The number of [periods][LessonPeriod] this lesson spot spans over.
  */
-class LessonSpot(lessons: List<Lesson>) : Iterable<Lesson>
+class LessonSpot(lessons: List<Lesson>, val periodSpan: Int) : Iterable<Lesson>
 {
+    constructor(lesson: Lesson, periodSpan: Int) : this(listOf(lesson), periodSpan)
+
+    constructor(lesson: Lesson) : this(listOf(lesson), 1)
+
     private val lessons: List<Lesson>
 
     /**
@@ -15,8 +21,6 @@ class LessonSpot(lessons: List<Lesson>) : Iterable<Lesson>
      */
     val size: Int
         get() = lessons.size
-
-    constructor(lesson: Lesson) : this(listOf(lesson))
 
     init
     {
