@@ -1,5 +1,6 @@
 package me.tomasan7.jecnaapi.util
 
+import me.tomasan7.jecnaapi.data.timetable.Lesson
 import java.time.Month
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -13,5 +14,21 @@ internal class UtilKtTest
         val monthValueRange = Month.FEBRUARY.value..Month.JUNE.value
 
         assertEquals(monthValueRange, monthRange.mapToIntRange { it.value })
+    }
+
+    @Test
+    fun testHasDuplicate()
+    {
+        val lesson1 = Lesson("Math".toName(), "Mr. Smith".toName(), "A1", 1)
+        val lesson2 = Lesson("English".toName(), "Mr. Green".toName(), "B2", 2)
+        val lesson3 = Lesson("Math".toName(), "Mr. Smith".toName(), "C3", 1)
+
+        val lessonsWithDuplicate = listOf(lesson1, lesson2, lesson3)
+
+        assertEquals(true, lessonsWithDuplicate.hasDuplicate { it.group })
+
+        val lessonsWithoutDuplicate = listOf(lesson1, lesson3)
+
+        assertEquals(false, lessonsWithoutDuplicate.hasDuplicate { it.group })
     }
 }
