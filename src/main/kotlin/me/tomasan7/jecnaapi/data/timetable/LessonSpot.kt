@@ -69,8 +69,13 @@ class LessonSpot(lessons: List<Lesson>, val periodSpan: Int) : Iterable<Lesson>
     companion object
     {
         /**
-         * Creates a [LessonSpot] with no [lessons][Lesson].
+         * Creates a [LessonSpot] with no [lessons][Lesson] and with a [periodSpan] of 1.
          */
-        fun empty() = LessonSpot(listOf())
+        fun empty() = LessonSpot(emptyList(), 1)
+
+        /**
+         * Creates a [LessonSpot] with no [lessons][Lesson] and provided [periodSpan].
+         */
+        fun empty(periodSpan: Int) = LessonSpot(emptyList(), periodSpan)
     }
 }
