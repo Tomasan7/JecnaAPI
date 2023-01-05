@@ -126,7 +126,7 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
     /**
      * Contains names of regex capture groups inside [ITEM_DESCRIPTION_REGEX].
      */
-    object ItemDescriptionRegexGroups
+    private object ItemDescriptionRegexGroups
     {
         const val SOUP = "soup"
         const val REST = "rest"

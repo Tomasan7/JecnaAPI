@@ -218,7 +218,7 @@ internal object HtmlGradesPageParserImpl : HtmlGradesPageParser
     /**
      * Contains names of regex capture groups inside [GRADE_DETAILS_REGEX].
      */
-    object GradeDetailsRegexGroups
+    private object GradeDetailsRegexGroups
     {
         const val DESCRIPTION = "description"
         const val DATE = "date"
@@ -233,7 +233,7 @@ internal object HtmlGradesPageParserImpl : HtmlGradesPageParser
     /**
      * Contains names of regex capture groups inside [GRADE_DETAILS_REGEX].
      */
-    object SubjectNameRegexGroups
+    private object SubjectNameRegexGroups
     {
         const val FULL = "full"
         const val SHORT = "short"
