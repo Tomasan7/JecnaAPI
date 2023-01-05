@@ -1,5 +1,7 @@
 package me.tomasan7.jecnaapi.data.timetable
 
+import me.tomasan7.jecnaapi.util.hasDuplicate
+
 /**
  * Represents a spot for [lessons][Lesson] in a timetable.
  * That spot can contain multiple [lessons][Lesson].
@@ -24,7 +26,7 @@ class LessonSpot(lessons: List<Lesson>, val periodSpan: Int) : Iterable<Lesson>
 
     init
     {
-        require(!findDuplicateGroups(lessons)) { "Lessons cannot have duplicate groups." }
+        require(!hasDuplicateGroups(lessons)) { "Lessons cannot have duplicate groups." }
 
         this.lessons = lessons.sortedBy { it.group }
     }
@@ -32,16 +34,7 @@ class LessonSpot(lessons: List<Lesson>, val periodSpan: Int) : Iterable<Lesson>
     /**
      * @return Whether there are any duplicate groups in provided [lessons][Lesson].
      */
-    private fun findDuplicateGroups(lessons: Iterable<Lesson>): Boolean
-    {
-        val groups = mutableSetOf<Int>()
-
-        for (lesson in lessons)
-            if (!groups.add(lesson.group))
-                return true
-
-        return false
-    }
+    private fun hasDuplicateGroups(lessons: Iterable<Lesson>) = lessons.hasDuplicate { it.group }
 
     /**
      * @return Whether this [LessonSpot] contains any [lessons][Lesson] or not. `true` if not, `false` if yes.
