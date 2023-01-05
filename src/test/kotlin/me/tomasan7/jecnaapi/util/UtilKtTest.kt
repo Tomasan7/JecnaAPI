@@ -4,7 +4,7 @@ import java.time.Month
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-internal class UtilTest
+internal class UtilKtTest
 {
     @Test
     fun testMapToInt()
