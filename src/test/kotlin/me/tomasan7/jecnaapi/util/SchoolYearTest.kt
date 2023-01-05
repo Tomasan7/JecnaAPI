@@ -1,8 +1,5 @@
 package me.tomasan7.jecnaapi.util
 
-import me.tomasan7.jecnaapi.util.SchoolYear
-import me.tomasan7.jecnaapi.util.month
-import me.tomasan7.jecnaapi.util.schoolYear
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 import java.time.LocalDate
