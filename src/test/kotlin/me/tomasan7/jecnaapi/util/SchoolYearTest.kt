@@ -67,9 +67,9 @@ internal class SchoolYearTest
     @Test
     fun testOfDate()
     {
-        assertEquals(SchoolYear(2020), SchoolYear(LocalDate.of(2021, 7, 25)))
-        assertEquals(SchoolYear(2021), SchoolYear(LocalDate.of(2022, 6, 25)))
-        assertNotEquals(SchoolYear(2023), SchoolYear(LocalDate.of(2022, 7, 25)))
+        assertEquals(SchoolYear(2020), SchoolYear.fromDate(LocalDate.of(2021, 7, 25)))
+        assertEquals(SchoolYear(2021), SchoolYear.fromDate(LocalDate.of(2022, 6, 25)))
+        assertNotEquals(SchoolYear(2023), SchoolYear.fromDate(LocalDate.of(2022, 7, 25)))
     }
 
     @Test
