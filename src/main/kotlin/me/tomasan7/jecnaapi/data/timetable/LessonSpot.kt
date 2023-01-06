@@ -18,9 +18,7 @@ class LessonSpot(lessons: List<Lesson>, val periodSpan: Int) : Iterable<Lesson>
 
     private val lessons: List<Lesson>
 
-    /**
-     * The number of lessons in this [LessonSpot].
-     */
+    /** The number of lessons in this [LessonSpot]. */
     val size: Int
         get() = lessons.size
 
@@ -31,24 +29,16 @@ class LessonSpot(lessons: List<Lesson>, val periodSpan: Int) : Iterable<Lesson>
         this.lessons = lessons.sortedBy { it.group }
     }
 
-    /**
-     * @return Whether there are any duplicate groups in provided [lessons][Lesson].
-     */
+    /** Returns whether there are any duplicate groups in provided [lessons][Lesson]. */
     private fun hasDuplicateGroups(lessons: Iterable<Lesson>) = lessons.hasDuplicate { it.group }
 
-    /**
-     * @return Whether this [LessonSpot] contains any [lessons][Lesson] or not. `true` if not, `false` if yes.
-     */
+    /** Returns `true` if this [LessonSpot] contains no [lessons][Lesson]. */
     fun isEmpty() = size == 0
 
-    /**
-     * @return A [Lesson] with the specified group. Or `null`, if there's no [Lesson] with that group.
-     */
+    /** Returns a [Lesson] with the specified [group], or `null` if there's no [Lesson] with that [group]. */
     fun getLessonByGroup(group: Int) = lessons.getOrNull(group)
 
-    /**
-     * @return An [Iterator] of [Lesson], which doesn't modify this [LessonSpot].
-     */
+    /** @return An [Iterator] of [Lesson], which doesn't modify this [LessonSpot]. */
     override fun iterator() = lessons.iterator()
 
     override fun toString(): String
@@ -61,14 +51,10 @@ class LessonSpot(lessons: List<Lesson>, val periodSpan: Int) : Iterable<Lesson>
 
     companion object
     {
-        /**
-         * Creates a [LessonSpot] with no [lessons][Lesson] and with a [periodSpan] of 1.
-         */
+        /** Creates a [LessonSpot] with no [lessons][Lesson] and a [periodSpan] of `1`. */
         fun empty() = LessonSpot(emptyList(), 1)
 
-        /**
-         * Creates a [LessonSpot] with no [lessons][Lesson] and provided [periodSpan].
-         */
+        /** Creates a [LessonSpot] with no [lessons][Lesson] and provided [periodSpan]. */
         fun empty(periodSpan: Int) = LessonSpot(emptyList(), periodSpan)
     }
 }
