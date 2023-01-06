@@ -35,6 +35,9 @@ class LessonSpot(lessons: List<Lesson>, val periodSpan: Int) : Iterable<Lesson>
     /** Returns `true` if this [LessonSpot] contains no [lessons][Lesson]. */
     fun isEmpty() = size == 0
 
+    /** Returns `true` if this [LessonSpot] contains at least one lesson. */
+    fun isNotEmpty() = !isEmpty()
+
     /** Returns a [Lesson] with the specified [group], or `null` if there's no [Lesson] with that [group]. */
     fun getLessonByGroup(group: Int) = lessons.getOrNull(group)
 
