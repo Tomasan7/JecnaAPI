@@ -7,135 +7,162 @@ import java.time.*
 import java.time.temporal.ChronoUnit
 import java.util.*
 
-class Timetable(lessonPeriods: List<LessonPeriod>, timetable: Map<DayOfWeek, List<LessonSpot>>)
+class Timetable private constructor(
+    lessonPeriods: List<LessonPeriod>,
+    private val timetable: Map<DayOfWeek, List<LessonSpot>>
+)
 {
-    val lessonPeriods: List<LessonPeriod>
-    val timetable: Map<DayOfWeek, List<TimetableSpot>>
+    val lessonPeriods = lessonPeriods.sortedBy { it.from }
 
-    init
-    {
-        this.lessonPeriods = lessonPeriods.sortedBy { it.from }
-        this.timetable = timetable.mapValues { entry ->
-            entry.value.mapIndexed { i, lessonSpot ->
-                TimetableSpot(entry.key, this.lessonPeriods[i], lessonSpot)
-            }
-        }
-    }
-
-    /**
-     * All [days][DayOfWeek] in the [Timetable]. There may be no [TimetableSpots][TimetableSpot] for some days.
-     */
+    /** All days in the [Timetable]. There may be no [LessonSpots][LessonSpot] for some days. */
     val days = this.timetable.keys
 
     /**
-     * All [days][DayOfWeek] in the [Timetable] sorted as they would be in a week. There may be no [TimetableSpots][TimetableSpot] for some days.
+     * All days in the [Timetable] sorted as they would be in a week.
+     * There may be no [LessonSpots][LessonSpot] for some days.
      */
     val daysSorted = days.sorted()
 
     /**
-     * @return Whether the [Timetable] contains any [days][DayOfWeek].
-     * There may be no [TimetableSpots][TimetableSpot] for some days, that would return `false`.
+     * Returns Whether the [Timetable] contains any days.
+     * There may be no [LessonSpots][LessonSpot] for some days, that would return `false`.
      */
     fun isEmpty() = timetable.isEmpty()
 
-    /**
-     * @return A [List] of all [TimetableSpots][TimetableSpot] in the [day] ordered by their start time.
-     */
-    fun getTimetableSpotsForDay(day: DayOfWeek) = timetable[day]
+    /** Returns index of the [LessonPeriod] at the given [time], or `null` if there is not any. */
+    fun getIndexOfLessonPeriod(time: LocalTime) = lessonPeriods.indexOfFirst { time in it }.let { if (it != -1) it else null }
 
-    /**
-     * @return A [List] of all [TimetableSpots][TimetableSpot] in the [day] ordered by their start time.
-     */
-    operator fun get(day: DayOfWeek) = timetable[day]
+    /** Returns index of the [LessonPeriod] at [LocalTime.now], or `null` if there is not any. */
+    fun getIndexOfCurrentLessonPeriod() = getIndexOfLessonPeriod(LocalTime.now())
 
-    /**
-     * @param takeEmpty Whether [empty][TimetableSpot.isEmpty] [TimetableSpot] should be returned.
-     * @return The [TimetableSpot] at the provided [day] and [time]. `null` if there is currently no [LessonSpot].
-     */
-    fun getTimetableSpot(day: DayOfWeek, time: LocalTime, takeEmpty: Boolean = false): TimetableSpot?
+    /** Returns the [LessonPeriod] at the given [time], or `null` if there is not any. */
+    fun getLessonPeriod(time: LocalTime) = getIndexOfLessonPeriod(time)?.let { lessonPeriods[it] }
+
+    /** Returns the [LessonPeriod] at [LocalTime.now], or `null` if there is not any. */
+    fun getCurrentLessonPeriod() = getLessonPeriod(LocalTime.now())
+
+    /** Returns the index of next [LessonPeriod] from the given [time], or `null` if there is no next [LessonPeriod]. */
+    fun getIndexOfNextLessonPeriod(time: LocalTime): Int?
     {
-        return timetable[day]?.find { time in it.lessonPeriod }?.takeIf { takeEmpty || !it.lessonSpot.isEmpty() }
+        fun minsUntilStartOf(lessonPeriodIndex: Int) = time.until(lessonPeriods[lessonPeriodIndex].from, ChronoUnit.MINUTES)
+
+        return lessonPeriods.indices.filter { minsUntilStartOf(it) > 0 }.minByOrNull { minsUntilStartOf(it) }
     }
 
-    /**
-     * @param takeEmpty Whether [empty][TimetableSpot.isEmpty] [TimetableSpot] should be returned.
-     * @return The [TimetableSpot] at the provided [datetime]. `null` if there is currently no [LessonSpot].
-     */
-    fun getTimetableSpot(datetime: LocalDateTime, takeEmpty: Boolean = false) = getTimetableSpot(datetime.dayOfWeek, datetime.toLocalTime(), takeEmpty)
+    /** Returns the index of next [LessonPeriod] from [LocalTime.now], or `null` if there is no next [LessonPeriod]. */
+    fun getIndexOfCurrentNextLessonPeriod() = getIndexOfNextLessonPeriod(LocalTime.now())
 
-    /**
-     * @param takeEmpty Whether [empty][TimetableSpot.isEmpty] [TimetableSpot] should be returned.
-     * @return The [TimetableSpot] at the provided [instant]. `null` if there is currently no [LessonSpot].
-     */
-    fun getTimetableSpot(instant: Instant, takeEmpty: Boolean = false) = getTimetableSpot(LocalDateTime.ofInstant(instant, ZoneId.systemDefault()), takeEmpty)
+    /** Returns the next [LessonPeriod] from the given [time], or `null` if there is no next [LessonPeriod]. */
+    fun getNextLessonPeriod(time: LocalTime) = getIndexOfNextLessonPeriod(time)?.let { lessonPeriods[it] }
 
-    /**
-     * @param takeEmpty Whether [empty][TimetableSpot.isEmpty] [TimetableSpot] should be returned.
-     * @return The current [TimetableSpot] at the moment. `null` if there is currently no [LessonSpot].
-     */
-    fun getCurrentTimetableSpot(takeEmpty: Boolean = false) = getTimetableSpot(Instant.now(), takeEmpty)
+    /** Returns the next [LessonPeriod] from [LocalTime.now], or `null` if there is no next [LessonPeriod]. */
+    fun getCurrentNextLessonPeriod() = getNextLessonPeriod(LocalTime.now())
 
-    /**
-     * @param takeEmpty Whether [empty][TimetableSpot.isEmpty] [TimetableSpot] should be returned.
-     * @return The following [TimetableSpot] from the provided [day] and [time]. Or `null`, when the [Timetable] is [empty][isEmpty].
-    */
-    fun getNextTimetableSpot(day: DayOfWeek, time: LocalTime, takeEmpty: Boolean = false): TimetableSpot?
+    /** Returns a list of all [LessonSpots][LessonSpot] in the given [day] ordered by their start time, or `null` if [day] is not in this [Timetable]. */
+    fun getLessonSpotsForDay(day: DayOfWeek) = timetable[day]
+
+    /** Returns a list of all [LessonSpots][LessonSpot] in the given [day] ordered by their start time, or `null` if [day] is not in this [Timetable]. */
+    operator fun get(day: DayOfWeek) = getLessonSpotsForDay(day)
+
+    /** Returns the [LessonSpot] that is happening at the given [lessonPeriodIndex]. */
+    fun getLessonSpot(day: DayOfWeek, lessonPeriodIndex: Int): LessonSpot?
     {
-        if (timetable.isEmpty())
-            return null
+        if (isEmpty()) return null
 
-        if (!timetable.containsKey(day))
-            return getNextTimetableSpot(day.next(), LocalTime.of(0, 0), takeEmpty)
+        val lessonSpots = getLessonSpotsForDay(day) ?: return null
 
-        val daySpots = timetable[day]!!
+        var x = 0
 
-        fun TimetableSpot.isViable() = takeEmpty || !isEmpty()
-
-        var lastDiff: Pair<TimetableSpot, Long>? = null
-
-        for (timetableSpot in daySpots)
+        for (lessonSpot in lessonSpots)
         {
-            if (timetableSpot.lessonPeriod.from < time)
-                continue
+            if (lessonPeriodIndex in x until x + lessonSpot.periodSpan)
+                return lessonSpot
 
-            val diff = time.until(timetableSpot.lessonPeriod.from, ChronoUnit.SECONDS)
-
-            if (lastDiff == null && timetableSpot.isViable())
-            {
-                lastDiff = timetableSpot to diff
-                continue
-            }
-
-            if (lastDiff != null && diff > lastDiff.second)
-                break
-
-            if (timetableSpot.isViable())
-                lastDiff = timetableSpot to diff
+            x += lessonSpot.periodSpan
         }
 
-        if (lastDiff == null)
-            return getNextTimetableSpot(day.next(), LocalTime.of(0, 0), takeEmpty)
-
-        return lastDiff.first
+        return null
     }
 
     /**
-     * @param takeEmpty Whether [empty][TimetableSpot.isEmpty] [TimetableSpot] should be returned.
-     * @return The following [TimetableSpot] from the provided [datetime]. Or `null`, when the [Timetable] is [empty][isEmpty].
+     * Returns the [LessonSpot] that is happening at the given [lessonPeriod].
+     * Prefer using [getLessonSpot] if you know the [lessonPeriod] index.
+     * @see getLessonSpot
      */
-    fun getNextTimetableSpot(datetime: LocalDateTime, takeEmpty: Boolean = false) = getNextTimetableSpot(datetime.dayOfWeek, datetime.toLocalTime(), takeEmpty)
+    fun getLessonSpot(day: DayOfWeek, lessonPeriod: LessonPeriod) = lessonPeriods.indexOf(lessonPeriod).let { if (it != -1) getLessonSpot(day, it) else null }
 
     /**
-     * @param takeEmpty Whether [empty][TimetableSpot.isEmpty] [TimetableSpot] should be returned.
-     * @return The following [TimetableSpot] from the provided [instant]. Or `null`, when the [Timetable] is [empty][isEmpty].
+     * Returns the [LessonSpot] at the given [day] and [time], or `null` if there is no [LessonSpot] at that moment.
+     *
+     * @param takeEmpty Whether [empty][LessonSpot.isEmpty] [LessonSpot] should be returned, or `null` instead.
      */
-    fun getNextTimetableSpot(instant: Instant, takeEmpty: Boolean = false) = getNextTimetableSpot(LocalDateTime.ofInstant(instant, ZoneId.systemDefault()), takeEmpty)
+    fun getLessonSpot(day: DayOfWeek, time: LocalTime, takeEmpty: Boolean = false): LessonSpot?
+    {
+        val lessonPeriodIndex = getIndexOfLessonPeriod(time) ?: return null
+
+        return getLessonSpot(day, lessonPeriodIndex)?.takeIf { takeEmpty || it.isNotEmpty() }
+    }
 
     /**
-     * @param takeEmpty Whether [empty][TimetableSpot.isEmpty] [TimetableSpot] should be returned.
-     * @return The currently following [TimetableSpot]. Or `null`, when the [Timetable] is [empty][isEmpty].
+     * Returns the [LessonSpot] at the given [datetime], or `null` if there is no [LessonSpot] at that moment.
+     *
+     * @param takeEmpty Whether [empty][LessonSpot.isEmpty] [LessonSpot] should be returned, or `null` instead.
      */
-    fun getCurrentNextTimetableSpot(takeEmpty: Boolean = false) = getNextTimetableSpot(Instant.now(), takeEmpty)
+    fun getLessonSpot(datetime: LocalDateTime, takeEmpty: Boolean = false) = getLessonSpot(datetime.dayOfWeek, datetime.toLocalTime(), takeEmpty)
+
+    /**
+     * Returns the [LessonSpot] at the given [instant], or `null` if there is no [LessonSpot] at that moment.
+     *
+     * @param takeEmpty Whether [empty][LessonSpot.isEmpty] [LessonSpot] should be returned, or `null` instead.
+     */
+    fun getLessonSpot(instant: Instant, takeEmpty: Boolean = false) = getLessonSpot(LocalDateTime.ofInstant(instant, ZoneId.systemDefault()), takeEmpty)
+
+    /**
+     * Returns the [LessonSpot] at [Instant.now], or `null` if there is currently no [LessonSpot].
+     *
+     * @param takeEmpty Whether [empty][LessonSpot.isEmpty] [LessonSpot] should be returned, or `null` instead.
+     */
+    fun getCurrentLessonSpot(takeEmpty: Boolean = false) = getLessonSpot(Instant.now(), takeEmpty)
+
+    /**
+     * Returns the next [LessonSpot] from the given [time] on the [day], or `null` if there is no [LessonSpot] at that moment.
+     *
+     * @param takeEmpty Whether [empty][LessonSpot.isEmpty] [LessonSpot] should be returned, or `null` instead.
+     */
+    fun getNextLessonSpot(day: DayOfWeek, time: LocalTime, takeEmpty: Boolean = false): LessonSpot?
+    {
+        if (timetable.isEmpty()) return null
+
+        if (day !in days)
+            return getNextLessonSpot(day.next(), LocalTime.of(0, 0), takeEmpty)
+
+        val nextLessonPeriodIndex = getIndexOfLessonPeriod(time) ?: 0
+
+        val nextLessonSpot = getLessonSpot(day, nextLessonPeriodIndex)?.takeIf { takeEmpty || it.isNotEmpty() }
+
+        return nextLessonSpot ?: getNextLessonSpot(day.next(), LocalTime.of(0, 0), takeEmpty)
+    }
+
+    /**
+     * Returns the next [LessonSpot] from the given [datetime], or `null` if there is no [LessonSpot] at that moment.
+     *
+     * @param takeEmpty Whether [empty][LessonSpot.isEmpty] [LessonSpot] should be returned, or `null` instead.
+     */
+    fun getNextLessonSpot(datetime: LocalDateTime, takeEmpty: Boolean = false) = getNextLessonSpot(datetime.dayOfWeek, datetime.toLocalTime(), takeEmpty)
+
+    /**
+     * Returns the next [LessonSpot] from the given [instant], or `null` if there is no [LessonSpot] at that moment.
+     *
+     * @param takeEmpty Whether [empty][LessonSpot.isEmpty] [LessonSpot] should be returned, or `null` instead.
+     */
+    fun getNextLessonSpot(instant: Instant, takeEmpty: Boolean = false) = getNextLessonSpot(LocalDateTime.ofInstant(instant, ZoneId.systemDefault()), takeEmpty)
+
+    /**
+     * Returns the next [LessonSpot] from [Instant.now], or `null` if there is no [LessonSpot] at that moment.
+     *
+     * @param takeEmpty Whether [empty][LessonSpot.isEmpty] [LessonSpot] should be returned, or `null` instead.
+     */
+    fun getCurrentNextTimetableSpot(takeEmpty: Boolean = false) = getNextLessonSpot(Instant.now(), takeEmpty)
 
     companion object
     {
