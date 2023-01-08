@@ -94,7 +94,7 @@ class TimetablePage private constructor(
 
         fun build(): TimetablePage
         {
-            check(::selectedSchoolYear.isInitialized) { "selectedSchoolYear has not been se.t" }
+            check(::selectedSchoolYear.isInitialized) { "selectedSchoolYear has not been set." }
 
             return TimetablePage(timetableBuilder.build(), periodOptions, selectedSchoolYear)
         }
