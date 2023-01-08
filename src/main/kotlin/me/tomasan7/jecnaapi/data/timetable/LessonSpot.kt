@@ -10,7 +10,7 @@ import me.tomasan7.jecnaapi.util.hasDuplicate
  *
  * @property periodSpan The number of [periods][LessonPeriod] this lesson spot spans over.
  */
-class LessonSpot(lessons: List<Lesson>, val periodSpan: Int) : Iterable<Lesson>
+class LessonSpot(lessons: List<Lesson>, val periodSpan: Int = 1) : Iterable<Lesson>
 {
     constructor(lesson: Lesson, periodSpan: Int = 1) : this(listOf(lesson), periodSpan)
 
