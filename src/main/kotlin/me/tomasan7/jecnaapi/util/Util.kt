@@ -3,6 +3,7 @@ package me.tomasan7.jecnaapi.util
 import java.time.DayOfWeek
 import java.time.Month
 import java.util.*
+import kotlin.collections.HashSet
 
 /**
  * Creates a new empty mutable [LinkedList].
@@ -39,6 +40,20 @@ fun <T> MutableCollection<T>.setAll(elements: Iterable<T>)
 {
     clear()
     addAll(elements)
+}
+
+/**
+ * Returns whether there are any elements, that have the same result of [selector] function.
+ */
+fun <T, R> Iterable<T>.hasDuplicate(selector: (T) -> R): Boolean
+{
+    val set = HashSet<R>()
+
+    for (element in this)
+        if (!set.add(selector(element)))
+            return true
+
+    return false
 }
 
 /**
