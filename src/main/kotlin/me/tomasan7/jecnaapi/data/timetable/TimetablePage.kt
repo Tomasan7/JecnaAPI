@@ -58,9 +58,9 @@ class TimetablePage private constructor(
 
     class Builder
     {
-        var timetableBuilder = Timetable.builder()
         private val periodOptions: MutableList<PeriodOption> = emptyMutableLinkedList()
         private lateinit var selectedSchoolYear: SchoolYear
+        private lateinit var timetable: Timetable
 
         /**
          * Sets all the [PeriodOptions][PeriodOption].
@@ -92,11 +92,18 @@ class TimetablePage private constructor(
             return this
         }
 
+        fun setTimetable(timetable: Timetable): Builder
+        {
+            this.timetable
+            return this
+        }
+
         fun build(): TimetablePage
         {
             check(::selectedSchoolYear.isInitialized) { "selectedSchoolYear has not been set." }
+            check(::timetable.isInitialized) { "Timetable has not been set." }
 
-            return TimetablePage(timetableBuilder.build(), periodOptions, selectedSchoolYear)
+            return TimetablePage(timetable, periodOptions, selectedSchoolYear)
         }
     }
 
