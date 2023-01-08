@@ -106,45 +106,4 @@ class TimetablePage private constructor(
             return TimetablePage(timetable, periodOptions, selectedSchoolYear)
         }
     }
-
-    /**
-     * Compares two days based on their position in a week. Meaning tuesday < friday.
-     * The **days must follow this format**: Po/Út/St/Čt/Pa/So/Ne.
-     * **Note the "Pa", it is not "Pá".**
-     */
-    class DayComparator : Comparator<String>
-    {
-        override fun compare(s1: String, s2: String): Int
-        {
-            /* This method works by finding each day's position in a week using DAYS list and then subtracting their position. */
-
-            if (s1.equals(s2, true))
-                return 0
-
-            var s1Pos = -1
-            var s2Pos = -1
-
-            for (i in DAYS.indices)
-            {
-                if (s1.equals(DAYS[i], true))
-                {
-                    s1Pos = i
-                    continue
-                }
-
-                if (s2.equals(DAYS[i], true))
-                    s2Pos = i
-
-                if (s1Pos != -1 && s2Pos != -1)
-                    break
-            }
-
-            return s1Pos - s2Pos
-        }
-
-        companion object
-        {
-            val DAYS = listOf("Po", "Út", "St", "Čt", "Pa", "So", "Ne")
-        }
-    }
 }
