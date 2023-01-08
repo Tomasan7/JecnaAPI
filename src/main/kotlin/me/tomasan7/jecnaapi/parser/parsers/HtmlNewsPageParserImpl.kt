@@ -4,7 +4,6 @@ import me.tomasan7.jecnaapi.data.article.Article
 import me.tomasan7.jecnaapi.data.article.ArticleFile
 import me.tomasan7.jecnaapi.data.article.NewsPage
 import me.tomasan7.jecnaapi.parser.ParseException
-import me.tomasan7.jecnaapi.util.emptyMutableLinkedList
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import java.time.LocalDate
@@ -59,19 +58,29 @@ internal object HtmlNewsPageParserImpl : HtmlNewsPageParser
             val dateStr = footerSplit[0]
             val author = footerSplit[1]
             val schoolOnly = footerSplit.size == 3
-            val date = LocalDate.parse(dateStr, DATE_FORMATTER)
+            val date = parseDate(dateStr)
 
             return Article(title, content, htmlContent, date, author, schoolOnly, articleFiles, images)
         }
         else
         {
-            val date = LocalDate.parse(dateEle.text(), DATE_FORMATTER)
+            val date = parseDate(dateEle.text())
 
             val author = footerSplit[0]
             val schoolOnly = footerSplit.size == 2
 
             return Article(title, content, htmlContent, date, author, schoolOnly, articleFiles, images)
         }
+    }
+
+    /**
+     * Finds and parses a date in [strWithDate].
+     * Used to be more flexible, so if there are more things in the [strWithDate], it won't affect the date parsing.
+     */
+    private fun parseDate(strWithDate: String): LocalDate
+    {
+        val dateStr = DATE_REGEX.find(strWithDate)?.value ?: throw ParseException("Failed to parse date from string: $strWithDate")
+        return LocalDate.parse(dateStr, DATE_FORMATTER)
     }
 
     private fun parseArticleFiles(articleEle: Element): List<ArticleFile>
@@ -95,6 +104,8 @@ internal object HtmlNewsPageParserImpl : HtmlNewsPageParser
 
         return imageEles.map { it.attr("href") }
     }
+
+    private val DATE_REGEX = Regex("""(?:[1-3]\d|\d)\.(?:ledna|února|března|dubna|května|června|července|srpna|září|října|listopadu|prosince)""")
 
     private val DATE_FORMATTER: DateTimeFormatter
         get() = DateTimeFormatterBuilder()
