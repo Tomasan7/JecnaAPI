@@ -12,9 +12,7 @@ import me.tomasan7.jecnaapi.util.hasDuplicate
  */
 class LessonSpot(lessons: List<Lesson>, val periodSpan: Int) : Iterable<Lesson>
 {
-    constructor(lesson: Lesson, periodSpan: Int) : this(listOf(lesson), periodSpan)
-
-    constructor(lesson: Lesson) : this(listOf(lesson), 1)
+    constructor(lesson: Lesson, periodSpan: Int = 1) : this(listOf(lesson), periodSpan)
 
     private val lessons: List<Lesson>
 
