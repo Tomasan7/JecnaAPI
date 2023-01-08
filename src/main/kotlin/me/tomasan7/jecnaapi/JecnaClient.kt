@@ -35,7 +35,7 @@ class JecnaClient(autoLogin: Boolean = false)
 
     private val newsPageParser: HtmlNewsPageParser = HtmlNewsPageParserImpl
     private val gradesPageParser: HtmlGradesPageParser = HtmlGradesPageParserImpl
-    private val timetablePageParser: HtmlTimetablePageParser = HtmlTimetableParserImpl
+    private val timetablePageParser: HtmlTimetablePageParser = HtmlTimetablePageParserImpl(HtmlTimetableParserImpl)
     private val attendancesPageParser: HtmlAttendancesPageParser = HtmlAttendancesPageParserImpl
     private val teachersPageParser: HtmlTeachersPageParser = HtmlTeachersPageParserImpl
     private val teacherParser: HtmlTeacherParser = HtmlTeacherParserImpl
