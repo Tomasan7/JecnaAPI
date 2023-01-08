@@ -31,7 +31,7 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
         }
         catch (e: Exception)
         {
-            throw ParseException(e)
+            throw ParseException("Failed to parse canteen.", e)
         }
     }
 

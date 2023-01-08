@@ -29,10 +29,6 @@ internal class HtmlTimetablePageParserImpl(private val timetableParser: HtmlTime
 
             return timetablePageBuilder.build()
         }
-        catch (e: ParseException)
-        {
-            throw e
-        }
         catch (e: Exception)
         {
             throw ParseException("Failed to parse timetable page.", e)

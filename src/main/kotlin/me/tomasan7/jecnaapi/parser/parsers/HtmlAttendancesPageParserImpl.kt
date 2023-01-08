@@ -52,10 +52,6 @@ internal object HtmlAttendancesPageParserImpl : HtmlAttendancesPageParser
 
             return attendancesPageBuilder.build()
         }
-        catch (e: ParseException)
-        {
-            throw e
-        }
         catch (e: Exception)
         {
             throw ParseException("Failed to parse attendances page.", e)

@@ -29,7 +29,7 @@ internal object HtmlTeachersPageParserImpl : HtmlTeachersPageParser
         }
         catch (e: Exception)
         {
-            throw ParseException(e)
+            throw ParseException("Failed to parse teachers page.", e)
         }
     }
 

@@ -35,7 +35,7 @@ internal object HtmlNewsPageParserImpl : HtmlNewsPageParser
         }
         catch (e: Exception)
         {
-            throw ParseException(e)
+            throw ParseException("Failed to parse news page.", e)
         }
     }
 

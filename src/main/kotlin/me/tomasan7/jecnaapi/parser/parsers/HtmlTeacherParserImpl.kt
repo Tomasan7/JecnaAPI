@@ -45,7 +45,7 @@ internal object HtmlTeacherParserImpl : HtmlTeacherParser
         }
         catch (e: Exception)
         {
-            throw ParseException(e)
+            throw ParseException("Failed to parse teacher.", e)
         }
     }
 
