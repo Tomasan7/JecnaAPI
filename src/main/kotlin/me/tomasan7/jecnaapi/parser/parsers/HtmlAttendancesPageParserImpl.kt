@@ -116,8 +116,6 @@ internal object HtmlAttendancesPageParserImpl : HtmlAttendancesPageParser
             .toFormatter())
     }
 
-
-
     /**
      * Matches the day date in the first column.
      *
