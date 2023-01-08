@@ -19,9 +19,9 @@ internal class UtilKtTest
     @Test
     fun testHasDuplicate()
     {
-        val lesson1 = Lesson("Math".toName(), "Mr. Smith".toName(), "A1", 1)
-        val lesson2 = Lesson("English".toName(), "Mr. Green".toName(), "B2", 2)
-        val lesson3 = Lesson("Math".toName(), "Mr. Smith".toName(), "C3", 1)
+        val lesson1 = Lesson("Math".toName(), "Mr. Smith".toName(), "A1", "1/3")
+        val lesson2 = Lesson("English".toName(), "Mr. Green".toName(), "B2", "1/3")
+        val lesson3 = Lesson("Math".toName(), "Mr. Smith".toName(), "C3", "3/3")
 
         val lessonsWithDuplicate = listOf(lesson1, lesson2, lesson3)
 
