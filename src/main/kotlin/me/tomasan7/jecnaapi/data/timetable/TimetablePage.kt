@@ -15,7 +15,7 @@ class TimetablePage private constructor(
     val selectedSchoolYear: SchoolYear
 )
 {
-    override fun toString() = "TimetablePage(timetable=$timetable, periodOptions=$periodOptions)"
+    override fun toString() = "TimetablePage(timetable=$timetable, periodOptions=$periodOptions, selectedSchoolYear=$selectedSchoolYear)"
 
     companion object
     {
