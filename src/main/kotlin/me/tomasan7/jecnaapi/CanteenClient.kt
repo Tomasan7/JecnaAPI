@@ -84,14 +84,14 @@ class CanteenClient
      * @param menuPage The [MenuPage] the [menuItem] is in.
      * @return Whether the order was successful or not.
      */
-    suspend fun order(menuItem: MenuItem, menuPage: MenuPage) = order(menuItem, menuPage.menu.dayMenus.find { it.items.contains(menuItem) }!!.day, menuPage)
+    suspend fun order(menuItem: MenuItem, menuPage: MenuPage) =
+        order(menuItem, menuPage.menu.dayMenus.find { it.items.contains(menuItem) }!!.day, menuPage)
 
-    suspend fun putOnExchange(menuItem: MenuItem, dayMenuDay: LocalDate, menuPage: MenuPage): Boolean
-    {
-        return menuItem.putOnExchangePath?.let { ajaxOrder(it, dayMenuDay, menuPage) } ?: false
-    }
+    suspend fun putOnExchange(menuItem: MenuItem, dayMenuDay: LocalDate, menuPage: MenuPage) =
+        menuItem.putOnExchangePath?.let { ajaxOrder(it, dayMenuDay, menuPage) } ?: false
 
-    suspend fun putOnExchange(menuItem: MenuItem, menuPage: MenuPage) = putOnExchange(menuItem, menuPage.menu.dayMenus.find { it.items.contains(menuItem) }!!.day, menuPage)
+    suspend fun putOnExchange(menuItem: MenuItem, menuPage: MenuPage) =
+        putOnExchange(menuItem, menuPage.menu.dayMenus.find { it.items.contains(menuItem) }!!.day, menuPage)
 
     private suspend fun ajaxOrder(url: String, dayMenuDay: LocalDate, menuPage: MenuPage): Boolean
     {
@@ -139,7 +139,10 @@ class CanteenClient
     {
         /* The day string formatted as the server accepts it. */
         val dayStr = dayMenuDay.format(DAY_MENU_DAY_FORMATTER)
-        val newDayMenuHtml = webClient.queryStringBody("/faces/secured/db/dbJidelnicekOnDayView.jsp", Parameters.build { append("day", dayStr) })
+        val newDayMenuHtml = webClient.queryStringBody(
+            path = "/faces/secured/db/dbJidelnicekOnDayView.jsp",
+            parameters = Parameters.build { append("day", dayStr) }
+        )
 
         return canteenParser.parseDayMenu(newDayMenuHtml)
     }
