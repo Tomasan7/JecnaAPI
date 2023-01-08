@@ -9,7 +9,7 @@ fun main(): Unit = runBlocking {
 
     val client = JecnaClient()
 
-    client.login("hula", "password")
+    client.login("user", "password")
 
     /* Stáhne známky z roku 2021/2022 z druhého pololetí. */
     val gradesPage = client.getGradesPage(SchoolYear(2021), SchoolYearHalf.SECOND)
