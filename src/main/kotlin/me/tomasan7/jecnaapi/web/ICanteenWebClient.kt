@@ -33,7 +33,9 @@ class ICanteenWebClient : AuthWebClient
                 append("j_password", auth.password)
                 append("terminal", false.toString())
                 append("type", "web")
-                append("_csrf", Jsoup.parse(loginFormHtmlResponse).select("#signup-user-col > div > form > ul > li > input[name=_csrf]").attr("value"))
+                append("_csrf", Jsoup.parse(loginFormHtmlResponse)
+                    .selectFirstOrThrow("#signup-user-col > div > form > ul > li > input[name=_csrf]", "CSRF token")
+                    .attr("value"))
                 append("targetUrl", "/faces/secured/main.jsp?terminal=false&status=true&printer=&keyboard=")
             })
 
