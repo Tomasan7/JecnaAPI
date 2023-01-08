@@ -18,13 +18,13 @@ class LessonSpot(lessons: List<Lesson>, val periodSpan: Int = 1) : Iterable<Less
 
     /** The number of lessons in this [LessonSpot]. */
     val size: Int
-        get() = lessons.size
 
     init
     {
         require(!hasDuplicateGroups(lessons)) { "Lessons cannot have duplicate groups." }
 
         this.lessons = lessons.sortedBy { it.group }
+        this.size = lessons.size
     }
 
     /** Returns whether there are any duplicate groups in provided [lessons][Lesson]. */
