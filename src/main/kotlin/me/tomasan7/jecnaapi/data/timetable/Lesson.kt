@@ -11,5 +11,5 @@ data class Lesson(
     val subjectName: Name,
     val teacherName: Name?,
     val classroom: String?,
-    val group: Int
+    val group: String?
 )
