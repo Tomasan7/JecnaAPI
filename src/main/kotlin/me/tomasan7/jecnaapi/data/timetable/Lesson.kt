@@ -9,7 +9,7 @@ import me.tomasan7.jecnaapi.util.Name
  */
 data class Lesson(
     val subjectName: Name,
-    val teacherName: Name,
+    val teacherName: Name?,
     val classroom: String?,
     val group: Int
 )
