@@ -20,8 +20,8 @@ internal class HtmlTimetablePageParserImpl(private val timetableParser: HtmlTime
 
             val document = Jsoup.parse(html)
 
-            val timetableEle = document.selectFirstOrThrow(".timetable")
-            val timetable = timetableParser.parse(timetableEle.html())
+            val timetableEle = document.selectFirstOrThrow("table.timetable")
+            val timetable = timetableParser.parse(timetableEle.outerHtml())
 
             timetablePageBuilder.setPeriodOptions(parsePeriodOptions(document))
             timetablePageBuilder.setSelectedSchoolYear(HtmlCommonParser.parseSelectedSchoolYear(document))
