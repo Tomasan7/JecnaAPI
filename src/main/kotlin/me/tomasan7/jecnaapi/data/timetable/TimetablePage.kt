@@ -86,7 +86,7 @@ class TimetablePage private constructor(
             return this
         }
 
-        fun setSetSelectedSchoolYear(selectedSchoolYear: SchoolYear): Builder
+        fun setSelectedSchoolYear(selectedSchoolYear: SchoolYear): Builder
         {
             this.selectedSchoolYear = selectedSchoolYear
             return this
