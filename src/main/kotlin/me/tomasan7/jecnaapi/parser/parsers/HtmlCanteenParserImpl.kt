@@ -54,13 +54,13 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
         return OrderResponse(credit, time)
     }
 
-    private fun parseCredit(creditEleText: String): Float
-    {
-        /* Substring to remove the " Kč" suffix. */
+    private fun parseCredit(creditEleText: String) = creditEleText
+        .replace(" Kč", "")
         /* Comma replaced with dot to make conversion to float possible. */
+        .replace(',', '.')
         /* Space removed, because there might be one between the thousand and so digits. */
-        return creditEleText.let { it.substring(0, it.length - 3) }.replace(',', '.').replace(" ", "").toFloat()
-    }
+        .replace(" ", "")
+        .toFloat()
 
     private fun parseDayMenu(dayMenuEle: Element): DayMenu
     {
