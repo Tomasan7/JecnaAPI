@@ -55,6 +55,7 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
     }
 
     private fun parseCredit(creditEleText: String) = creditEleText
+        .trim()
         .replace(" Kč", "")
         /* Comma replaced with dot to make conversion to float possible. */
         .replace(',', '.')
@@ -106,9 +107,9 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
         return MenuItem(
             description = itemDescription,
             allergens = allergens,
-            /* Substring to remove the " Kč" suffix. */
-            price = orderButtonEle.selectFirstOrThrow(".important.warning.button-link-align", "order button")
-                .text().let { it.substring(0, it.length - 3) }.toFloat(),
+            price = parseCredit(
+                orderButtonEle.selectFirstOrThrow(".important.warning.button-link-align", "order price").text()
+            ),
             enabled = !orderButtonEle.hasClass("disabled"),
             /* Query for the check mark in the button ele. */
             ordered = orderButtonEle.selectFirst(".fa.fa-check.fa-2x") != null,
