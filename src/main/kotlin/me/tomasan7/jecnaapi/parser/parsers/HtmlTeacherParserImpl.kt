@@ -12,7 +12,7 @@ internal object HtmlTeacherParserImpl : HtmlTeacherParser
         try
         {
             val document = Jsoup.parse(html)
-            val table = document.selectFirst(".userprofile")!!
+            val table = document.selectFirstOrThrow(".userprofile", "data table")
 
             val fullName = getTableValue(table, "Jméno")!!
             val tag = getTableValue(table, "Zkratka")!!

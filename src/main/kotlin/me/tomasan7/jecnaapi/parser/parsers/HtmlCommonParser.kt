@@ -16,13 +16,13 @@ object HtmlCommonParser
 {
     fun parseSelectedSchoolYear(document: Document): SchoolYear
     {
-        val selectedSchoolYearEle = document.selectFirst("#schoolYearId > option[selected]")!!
+        val selectedSchoolYearEle = document.selectFirstOrThrow("#schoolYearId > option[selected]", "selected school year")
         return selectedSchoolYearEle.text().toSchoolYear()
     }
 
     fun parseSelectedMonth(document: Document): Month
     {
-        val selectedMonthEle = document.selectFirst("#schoolYearPartMonthId > option[selected]")!!
+        val selectedMonthEle = document.selectFirstOrThrow("#schoolYearPartMonthId > option[selected]", "selected month")
         return parseMonthByName(selectedMonthEle.text())
     }
 

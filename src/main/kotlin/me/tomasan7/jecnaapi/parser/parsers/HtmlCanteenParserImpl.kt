@@ -25,7 +25,7 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
                 menuBuilder.addDayMenu(dayMenu.day, dayMenu)
             }
 
-           val credit = parseCredit(document.selectFirst("#Kredit")!!.text())
+           val credit = parseCredit(document.selectFirstOrThrow("#Kredit").text())
 
             return MenuPage(menuBuilder.build(), credit)
         }
@@ -37,7 +37,7 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
 
     override fun parseDayMenu(html: String): DayMenu
     {
-        val element = Jsoup.parse(html).selectFirst("body")!!
+        val element = Jsoup.parse(html).selectFirstOrThrow("body")
         return parseDayMenu(element)
     }
 
@@ -45,8 +45,8 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
     {
         val document = Jsoup.parse(orderResponseHtml)
 
-        val creditEle = document.selectFirst("#Kredit")!!
-        val timeEle = document.selectFirst("#time")!!
+        val creditEle = document.selectFirstOrThrow("#Kredit")
+        val timeEle = document.selectFirstOrThrow("#time")
 
         val credit = parseCredit(creditEle.text())
         val time = timeEle.text().toLong()
@@ -64,7 +64,7 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
 
     private fun parseDayMenu(dayMenuEle: Element): DayMenu
     {
-        val dayStr = dayMenuEle.selectFirst("div > strong > .important")!!.text()
+        val dayStr = dayMenuEle.selectFirstOrThrow("div > strong > .important").text()
         val day = LocalDate.parse(dayStr, DATE_FORMAT)
 
         val dayMenuBuilder = DayMenu.builder(day)
@@ -107,7 +107,8 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
             description = itemDescription,
             allergens = allergens,
             /* Substring to remove the " Kč" suffix. */
-            price = orderButtonEle.selectFirst(".important.warning.button-link-align")!!.text().let { it.substring(0, it.length - 3) }.toFloat(),
+            price = orderButtonEle.selectFirstOrThrow(".important.warning.button-link-align", "order button")
+                .text().let { it.substring(0, it.length - 3) }.toFloat(),
             enabled = !orderButtonEle.hasClass("disabled"),
             /* Query for the check mark in the button ele. */
             ordered = orderButtonEle.selectFirst(".fa.fa-check.fa-2x") != null,
