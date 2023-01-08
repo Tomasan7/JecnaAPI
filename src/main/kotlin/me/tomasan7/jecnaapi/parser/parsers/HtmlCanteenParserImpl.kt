@@ -25,7 +25,7 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
                 menuBuilder.addDayMenu(dayMenu.day, dayMenu)
             }
 
-           val credit = parseCredit(document.selectFirstOrThrow("#Kredit").text())
+            val credit = parseCredit(document.selectFirstOrThrow("#Kredit").text())
 
             return MenuPage(menuBuilder.build(), credit)
         }
