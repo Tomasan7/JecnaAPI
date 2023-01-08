@@ -1,6 +1,7 @@
 package me.tomasan7.jecnaapi.data.schoolStaff
 
 import me.tomasan7.jecnaapi.data.SchoolAttendee
+import me.tomasan7.jecnaapi.data.timetable.Timetable
 import java.net.URI
 
 class Teacher(
@@ -15,7 +16,8 @@ class Teacher(
     val landline: String? = null,
     val cabinet: String? = null,
     val tutorOfClass: String? = null,
-    val consultationHours: String? = null
+    val consultationHours: String? = null,
+    val timetable: Timetable? = null
 ) : SchoolAttendee(fullName, username, schoolMail, privateMail, phoneNumbers, profilePicturePath)
 {
     val tag = tag.trim().lowercase().replaceFirstChar { it.uppercaseChar() }

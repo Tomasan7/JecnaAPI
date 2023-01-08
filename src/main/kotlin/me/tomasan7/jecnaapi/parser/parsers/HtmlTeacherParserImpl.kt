@@ -5,7 +5,7 @@ import me.tomasan7.jecnaapi.parser.ParseException
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
-internal object HtmlTeacherParserImpl : HtmlTeacherParser
+internal class HtmlTeacherParserImpl(private val timetableParser: HtmlTimetableParser) : HtmlTeacherParser
 {
     override fun parse(html: String): Teacher
     {
@@ -28,6 +28,9 @@ internal object HtmlTeacherParserImpl : HtmlTeacherParser
             val tutorOfClass = getTableValue(table, "Třídní učitel")
             val profilePicturePath = document.selectFirst(".profilephoto .image img")?.attr("src")
 
+            val timetableEle = document.selectFirst("table.timetable")
+            val timetable = timetableEle?.let { timetableParser.parse(it.outerHtml()) }
+
             return Teacher(
                 fullName = fullName,
                 username = username,
@@ -41,6 +44,7 @@ internal object HtmlTeacherParserImpl : HtmlTeacherParser
                 cabinet = cabinet,
                 tutorOfClass = tutorOfClass,
                 consultationHours = consultationHours,
+                timetable = timetable
             )
         }
         catch (e: Exception)
@@ -57,13 +61,16 @@ internal object HtmlTeacherParserImpl : HtmlTeacherParser
         return targetRow?.selectFirst(".value,.link")?.text()
     }
 
-    /**
-     * Matches either a number without spaces (123456789) or a number with spaces in the middle (123 456 789).
-     */
-    private val PHONE_NUMBER_REGEX = Regex("""(?:\d{3}){3}|((?:\d{3} ){2}\d{3})""")
+    companion object
+    {
+        /**
+         * Matches either a number without spaces (123456789) or a number with spaces in the middle (123 456 789).
+         */
+        private val PHONE_NUMBER_REGEX = Regex("""(?:\d{3}){3}|((?:\d{3} ){2}\d{3})""")
 
-    /**
-     * Matches three numbers preceded with "a linka".
-     */
-    private val LAND_LINE_REGEX = Regex("""(?<=a linka )\d{3}""")
+        /**
+         * Matches three numbers preceded with "a linka".
+         */
+        private val LAND_LINE_REGEX = Regex("""(?<=a linka )\d{3}""")
+    }
 }

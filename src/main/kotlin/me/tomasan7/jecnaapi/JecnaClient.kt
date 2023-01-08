@@ -38,7 +38,7 @@ class JecnaClient(autoLogin: Boolean = false)
     private val timetablePageParser: HtmlTimetablePageParser = HtmlTimetablePageParserImpl(HtmlTimetableParserImpl)
     private val attendancesPageParser: HtmlAttendancesPageParser = HtmlAttendancesPageParserImpl
     private val teachersPageParser: HtmlTeachersPageParser = HtmlTeachersPageParserImpl
-    private val teacherParser: HtmlTeacherParser = HtmlTeacherParserImpl
+    private val teacherParser: HtmlTeacherParser = HtmlTeacherParserImpl(HtmlTimetableParserImpl)
 
     suspend fun login(username: String, password: String) = login(Auth(username, password))
 
