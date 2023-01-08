@@ -94,7 +94,7 @@ class TimetablePage private constructor(
 
         fun setTimetable(timetable: Timetable): Builder
         {
-            this.timetable
+            this.timetable = timetable
             return this
         }
 
