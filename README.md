@@ -21,7 +21,7 @@ JecnaAPI je Kotlin knihovna, díky které lze přistupovat k datům webu [spseje
 ### Vytvoření JecnaClient objektu
 
 ```kotlin
-val jecnaClient = JecnaClient("username", "password")
+val jecnaClient = JecnaClient()
 ```
 
 ### Přihlášení
@@ -31,7 +31,7 @@ Přihlášení je nezbytné k čtení dat studenta.
 ```kotlin
 /* runBlocking, nebo jiný coroutine scope. */
 runBlocking {
-    jecnaClient.login()
+    jecnaClient.login("username", "password")
 }
 ```
 
