@@ -8,7 +8,7 @@ import java.time.Month
 /**
  * Holds all [attendances][Attendance] for each day.
  */
-class AttendancesPage private constructor(
+data class AttendancesPage private constructor(
     private val attendances: Map<LocalDate, List<Attendance>>,
     val selectedSchoolYear: SchoolYear,
     val selectedMonth: Month

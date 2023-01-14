@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter
 /**
  * Whole timetable containing [LessonSpot]s for each day and their [LessonPeriod]s.
  */
-class TimetablePage private constructor(
+data class TimetablePage private constructor(
     val timetable: Timetable,
     val periodOptions: List<PeriodOption> = emptyList(),
     val selectedSchoolYear: SchoolYear

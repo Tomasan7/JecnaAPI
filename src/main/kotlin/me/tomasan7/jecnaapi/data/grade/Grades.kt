@@ -7,7 +7,7 @@ import java.util.*
  * @property subjectPartsGrades Map of all [grades][Grade] for each subject part. (eg. "Teorie, Cvičení")
  * When there are no subject parts, the list of all [grades][Grade] is under `null` key.
  */
-class Grades private constructor(private val subjectPartsGrades: Map<String?, List<Grade>>)
+data class Grades private constructor(private val subjectPartsGrades: Map<String?, List<Grade>>)
 {
     val subjectParts = subjectPartsGrades.keys
     val count = subjectParts.flatMap { subjectPartsGrades[it]!! }.size

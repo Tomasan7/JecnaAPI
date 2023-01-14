@@ -9,7 +9,7 @@ import me.tomasan7.jecnaapi.util.toName
  * Representing grades table.
  * Stores `0` or more grades for each subject.
  */
-class GradesPage private constructor(
+data class GradesPage private constructor(
     private val subjectsMap: Map<Name, Subject>,
     val behaviour: Behaviour,
     val selectedSchoolYear: SchoolYear,

@@ -2,7 +2,7 @@ package me.tomasan7.jecnaapi.data.schoolStaff
 
 import me.tomasan7.jecnaapi.util.setAll
 
-class TeachersPage(val teachersReferences: Set<TeacherReference>)
+data class TeachersPage(val teachersReferences: Set<TeacherReference>)
 {
     companion object
     {
