@@ -1,5 +1,6 @@
 package me.tomasan7.jecnaapi.data.timetable
 
+import kotlinx.serialization.Serializable
 import me.tomasan7.jecnaapi.util.hasDuplicate
 
 /**
@@ -10,6 +11,7 @@ import me.tomasan7.jecnaapi.util.hasDuplicate
  *
  * @property periodSpan The number of [periods][LessonPeriod] this lesson spot spans over.
  */
+@Serializable
 class LessonSpot(val lessons: List<Lesson>, val periodSpan: Int = 1) : Iterable<Lesson>
 {
     constructor(lesson: Lesson, periodSpan: Int = 1) : this(listOf(lesson), periodSpan)

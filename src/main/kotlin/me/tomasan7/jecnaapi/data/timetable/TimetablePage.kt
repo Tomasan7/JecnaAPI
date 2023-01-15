@@ -1,5 +1,8 @@
 package me.tomasan7.jecnaapi.data.timetable
 
+import kotlinx.serialization.Serializable
+import me.tomasan7.jecnaapi.serialization.LocalDateSerializer
+import me.tomasan7.jecnaapi.serialization.SchoolYearSerializer
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.util.emptyMutableLinkedList
 import me.tomasan7.jecnaapi.util.setAll
@@ -9,9 +12,11 @@ import java.time.format.DateTimeFormatter
 /**
  * Whole timetable containing [LessonSpot]s for each day and their [LessonPeriod]s.
  */
+@Serializable
 data class TimetablePage private constructor(
     val timetable: Timetable,
     val periodOptions: List<PeriodOption> = emptyList(),
+    @Serializable(with = SchoolYearSerializer::class)
     val selectedSchoolYear: SchoolYear
 )
 {
@@ -31,10 +36,13 @@ data class TimetablePage private constructor(
      * @property to Optional end [date][LocalDate] of this [option][PeriodOption]. `null` means that this period will continue for unknown time.
      * @property selected Whether this [option][PeriodOption] is selected or not.
      */
+    @Serializable
     data class PeriodOption(
         val id: Int,
         val header: String?,
+        @Serializable(with = LocalDateSerializer::class)
         val from: LocalDate,
+        @Serializable(with = LocalDateSerializer::class)
         val to: LocalDate?,
         val selected: Boolean = false
     )

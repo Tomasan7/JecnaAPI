@@ -1,5 +1,7 @@
 package me.tomasan7.jecnaapi.data.timetable
 
+import kotlinx.serialization.Serializable
+import me.tomasan7.jecnaapi.serialization.TimetableSerializer
 import me.tomasan7.jecnaapi.util.emptyMutableLinkedList
 import me.tomasan7.jecnaapi.util.next
 import me.tomasan7.jecnaapi.util.setAll
@@ -7,6 +9,7 @@ import java.time.*
 import java.time.temporal.ChronoUnit
 import java.util.*
 
+@Serializable(with = TimetableSerializer::class)
 class Timetable private constructor(
     lessonPeriods: List<LessonPeriod>,
     private val timetable: Map<DayOfWeek, List<LessonSpot>>
