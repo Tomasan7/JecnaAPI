@@ -1,5 +1,9 @@
 package me.tomasan7.jecnaapi.data.attendance
 
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
+import me.tomasan7.jecnaapi.serialization.LocalDateSerializer
+import me.tomasan7.jecnaapi.serialization.SchoolYearSerializer
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.util.emptyMutableLinkedList
 import java.time.LocalDate
@@ -8,8 +12,10 @@ import java.time.Month
 /**
  * Holds all [attendances][Attendance] for each day.
  */
+@Serializable
 data class AttendancesPage private constructor(
-    private val attendances: Map<LocalDate, List<Attendance>>,
+    private val attendances: Map<@Serializable(with = LocalDateSerializer::class) LocalDate, List<Attendance>>,
+    @Serializable(with = SchoolYearSerializer::class)
     val selectedSchoolYear: SchoolYear,
     val selectedMonth: Month
 )
@@ -17,6 +23,7 @@ data class AttendancesPage private constructor(
     /**
      * All days, this [AttendancesPage] has data for.
      */
+    @Transient
     val days = attendances.keys
 
     /**

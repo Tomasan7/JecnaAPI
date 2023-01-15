@@ -1,5 +1,7 @@
 package me.tomasan7.jecnaapi.data.attendance
 
+import kotlinx.serialization.Serializable
+import me.tomasan7.jecnaapi.serialization.LocalTimeSerializer
 import java.time.LocalTime
 
 /**
@@ -9,4 +11,9 @@ import java.time.LocalTime
  * @property type [AttendanceType] about whether the person exited or entered.
  * @property time The time, the person entered/exited.
  */
-data class Attendance(val type: AttendanceType, val time: LocalTime)
+@Serializable
+data class Attendance(
+    val type: AttendanceType,
+    @Serializable(with = LocalTimeSerializer::class)
+    val time: LocalTime
+)
