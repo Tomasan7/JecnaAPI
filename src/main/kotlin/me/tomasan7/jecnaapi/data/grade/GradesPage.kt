@@ -1,5 +1,9 @@
 package me.tomasan7.jecnaapi.data.grade
 
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
+import me.tomasan7.jecnaapi.serialization.NameSerializer
+import me.tomasan7.jecnaapi.serialization.SchoolYearSerializer
 import me.tomasan7.jecnaapi.util.Name
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.util.SchoolYearHalf
@@ -9,19 +13,23 @@ import me.tomasan7.jecnaapi.util.toName
  * Representing grades table.
  * Stores `0` or more grades for each subject.
  */
+@Serializable
 data class GradesPage private constructor(
-    private val subjectsMap: Map<Name, Subject>,
+    private val subjectsMap: Map<@Serializable(with = NameSerializer::class) Name, Subject>,
     val behaviour: Behaviour,
+    @Serializable(with = SchoolYearSerializer::class)
     val selectedSchoolYear: SchoolYear,
     val selectedSchoolYearHalf: SchoolYearHalf
 )
 {
     /** All subject names. */
+    @Transient
     val subjectNames = subjectsMap.keys
 
     /**
      * All subjects.
      */
+    @Transient
     val subjects = subjectsMap.values
 
     /**
