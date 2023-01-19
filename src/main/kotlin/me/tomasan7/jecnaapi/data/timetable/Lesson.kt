@@ -1,7 +1,6 @@
 package me.tomasan7.jecnaapi.data.timetable
 
 import kotlinx.serialization.Serializable
-import me.tomasan7.jecnaapi.serialization.NameSerializer
 import me.tomasan7.jecnaapi.util.Name
 
 /**
@@ -11,9 +10,7 @@ import me.tomasan7.jecnaapi.util.Name
  */
 @Serializable
 data class Lesson(
-    @Serializable(with = NameSerializer::class)
     val subjectName: Name,
-    @Serializable(with = NameSerializer::class)
     val teacherName: Name?,
     val classroom: String?,
     val group: String?

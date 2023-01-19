@@ -1,7 +1,6 @@
 package me.tomasan7.jecnaapi.data.grade
 
 import kotlinx.serialization.Serializable
-import me.tomasan7.jecnaapi.serialization.NameSerializer
 import me.tomasan7.jecnaapi.util.Name
 
 /**
@@ -16,7 +15,6 @@ sealed interface FinalGrade
     @Serializable
     data class Grade(
         val value: Int,
-        @Serializable(with = NameSerializer::class)
         val subject: Name? = null
     ) : FinalGrade
     {
