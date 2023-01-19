@@ -42,8 +42,8 @@ class CanteenClient
 
         val response = webClient.queryStringBody("/faces/secured/" + menuItem.orderPath)
 
-        /* Server responds with HTML, when everything went right or JSON error if something went wrong. */
-        return response.startsWith('<')
+        /* Same check as on the original website. */
+        return !response.contains("error")
     }
 
     /**
