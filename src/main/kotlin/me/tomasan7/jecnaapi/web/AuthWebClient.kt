@@ -54,7 +54,7 @@ interface AuthWebClient
      * @throws AuthenticationException When the query fails because user is not authenticated.
      * @return The HTTP response's body as [String].
      */
-    suspend fun queryStringBody(path: String, parameters: Parameters? = null) = query(path, parameters).body<String>()
+    suspend fun queryStringBody(path: String, parameters: Parameters? = null) = query(path, parameters).bodyAsText()
 }
 
 /**
