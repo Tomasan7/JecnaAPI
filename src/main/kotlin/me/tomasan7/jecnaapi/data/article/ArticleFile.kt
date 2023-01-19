@@ -17,6 +17,7 @@ data class ArticleFile(
 {
     @Transient
     val fileNameNoExtension = filename.split(FILE_EXTENSION_DOT_REGEX)[0]
+
     @Transient
     val fileExtension = filename.split(FILE_EXTENSION_DOT_REGEX)[1]
 

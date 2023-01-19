@@ -14,6 +14,7 @@ data class Grades private constructor(private val subjectPartsGrades: Map<String
 {
     @Transient
     val subjectParts = subjectPartsGrades.keys
+
     @Transient
     val count = subjectParts.flatMap { subjectPartsGrades[it]!! }.size
 
