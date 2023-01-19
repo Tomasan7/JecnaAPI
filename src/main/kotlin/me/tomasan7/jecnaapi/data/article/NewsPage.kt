@@ -1,11 +1,13 @@
 package me.tomasan7.jecnaapi.data.article
 
+import kotlinx.serialization.Serializable
 import me.tomasan7.jecnaapi.util.emptyMutableLinkedList
 import me.tomasan7.jecnaapi.util.setAll
 
 /**
  * Holds all the [articles][Article] on the main news page.
  */
+@Serializable
 data class NewsPage(val articles: List<Article>)
 {
     companion object

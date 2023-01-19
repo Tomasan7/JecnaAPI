@@ -1,5 +1,7 @@
 package me.tomasan7.jecnaapi.data.grade
 
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import me.tomasan7.jecnaapi.util.emptyMutableLinkedList
 import java.util.*
 
@@ -7,9 +9,13 @@ import java.util.*
  * @property subjectPartsGrades Map of all [grades][Grade] for each subject part. (eg. "Teorie, Cvičení")
  * When there are no subject parts, the list of all [grades][Grade] is under `null` key.
  */
+@Serializable
 data class Grades private constructor(private val subjectPartsGrades: Map<String?, List<Grade>>)
 {
+    @Transient
     val subjectParts = subjectPartsGrades.keys
+
+    @Transient
     val count = subjectParts.flatMap { subjectPartsGrades[it]!! }.size
 
     /**

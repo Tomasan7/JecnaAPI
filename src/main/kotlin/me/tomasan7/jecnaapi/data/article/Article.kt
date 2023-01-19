@@ -1,10 +1,16 @@
+@file:UseSerializers(LocalDateSerializer::class)
+
 package me.tomasan7.jecnaapi.data.article
 
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.UseSerializers
+import me.tomasan7.jecnaapi.serialization.LocalDateSerializer
 import java.time.LocalDate
 
 /**
  * An article on the main news page.
  */
+@Serializable
 data class Article(
     val title: String,
     val content: String,

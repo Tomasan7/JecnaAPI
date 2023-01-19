@@ -1,5 +1,10 @@
+@file:UseSerializers(LocalDateSerializer::class)
+
 package me.tomasan7.jecnaapi.data.grade
 
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.UseSerializers
+import me.tomasan7.jecnaapi.serialization.LocalDateSerializer
 import me.tomasan7.jecnaapi.util.Name
 import java.time.LocalDate
 
@@ -10,6 +15,7 @@ import java.time.LocalDate
  * @property teacher     The teacher, who gave you the grade.
  * @property description Description of the grade.
  */
+@Serializable
 data class Grade(
     val value: Int,
     val small: Boolean,

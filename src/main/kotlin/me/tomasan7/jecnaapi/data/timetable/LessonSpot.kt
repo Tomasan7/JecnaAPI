@@ -1,5 +1,7 @@
 package me.tomasan7.jecnaapi.data.timetable
 
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import me.tomasan7.jecnaapi.util.hasDuplicate
 
 /**
@@ -10,34 +12,37 @@ import me.tomasan7.jecnaapi.util.hasDuplicate
  *
  * @property periodSpan The number of [periods][LessonPeriod] this lesson spot spans over.
  */
-class LessonSpot(lessons: List<Lesson>, val periodSpan: Int = 1) : Iterable<Lesson>
+@Serializable
+class LessonSpot(val lessons: List<Lesson>, val periodSpan: Int = 1) : Iterable<Lesson>
 {
     constructor(lesson: Lesson, periodSpan: Int = 1) : this(listOf(lesson), periodSpan)
 
-    private val lessons: List<Lesson>
-
     /** The number of lessons in this [LessonSpot]. */
-    val size: Int
+    @Transient
+    val size = lessons.size
 
     init
     {
         require(!hasDuplicateGroups(lessons)) { "Lessons cannot have duplicate groups." }
-
-        this.lessons = lessons.sortedBy { it.group }
-        this.size = lessons.size
     }
 
     /** Returns whether there are any duplicate groups in provided [lessons][Lesson]. */
     private fun hasDuplicateGroups(lessons: Iterable<Lesson>) = lessons.hasDuplicate { it.group }
 
+    /** Returns the [Lesson] on given [index]. */
+    fun getLesson(index: Int) = lessons[index]
+
+    /** Returns the [Lesson] on given [index]. */
+    operator fun get(index: Int) = getLesson(index)
+
     /** Returns `true` if this [LessonSpot] contains no [lessons][Lesson]. */
-    fun isEmpty() = size == 0
+    fun isEmpty() = lessons.isEmpty()
 
     /** Returns `true` if this [LessonSpot] contains at least one lesson. */
     fun isNotEmpty() = !isEmpty()
 
     /** Returns a [Lesson] with the specified [group], or `null` if there's no [Lesson] with that [group]. */
-    fun getLessonByGroup(group: Int) = lessons.getOrNull(group)
+    fun getLessonByGroup(group: String) = lessons.find { it.group == group }
 
     /** @return An [Iterator] of [Lesson], which doesn't modify this [LessonSpot]. */
     override fun iterator() = lessons.iterator()

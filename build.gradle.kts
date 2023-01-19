@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "1.7.20"
+    kotlin("plugin.serialization") version "1.7.20"
     id("org.jetbrains.dokka") version "1.7.20"
     `java-library`
     `maven-publish`
@@ -25,6 +26,8 @@ dependencies {
     val ktorVersion = "2.2.2"
     api("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
+    /* Ktor Serialization (just core, so the user decides the format) */
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.4.1")
 
     testImplementation(kotlin("test"))
 }

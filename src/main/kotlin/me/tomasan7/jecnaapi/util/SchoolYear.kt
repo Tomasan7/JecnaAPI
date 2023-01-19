@@ -1,8 +1,11 @@
 package me.tomasan7.jecnaapi.util
 
+import kotlinx.serialization.Serializable
+import me.tomasan7.jecnaapi.serialization.SchoolYearSerializer
 import java.time.LocalDate
 import java.time.Month
 
+@Serializable(with = SchoolYearSerializer::class)
 data class SchoolYear(val firstCalendarYear: Int): Comparable<SchoolYear>
 {
     val secondCalendarYear: Int = firstCalendarYear + 1

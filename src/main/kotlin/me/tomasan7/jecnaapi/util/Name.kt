@@ -1,5 +1,8 @@
 package me.tomasan7.jecnaapi.util
 
+import kotlinx.serialization.Serializable
+import me.tomasan7.jecnaapi.serialization.NameSerializer
+
 /**
  * Holds a full and short name of a subject.
  * The short name is optional, can be null.
@@ -7,6 +10,7 @@ package me.tomasan7.jecnaapi.util
  * [Name] can also be equal to a [String], when the [String] equals to the [full].
  * Same goes with hash code.
  */
+@Serializable(with = NameSerializer::class)
 data class Name(val full: String, val short: String? = null)
 {
     /**
