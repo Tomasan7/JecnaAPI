@@ -2,7 +2,6 @@ package me.tomasan7.jecnaapi.data.timetable
 
 import kotlinx.serialization.Serializable
 import me.tomasan7.jecnaapi.serialization.LocalDateSerializer
-import me.tomasan7.jecnaapi.serialization.SchoolYearSerializer
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.util.emptyMutableLinkedList
 import me.tomasan7.jecnaapi.util.setAll
@@ -16,7 +15,6 @@ import java.time.format.DateTimeFormatter
 data class TimetablePage private constructor(
     val timetable: Timetable,
     val periodOptions: List<PeriodOption> = emptyList(),
-    @Serializable(with = SchoolYearSerializer::class)
     val selectedSchoolYear: SchoolYear
 )
 {

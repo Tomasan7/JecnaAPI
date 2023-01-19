@@ -2,7 +2,6 @@ package me.tomasan7.jecnaapi.data.grade
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import me.tomasan7.jecnaapi.serialization.SchoolYearSerializer
 import me.tomasan7.jecnaapi.util.Name
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.util.SchoolYearHalf
@@ -16,7 +15,6 @@ import me.tomasan7.jecnaapi.util.toName
 data class GradesPage private constructor(
     private val subjectsMap: Map<Name, Subject>,
     val behaviour: Behaviour,
-    @Serializable(with = SchoolYearSerializer::class)
     val selectedSchoolYear: SchoolYear,
     val selectedSchoolYearHalf: SchoolYearHalf
 )
