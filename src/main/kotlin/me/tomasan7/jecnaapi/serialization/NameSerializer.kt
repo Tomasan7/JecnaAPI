@@ -24,5 +24,5 @@ object NameSerializer : KSerializer<Name>
         return Name(split[0], split.getOrNull(1))
     }
 
-    private const val DIVIDER = ";:;"
+    private const val DIVIDER = "\$"
 }
