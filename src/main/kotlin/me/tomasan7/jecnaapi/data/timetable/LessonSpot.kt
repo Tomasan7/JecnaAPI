@@ -1,6 +1,7 @@
 package me.tomasan7.jecnaapi.data.timetable
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import me.tomasan7.jecnaapi.util.hasDuplicate
 
 /**
@@ -17,6 +18,7 @@ class LessonSpot(val lessons: List<Lesson>, val periodSpan: Int = 1) : Iterable<
     constructor(lesson: Lesson, periodSpan: Int = 1) : this(listOf(lesson), periodSpan)
 
     /** The number of lessons in this [LessonSpot]. */
+    @Transient
     val size = lessons.size
 
     init
