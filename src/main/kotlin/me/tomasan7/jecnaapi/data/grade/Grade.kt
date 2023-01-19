@@ -1,6 +1,9 @@
+@file:UseSerializers(LocalDateSerializer::class)
+
 package me.tomasan7.jecnaapi.data.grade
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.UseSerializers
 import me.tomasan7.jecnaapi.serialization.LocalDateSerializer
 import me.tomasan7.jecnaapi.util.Name
 import java.time.LocalDate
@@ -19,7 +22,6 @@ data class Grade(
     val subject: Name? = null,
     val teacher: Name? = null,
     val description: String? = null,
-    @Serializable(with = LocalDateSerializer::class)
     val receiveDate: LocalDate? = null
 )
 {

@@ -1,6 +1,10 @@
+@file:UseSerializers(LocalTimeSerializer::class)
+
 package me.tomasan7.jecnaapi.data.timetable
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.UseSerializers
+import me.tomasan7.jecnaapi.serialization.LocalDateSerializer
 import me.tomasan7.jecnaapi.serialization.LocalTimeSerializer
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -12,9 +16,7 @@ import java.time.format.DateTimeFormatter
  */
 @Serializable
 data class LessonPeriod(
-    @Serializable(with = LocalTimeSerializer::class)
     val from: LocalTime,
-    @Serializable(with = LocalTimeSerializer::class)
     val to: LocalTime
 ) : ClosedRange<LocalTime>
 {

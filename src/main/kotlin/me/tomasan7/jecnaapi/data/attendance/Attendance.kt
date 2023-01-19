@@ -1,6 +1,10 @@
+@file:UseSerializers(LocalTimeSerializer::class)
+
 package me.tomasan7.jecnaapi.data.attendance
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.UseSerializers
+import me.tomasan7.jecnaapi.serialization.LocalDateSerializer
 import me.tomasan7.jecnaapi.serialization.LocalTimeSerializer
 import java.time.LocalTime
 
@@ -14,6 +18,5 @@ import java.time.LocalTime
 @Serializable
 data class Attendance(
     val type: AttendanceType,
-    @Serializable(with = LocalTimeSerializer::class)
     val time: LocalTime
 )

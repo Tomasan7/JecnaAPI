@@ -1,6 +1,9 @@
+@file:UseSerializers(LocalDateSerializer::class)
+
 package me.tomasan7.jecnaapi.data.article
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.UseSerializers
 import me.tomasan7.jecnaapi.serialization.LocalDateSerializer
 import java.time.LocalDate
 
@@ -12,7 +15,6 @@ data class Article(
     val title: String,
     val content: String,
     val htmlContent: String,
-    @Serializable(with = LocalDateSerializer::class)
     val date: LocalDate,
     val author: String,
     val schoolOnly: Boolean,
