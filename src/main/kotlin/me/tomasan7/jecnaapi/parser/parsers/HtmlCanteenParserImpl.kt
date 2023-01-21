@@ -113,6 +113,7 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
             isEnabled = !orderButtonEle.hasClass("disabled"),
             /* Query for the check mark in the button ele. */
             isOrdered = orderButtonEle.selectFirst(".fa.fa-check.fa-2x") != null,
+            isInExchange = putOnExchangeButtonEle?.text()?.let { it == "z burzy <" } ?: false,
             orderPath = onclick.substring(90, onclick.length - 29),
             putOnExchangePath = putOnExchangeOnClick?.substring(17, putOnExchangeOnClick.length - 28)
         )

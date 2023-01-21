@@ -6,6 +6,7 @@ data class MenuItem(
     val price: Float,
     val isEnabled: Boolean,
     val isOrdered: Boolean,
+    val isInExchange: Boolean,
     var orderPath: String,
     var putOnExchangePath: String? = null,
 )
