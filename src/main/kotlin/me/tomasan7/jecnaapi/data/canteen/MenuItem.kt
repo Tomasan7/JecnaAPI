@@ -4,8 +4,8 @@ data class MenuItem(
     val description: ItemDescription?,
     val allergens: List<String>? = null,
     val price: Float,
-    val enabled: Boolean,
-    val ordered: Boolean,
+    val isEnabled: Boolean,
+    val isOrdered: Boolean,
     var orderPath: String,
     var putOnExchangePath: String? = null,
 )

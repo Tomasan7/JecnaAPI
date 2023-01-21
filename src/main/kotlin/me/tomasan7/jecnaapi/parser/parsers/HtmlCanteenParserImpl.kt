@@ -110,9 +110,9 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
             price = parseCredit(
                 orderButtonEle.selectFirstOrThrow(".important.warning.button-link-align", "order price").text()
             ),
-            enabled = !orderButtonEle.hasClass("disabled"),
+            isEnabled = !orderButtonEle.hasClass("disabled"),
             /* Query for the check mark in the button ele. */
-            ordered = orderButtonEle.selectFirst(".fa.fa-check.fa-2x") != null,
+            isOrdered = orderButtonEle.selectFirst(".fa.fa-check.fa-2x") != null,
             orderPath = onclick.substring(90, onclick.length - 29),
             putOnExchangePath = putOnExchangeOnClick?.substring(17, putOnExchangeOnClick.length - 28)
         )

@@ -37,7 +37,7 @@ class CanteenClient
      */
     suspend fun order(menuItem: MenuItem): Boolean
     {
-        if (!menuItem.enabled)
+        if (!menuItem.isEnabled)
             return false
 
         val response = webClient.queryStringBody("/faces/secured/" + menuItem.orderPath)
@@ -57,7 +57,7 @@ class CanteenClient
      */
     suspend fun order(menuItem: MenuItem, dayMenuDay: LocalDate, menuPage: MenuPage): Boolean
     {
-        if (!menuItem.enabled)
+        if (!menuItem.isEnabled)
             return false
 
         return ajaxOrder(menuItem.orderPath, dayMenuDay, menuPage)
