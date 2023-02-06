@@ -165,7 +165,7 @@ class Timetable private constructor(
      *
      * @param takeEmpty Whether [empty][LessonSpot.isEmpty] [LessonSpot] should be returned, or `null` instead.
      */
-    fun getCurrentNextTimetableSpot(takeEmpty: Boolean = false) = getNextLessonSpot(Instant.now(), takeEmpty)
+    fun getCurrentNextLessonSpot(takeEmpty: Boolean = false) = getNextLessonSpot(Instant.now(), takeEmpty)
 
     companion object
     {
