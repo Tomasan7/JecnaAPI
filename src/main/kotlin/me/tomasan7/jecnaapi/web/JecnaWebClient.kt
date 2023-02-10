@@ -46,14 +46,12 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
         if (token3 == null)
             requestToken3()
 
-        /* The user login request. */
         val response = httpClient.submitForm(
             block = newRequestBuilder("/user/login") { header(HttpHeaders.Referrer, LOGIN_TEST_REFERER) },
             formParameters = Parameters.build {
                 append("user", auth.username)
                 append("pass", auth.password)
                 append("token3", token3!!)
-                /* If the login was successful, web responds with a redirect status code. */
             })
 
         if (response.status != HttpStatusCode.Found)
