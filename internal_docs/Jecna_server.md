@@ -19,4 +19,6 @@ Token3 is a [CSRF Protection](https://laravel.com/docs/9.x/csrf). It is always t
 ## Response
 - If the password or username is incorrect, the server will respond (`200 OK`) with a login problem page. (same as `/user/login-problem`)  
 - If token3 is missing or incorrect, the user will be redirected (`302 Moved Temporarily`) to `/user/login-problem`.
-- If the login is successful, the user will be redirected (`302 Moved Temporarily`) to the page, form which the login happened. ([Referer header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referer))
+- If the login is successful, the user will be redirected (`302 Moved Temporarily`) to either:
+  - the page, which the login happened from. ([Referer header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referer))
+  - root (`/`) in case the user was already logged in when the login happened.
