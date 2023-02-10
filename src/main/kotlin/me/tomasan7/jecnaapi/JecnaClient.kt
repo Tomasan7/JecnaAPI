@@ -82,6 +82,10 @@ class JecnaClient(autoLogin: Boolean = false)
 
     suspend fun getTeacher(teacherReference: TeacherReference) = teacherParser.parse(queryStringBody("${PageWebPath.teachers}/${teacherReference.tag}"))
 
+    suspend fun getRole() = webClient.getRole()
+
+    suspend fun setRole(role: String) = webClient.setRole(role)
+
     /**
      * Makes a request to the provided path. Responses may vary depending on whether user is logged in or not.
      *

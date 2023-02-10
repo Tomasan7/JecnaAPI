@@ -7,6 +7,9 @@ import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import me.tomasan7.jecnaapi.parser.parsers.selectFirstOrThrow
+import org.jsoup.Jsoup
+import java.io.File
 
 /**
  * Http client for accessing the Ječná web.
@@ -30,18 +33,35 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
         followRedirects = false
     }
 
+    private var token3: String? = null
+
+    suspend fun getCookie(name: String) = cookieStorage.get(Url(ENDPOINT)).firstOrNull { it.name == name }?.value
+
+    suspend fun setCookie(name: String, value: String) = cookieStorage.addCookie(ENDPOINT, Cookie(name, value))
+
     override suspend fun login(auth: Auth): Boolean
     {
         lastLoginAuth = auth
 
+        if (token3 == null)
+            requestToken3()
+
         /* The user login request. */
-        return httpClient.submitForm(
-            block = newRequestBuilder("/user/login"),
+        val response = httpClient.submitForm(
+            block = newRequestBuilder("/user/login") { header(HttpHeaders.Referrer, LOGIN_TEST_REFERER) },
             formParameters = Parameters.build {
                 append("user", auth.username)
                 append("pass", auth.password)
+                append("token3", token3!!)
                 /* If the login was successful, web responds with a redirect status code. */
-            }).status == HttpStatusCode.Found
+            })
+
+        if (response.status != HttpStatusCode.Found)
+            return false
+
+        val locationHeader = response.headers[HttpHeaders.Location] ?: return false
+
+        return locationHeader == LOGIN_TEST_REFERER
     }
 
     override suspend fun logout()
@@ -49,15 +69,14 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
         query("/user/logout")
     }
 
-    override suspend fun isLoggedIn(): Boolean
-    {
-        /* Responds with status 302 (redirect to login page) when user is not logged in. */
-        return query(LOGIN_TEST_ENDPOINT).status != HttpStatusCode.Found
-    }
+    /* Responds with status 302 (redirect to login page) when user is not logged in. */
+    override suspend fun isLoggedIn() = query(LOGIN_TEST_ENDPOINT).status == HttpStatusCode.OK
 
     override suspend fun query(path: String, parameters: Parameters?): HttpResponse
     {
         val response = httpClient.get(newRequestBuilder(path, parameters))
+
+        tryFindAndSaveToken3(response.bodyAsText())
 
         /* No redirect to login. */
         val locationHeader = response.headers[HttpHeaders.Location] ?: return response
@@ -78,6 +97,37 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
         }
 
         return response
+    }
+
+    /** Gets user's role cookie. Doesn't make any requests. */
+    suspend fun getRole() = getCookie("role")
+
+    /** Sets user's role cookie. Doesn't make any requests. */
+    suspend fun setRole(role: String) = setCookie("role", role)
+
+    private fun tryFindAndSaveToken3(htmlDocument: String): Boolean
+    {
+        val document = Jsoup.parse(htmlDocument)
+        val token3Ele = document.selectFirst("input[name=token3]") ?: return false
+        val token3 = token3Ele.attr("value")
+        this.token3 = token3
+        return true
+    }
+
+    private suspend fun requestToken3()
+    {
+        val previousRole = getRole()
+        /* Login form with the token3 is not in the root page, when you are neither student nor teacher. */
+        if (previousRole != "student")
+            setRole("student")
+
+        val foundToken = tryFindAndSaveToken3(queryStringBody("/"))
+
+        if (!foundToken)
+            throw RuntimeException("Failed to find token3.")
+
+        if (previousRole != null && previousRole != "student")
+            setRole(previousRole)
     }
 
     /**
@@ -119,6 +169,10 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
     companion object
     {
         const val ENDPOINT = "https://www.spsejecna.cz"
+
+        /** Used as a `Referer` header value in login request, so when server responds, we can check,
+         * if it redirects to that location. Note, that it is just this string, no domain. */
+        private const val LOGIN_TEST_REFERER = "/LOGIN-SUCCESSFUL"
 
         /**
          * Endpoint used for testing whether user is logged in or not.
