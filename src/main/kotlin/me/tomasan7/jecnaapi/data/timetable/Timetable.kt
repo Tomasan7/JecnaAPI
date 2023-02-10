@@ -33,7 +33,8 @@ class Timetable private constructor(
     fun isEmpty() = timetable.isEmpty()
 
     /** Returns index of the [LessonPeriod] at the given [time], or `null` if there is not any. */
-    fun getIndexOfLessonPeriod(time: LocalTime) = lessonPeriods.indexOfFirst { time in it }.let { if (it != -1) it else null }
+    fun getIndexOfLessonPeriod(time: LocalTime) =
+        lessonPeriods.indexOfFirst { time in it }.let { if (it != -1) it else null }
 
     /** Returns index of the [LessonPeriod] at [LocalTime.now], or `null` if there is not any. */
     fun getIndexOfCurrentLessonPeriod() = getIndexOfLessonPeriod(LocalTime.now())
@@ -47,7 +48,8 @@ class Timetable private constructor(
     /** Returns the index of next [LessonPeriod] from the given [time], or `null` if there is no next [LessonPeriod]. */
     fun getIndexOfNextLessonPeriod(time: LocalTime): Int?
     {
-        fun minsUntilStartOf(lessonPeriodIndex: Int) = time.until(lessonPeriods[lessonPeriodIndex].from, ChronoUnit.MINUTES)
+        fun minsUntilStartOf(lessonPeriodIndex: Int) =
+            time.until(lessonPeriods[lessonPeriodIndex].from, ChronoUnit.MINUTES)
 
         return lessonPeriods.indices.filter { minsUntilStartOf(it) > 0 }.minByOrNull { minsUntilStartOf(it) }
     }
@@ -85,6 +87,20 @@ class Timetable private constructor(
         }
 
         return null
+    }
+
+    private fun trimmedLessonPeriods(day: DayOfWeek): List<LessonPeriod>
+    {
+        var lessonPeriodWithLastLessonIndex: Int = lessonPeriods.lastIndex
+
+        for (i in lessonPeriods.indices)
+        {
+            val lessonSpot = getLessonSpot(day, i) ?: continue
+            if (lessonSpot.isNotEmpty())
+                lessonPeriodWithLastLessonIndex = i
+        }
+
+        return lessonPeriods.filterIndexed { i, _ -> i <= lessonPeriodWithLastLessonIndex }
     }
 
     /**
@@ -131,15 +147,32 @@ class Timetable private constructor(
      * Returns the next [LessonSpot] from the given [time] on the [day], or `null` if there is no [LessonSpot] at that moment.
      *
      * @param takeEmpty Whether [empty][LessonSpot.isEmpty] [LessonSpot] should be returned, or `null` instead.
+     * @param trim Whether the empty [LessonSpots][LessonSpot] at the end of the day should not be returned.
      */
-    fun getNextLessonSpot(day: DayOfWeek, time: LocalTime, takeEmpty: Boolean = false): LessonSpot?
+    fun getNextLessonSpot(
+        day: DayOfWeek,
+        time: LocalTime,
+        takeEmpty: Boolean = false,
+        trim: Boolean = true
+    ): LessonSpot?
     {
         if (timetable.isEmpty()) return null
 
         if (day !in days)
             return getNextLessonSpot(day.next(), LocalTime.of(0, 0), takeEmpty)
 
-        val nextLessonPeriodIndex = getIndexOfLessonPeriod(time) ?: 0
+        val lessonPeriods = if (trim)
+            trimmedLessonPeriods(day)
+        else
+            this.lessonPeriods
+
+        val nextLessonPeriodIndex = lessonPeriods
+            .map { it to it.start }
+            .filter { it.second > time }
+            .minByOrNull { time.until(it.second, ChronoUnit.SECONDS) }
+            ?.first
+            ?.let { lp -> lessonPeriods.indexOfFirst { lp === it } }
+            ?: -1
 
         val nextLessonSpot = getLessonSpot(day, nextLessonPeriodIndex)?.takeIf { takeEmpty || it.isNotEmpty() }
 
@@ -150,22 +183,28 @@ class Timetable private constructor(
      * Returns the next [LessonSpot] from the given [datetime], or `null` if there is no [LessonSpot] at that moment.
      *
      * @param takeEmpty Whether [empty][LessonSpot.isEmpty] [LessonSpot] should be returned, or `null` instead.
+     * @param trim Whether the empty [LessonSpots][LessonSpot] at the end of the day should not be returned.
      */
-    fun getNextLessonSpot(datetime: LocalDateTime, takeEmpty: Boolean = false) = getNextLessonSpot(datetime.dayOfWeek, datetime.toLocalTime(), takeEmpty)
+    fun getNextLessonSpot(datetime: LocalDateTime, takeEmpty: Boolean = false, trim: Boolean = true) =
+        getNextLessonSpot(datetime.dayOfWeek, datetime.toLocalTime(), takeEmpty, trim)
 
     /**
      * Returns the next [LessonSpot] from the given [instant], or `null` if there is no [LessonSpot] at that moment.
      *
      * @param takeEmpty Whether [empty][LessonSpot.isEmpty] [LessonSpot] should be returned, or `null` instead.
+     * @param trim Whether the empty [LessonSpots][LessonSpot] at the end of the day should not be returned.
      */
-    fun getNextLessonSpot(instant: Instant, takeEmpty: Boolean = false) = getNextLessonSpot(LocalDateTime.ofInstant(instant, ZoneId.systemDefault()), takeEmpty)
+    fun getNextLessonSpot(instant: Instant, takeEmpty: Boolean = false, trim: Boolean = true) =
+        getNextLessonSpot(LocalDateTime.ofInstant(instant, ZoneId.systemDefault()), takeEmpty, trim)
 
     /**
      * Returns the next [LessonSpot] from [Instant.now], or `null` if there is no [LessonSpot] at that moment.
      *
      * @param takeEmpty Whether [empty][LessonSpot.isEmpty] [LessonSpot] should be returned, or `null` instead.
+     * @param trim Whether the empty [LessonSpots][LessonSpot] at the end of the day should not be returned.
      */
-    fun getCurrentNextLessonSpot(takeEmpty: Boolean = false) = getNextLessonSpot(Instant.now(), takeEmpty)
+    fun getCurrentNextLessonSpot(takeEmpty: Boolean = false, trim: Boolean = true) =
+        getNextLessonSpot(Instant.now(), takeEmpty, trim)
 
     companion object
     {
