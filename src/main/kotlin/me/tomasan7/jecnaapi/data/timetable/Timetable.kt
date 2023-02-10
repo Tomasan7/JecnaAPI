@@ -26,6 +26,22 @@ class Timetable private constructor(
      */
     val daysSorted = days.sorted()
 
+    private val lessonPeriodsTrimmed = buildMap {
+        for (day in days)
+        {
+            var lessonPeriodWithLastLessonIndex: Int = lessonPeriods.lastIndex
+
+            for (i in lessonPeriods.indices)
+            {
+                val lessonSpot = getLessonSpot(day, i) ?: continue
+                if (lessonSpot.isNotEmpty())
+                    lessonPeriodWithLastLessonIndex = i
+            }
+
+            put(day, lessonPeriods.filterIndexed { i, _ -> i <= lessonPeriodWithLastLessonIndex })
+        }
+    }
+
     /**
      * Returns Whether the [Timetable] contains any days.
      * There may be no [LessonSpots][LessonSpot] for some days, that would return `false`.
@@ -89,52 +105,47 @@ class Timetable private constructor(
         return null
     }
 
-    private fun trimmedLessonPeriods(day: DayOfWeek): List<LessonPeriod>
-    {
-        var lessonPeriodWithLastLessonIndex: Int = lessonPeriods.lastIndex
-
-        for (i in lessonPeriods.indices)
-        {
-            val lessonSpot = getLessonSpot(day, i) ?: continue
-            if (lessonSpot.isNotEmpty())
-                lessonPeriodWithLastLessonIndex = i
-        }
-
-        return lessonPeriods.filterIndexed { i, _ -> i <= lessonPeriodWithLastLessonIndex }
-    }
-
     /**
      * Returns the [LessonSpot] that is happening at the given [lessonPeriod].
      * Prefer using [getLessonSpot] if you know the [lessonPeriod] index.
      * @see getLessonSpot
      */
-    fun getLessonSpot(day: DayOfWeek, lessonPeriod: LessonPeriod) = lessonPeriods.indexOf(lessonPeriod).let { if (it != -1) getLessonSpot(day, it) else null }
+    fun getLessonSpot(day: DayOfWeek, lessonPeriod: LessonPeriod) =
+        lessonPeriods.indexOf(lessonPeriod).let { if (it != -1) getLessonSpot(day, it) else null }
 
     /**
      * Returns the [LessonSpot] at the given [day] and [time], or `null` if there is no [LessonSpot] at that moment.
      *
      * @param takeEmpty Whether [empty][LessonSpot.isEmpty] [LessonSpot] should be returned, or `null` instead.
+     * @param trim Whether the empty [LessonSpots][LessonSpot] at the end of the day should not be returned.
      */
-    fun getLessonSpot(day: DayOfWeek, time: LocalTime, takeEmpty: Boolean = false): LessonSpot?
+    fun getLessonSpot(day: DayOfWeek, time: LocalTime, takeEmpty: Boolean = false, trim: Boolean = true): LessonSpot?
     {
-        val lessonPeriodIndex = getIndexOfLessonPeriod(time) ?: return null
+        val lessonPeriod = getLessonPeriod(time) ?: return null
 
-        return getLessonSpot(day, lessonPeriodIndex)?.takeIf { takeEmpty || it.isNotEmpty() }
+        if (trim && lessonPeriod !in lessonPeriodsTrimmed[day]!!)
+            return null
+
+        return getLessonSpot(day, lessonPeriod)?.takeIf { takeEmpty || it.isNotEmpty() }
     }
 
     /**
      * Returns the [LessonSpot] at the given [datetime], or `null` if there is no [LessonSpot] at that moment.
      *
      * @param takeEmpty Whether [empty][LessonSpot.isEmpty] [LessonSpot] should be returned, or `null` instead.
+     * @param trim Whether the empty [LessonSpots][LessonSpot] at the end of the day should not be returned.
      */
-    fun getLessonSpot(datetime: LocalDateTime, takeEmpty: Boolean = false) = getLessonSpot(datetime.dayOfWeek, datetime.toLocalTime(), takeEmpty)
+    fun getLessonSpot(datetime: LocalDateTime, takeEmpty: Boolean = false, trim: Boolean = true) =
+        getLessonSpot(datetime.dayOfWeek, datetime.toLocalTime(), takeEmpty, trim)
 
     /**
      * Returns the [LessonSpot] at the given [instant], or `null` if there is no [LessonSpot] at that moment.
      *
      * @param takeEmpty Whether [empty][LessonSpot.isEmpty] [LessonSpot] should be returned, or `null` instead.
+     * @param trim Whether the empty [LessonSpots][LessonSpot] at the end of the day should not be returned.
      */
-    fun getLessonSpot(instant: Instant, takeEmpty: Boolean = false) = getLessonSpot(LocalDateTime.ofInstant(instant, ZoneId.systemDefault()), takeEmpty)
+    fun getLessonSpot(instant: Instant, takeEmpty: Boolean = false, trim: Boolean = true) =
+        getLessonSpot(LocalDateTime.ofInstant(instant, ZoneId.systemDefault()), takeEmpty, trim)
 
     /**
      * Returns the [LessonSpot] at [Instant.now], or `null` if there is currently no [LessonSpot].
@@ -162,7 +173,7 @@ class Timetable private constructor(
             return getNextLessonSpot(day.next(), LocalTime.of(0, 0), takeEmpty)
 
         val lessonPeriods = if (trim)
-            trimmedLessonPeriods(day)
+            lessonPeriodsTrimmed[day]!!
         else
             this.lessonPeriods
 
