@@ -20,14 +20,11 @@ data class LessonPeriod(
     val to: LocalTime
 ) : ClosedRange<LocalTime>
 {
-    override val start: LocalTime
-        get() = from
+    override val start = from
 
-    override val endInclusive: LocalTime
-        get() = to
+    override val endInclusive = to
 
     override fun toString() = from.format(formatter) + " - " + to.format(formatter)
-
 
     companion object
     {
