@@ -7,7 +7,9 @@ import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import me.tomasan7.jecnaapi.parser.ParseException
 import me.tomasan7.jecnaapi.web.JecnaWebClient.AuthenticationException
+import org.jsoup.Jsoup
 
 /**
  * Http client for accessing the Ječná web.
@@ -30,9 +32,14 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
         followRedirects = false
     }
 
+    private var token3: String? = null
+
     override suspend fun login(auth: Auth): Boolean
     {
         lastLoginAuth = auth
+
+        if (token3 == null)
+            requestToken3()
 
         /* The user login request. */
         return httpClient.submitForm(
@@ -40,6 +47,7 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
             formParameters = Parameters.build {
                 append("user", auth.username)
                 append("pass", auth.password)
+                append("token3", token3!!)
                 /* If the login was successful, web responds with a redirect status code. */
             }).status == HttpStatusCode.Found
     }
@@ -55,11 +63,40 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
         return query(LOGIN_TEST_ENDPOINT).status != HttpStatusCode.Found
     }
 
+    private fun tryFindAndSaveToken3(htmlDocument: String): Boolean
+    {
+        val document = Jsoup.parse(htmlDocument)
+        val token3Ele = document.selectFirst("input[name=token3]") ?: return false
+        val token3 = token3Ele.attr("value")
+        this.token3 = token3
+        return true
+    }
+
+    private suspend fun requestToken3()
+    {
+        val previousRole = getRole()
+        if (previousRole != "student")
+            setRole("student")
+        val foundToken = tryFindAndSaveToken3(queryStringBody("/"))
+        if (!foundToken) throw ParseException("Failed to find token3.")
+        if (previousRole != null && previousRole != "student")
+            setRole(previousRole)
+    }
+
+    /** Sets user's role cookie. Doesn't make any requests. */
+    suspend fun setRole(role: String) = cookieStorage.addCookie(ENDPOINT, Cookie("role", role))
+
+    /** Gets user's role cookie. Doesn't make any requests. */
+    suspend fun getRole() = cookieStorage.get(Url(ENDPOINT)).find { it.name == "role" }?.value
+
     /**
      * @throws AuthenticationException When the query fails because user is not authenticated.
      */
-    override suspend fun query(path: String, parameters: Parameters?): HttpResponse {
+    override suspend fun query(path: String, parameters: Parameters?): HttpResponse
+    {
         val response = httpClient.get(newRequestBuilder(path, parameters))
+
+        tryFindAndSaveToken3(response.bodyAsText())
 
         /* No redirect to login. */
         val locationHeader = response.headers[HttpHeaders.Location] ?: return response
