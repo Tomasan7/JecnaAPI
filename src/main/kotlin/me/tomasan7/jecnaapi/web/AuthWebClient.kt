@@ -1,6 +1,5 @@
 package me.tomasan7.jecnaapi.web
 
-import io.ktor.client.call.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 
