@@ -44,6 +44,8 @@ data class Grades private constructor(private val subjectPartsGrades: Map<String
      */
     fun average(averageCalculator: GradeAverageCalculator = WeightedGradeAverageCalculator) = averageCalculator(this)
 
+    override fun toString() = "Grades(subjectPartsGrades=$subjectPartsGrades)"
+
     companion object
     {
         fun builder() = Builder()
