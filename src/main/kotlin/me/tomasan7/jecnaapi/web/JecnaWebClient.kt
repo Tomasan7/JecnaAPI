@@ -7,9 +7,7 @@ import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import me.tomasan7.jecnaapi.parser.parsers.selectFirstOrThrow
 import org.jsoup.Jsoup
-import java.io.File
 
 /**
  * Http client for accessing the Ječná web.
@@ -47,7 +45,7 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
             requestToken3()
 
         val response = httpClient.submitForm(
-            block = newRequestBuilder("/user/login") { header(HttpHeaders.Referrer, LOGIN_TEST_REFERER) },
+            block = newRequestBuilder("/user/login"),
             formParameters = Parameters.build {
                 append("user", auth.username)
                 append("pass", auth.password)
@@ -59,7 +57,7 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
 
         val locationHeader = response.headers[HttpHeaders.Location] ?: return false
 
-        return locationHeader == LOGIN_TEST_REFERER
+        return locationHeader == "/"
     }
 
     override suspend fun logout()
@@ -169,10 +167,6 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
     companion object
     {
         const val ENDPOINT = "https://www.spsejecna.cz"
-
-        /** Used as a `Referer` header value in login request, so when server responds, we can check,
-         * if it redirects to that location. Note, that it is just this string, no domain. */
-        private const val LOGIN_TEST_REFERER = "/LOGIN-SUCCESSFUL"
 
         /**
          * Endpoint used for testing whether user is logged in or not.
