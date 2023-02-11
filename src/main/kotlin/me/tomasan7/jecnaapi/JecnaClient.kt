@@ -48,6 +48,10 @@ class JecnaClient(autoLogin: Boolean = false)
 
     suspend fun isLoggedIn() = webClient.isLoggedIn()
 
+    suspend fun getCookie(name: String) = webClient.getCookie(name)
+
+    suspend fun setCookie(name: String, value: String) = webClient.setCookie(name, value)
+
     suspend fun getNewsPage() = newsPageParser.parse(queryStringBody(PageWebPath.news))
 
     suspend fun getGradesPage(schoolYear: SchoolYear, schoolYearHalf: SchoolYearHalf) =
