@@ -157,10 +157,6 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
 
             if (parameters != null)
                 url { this.parameters.appendAll(parameters) }
-
-            /* The web requires a User-Agent header, otherwise it responds to the login request with
-			 * 403 - "The page you were looking for is not availible." (yes, it contains the grammar mistake) */
-            header(HttpHeaders.UserAgent, "Mozilla/5.0")
         }
     }
 
