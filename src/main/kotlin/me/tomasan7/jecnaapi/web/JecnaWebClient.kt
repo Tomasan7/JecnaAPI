@@ -8,6 +8,7 @@ import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import org.jsoup.Jsoup
+import java.time.Instant
 
 /**
  * Http client for accessing the Ječná web.
@@ -30,6 +31,9 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
 
         followRedirects = false
     }
+
+    var lastSuccessfulLoginTime: Instant? = null
+        private set
 
     private var token3: String? = null
 
@@ -57,7 +61,12 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
 
         val locationHeader = response.headers[HttpHeaders.Location] ?: return false
 
-        return locationHeader == "/"
+        val successful = locationHeader == "/"
+
+        if (successful)
+            lastSuccessfulLoginTime = Instant.now()
+
+        return successful
     }
 
     override suspend fun logout()

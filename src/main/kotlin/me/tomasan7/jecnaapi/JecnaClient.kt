@@ -13,6 +13,7 @@ import me.tomasan7.jecnaapi.web.Auth
 import me.tomasan7.jecnaapi.web.JecnaWebClient
 import me.tomasan7.jecnaapi.web.AuthenticationException
 import me.tomasan7.jecnaapi.web.append
+import java.time.Instant
 import java.time.Month
 
 /**
@@ -26,6 +27,7 @@ class JecnaClient(autoLogin: Boolean = false)
     private val webClient = JecnaWebClient(autoLogin)
 
     var autoLogin: Boolean by webClient::autoLogin
+    val lastSuccessfulLoginTime: Instant? by webClient::lastSuccessfulLoginTime
 
     /**
      * The [Auth], that was last used in a call to [login]. (also the one with two parameters)
