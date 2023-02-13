@@ -1,3 +1,18 @@
+# General
+
+The server uses Apache server.
+
+## Session
+
+A session is started with a first request to the server. (any request)  
+Its end is dictated by the browser. (See [Session](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#define_the_lifetime_of_a_cookie))
+
+### Session ID cookie
+
+- A session id is indicated by the `JSESSIONID` cookie. (example value: `ucid34sfo72nmfet9aitildblp4psbmm`)
+- It has a lifetime (`Exipres` attribute) of ["Session"](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#define_the_lifetime_of_a_cookie).
+- If the cookie is not present yet, any request to the server will create a new session and set the cookie.
+
 # Login
 
 ## Request
