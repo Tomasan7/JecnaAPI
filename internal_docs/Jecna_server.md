@@ -19,7 +19,7 @@ Its end is dictated by the browser. (See [Session](https://developer.mozilla.org
 Path: `/user/login`  
 Method: `POST`    
 Content-Type: `application/x-www-form-urlencoded`  
-Parameters:
+Form Parameters:
 
 | Name     | Required | Description                                               | Example values            |
 |----------|----------|-----------------------------------------------------------|---------------------------|
