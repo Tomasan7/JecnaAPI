@@ -22,6 +22,7 @@ import java.time.Instant
  */
 class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
 {
+    private val cookieStorage = AcceptAllCookiesStorage()
     private val httpClient = HttpClient(CIO) {
         install(HttpCookies) {
             storage = cookieStorage
@@ -29,7 +30,6 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
 
         followRedirects = false
     }
-    private val cookieStorage = AcceptAllCookiesStorage()
     private var token3: String? = null
 
     var lastLoginAuth: Auth? = null
