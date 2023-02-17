@@ -22,11 +22,6 @@ import java.time.Instant
  */
 class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
 {
-    var lastLoginAuth: Auth? = null
-        private set
-
-    private val cookieStorage = AcceptAllCookiesStorage()
-
     private val httpClient = HttpClient(CIO) {
         install(HttpCookies) {
             storage = cookieStorage
@@ -34,11 +29,15 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
 
         followRedirects = false
     }
+    private val cookieStorage = AcceptAllCookiesStorage()
+    private var token3: String? = null
 
+    var lastLoginAuth: Auth? = null
+        private set
     var lastSuccessfulLoginTime: Instant? = null
         private set
-
-    private var token3: String? = null
+    var role: Role? = null
+        private set
 
     suspend fun getCookieValue(name: String) = getCookie(name)?.value
 
@@ -74,6 +73,13 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
             lastSuccessfulLoginTime = Instant.now()
 
         return successful
+    }
+
+    /** Sets user's role. */
+    suspend fun setRole(role: Role)
+    {
+        query("/user/role", Parameters.build { append("role", role.value) })
+        this.role = role
     }
 
     override suspend fun logout()
@@ -122,12 +128,6 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
         return response
     }
 
-    /** Gets user's role cookie. Doesn't make any requests. */
-    suspend fun getRole() = getCookieValue("role")
-
-    /** Sets user's role cookie. Doesn't make any requests. */
-    suspend fun setRole(role: String) = setCookie("role", role)
-
     private fun tryFindAndSaveToken3(htmlDocument: String): Boolean
     {
         val document = Jsoup.parse(htmlDocument)
@@ -139,17 +139,17 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
 
     private suspend fun requestToken3()
     {
-        val previousRole = getRole()
+        val previousRole = role
         /* Login form with the token3 is not in the root page, when you are neither student nor teacher. */
-        if (previousRole != "student")
-            setRole("student")
+        if (previousRole != Role.STUDENT)
+            setRole(Role.STUDENT)
 
         val foundToken = tryFindAndSaveToken3(queryStringBody("/"))
 
         if (!foundToken)
             throw RuntimeException("Failed to find token3.")
 
-        if (previousRole != null && previousRole != "student")
+        if (previousRole != null && previousRole != Role.STUDENT)
             setRole(previousRole)
     }
 
