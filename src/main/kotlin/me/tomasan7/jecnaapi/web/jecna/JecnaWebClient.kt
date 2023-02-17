@@ -43,9 +43,9 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
 
     suspend fun setCookie(name: String, value: String) = cookieStorage.addCookie(ENDPOINT, Cookie(name, value))
 
-    private suspend fun getCookie(name: String) = cookieStorage.get(Url(ENDPOINT)).firstOrNull { it.name == name }
+    suspend fun getCookie(name: String) = cookieStorage.get(Url(ENDPOINT)).firstOrNull { it.name == name }
 
-    private suspend fun getSessionCookie() = getCookie(SESSION_ID_COOKIE_NAME)
+    suspend fun getSessionCookie() = getCookie(SESSION_ID_COOKIE_NAME)
 
     override suspend fun login(auth: Auth): Boolean
     {
