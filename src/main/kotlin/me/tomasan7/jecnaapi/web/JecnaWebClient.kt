@@ -77,13 +77,22 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
     /* Responds with status 302 (redirect to login page) when user is not logged in. */
     override suspend fun isLoggedIn() = plainQuery(LOGIN_TEST_ENDPOINT).status == HttpStatusCode.OK
 
-    suspend fun plainQuery(path: String, parameters: Parameters? = null) = httpClient.get(newRequestBuilder(path, parameters))
-
-    override suspend fun query(path: String, parameters: Parameters?): HttpResponse
+    /** A query without any authentication (autologin) handling. */
+    suspend fun plainQuery(path: String, parameters: Parameters? = null): HttpResponse
     {
         val response = httpClient.get(newRequestBuilder(path, parameters))
-
         tryFindAndSaveToken3(response.bodyAsText())
+        return response
+    }
+
+    /**
+     * A query with autologin handling.
+     *
+     * @throws AuthenticationException If the request fails because of authentication. (even after autologin)
+     */
+    override suspend fun query(path: String, parameters: Parameters?): HttpResponse
+    {
+        val response = plainQuery(path, parameters)
 
         /* No redirect to login. */
         val locationHeader = response.headers[HttpHeaders.Location] ?: return response
