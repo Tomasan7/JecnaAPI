@@ -1,6 +1,26 @@
 # General
 
-The server uses Apache server.
+The server uses [WebToDate](https://webtodate.cz/) CMS (content management system).
+It has Apache as backend.
+
+## Role
+
+The root (`/`) page is based on your role. The role is selected by the main three buttons on the top of the page. Roles are: `zajemce, student, zamestnanec` (unofficial). The role is associated with the user by the `WTDGUID` cookie, which is used to identify the user.
+
+### Request
+
+Path: `/user/role?role=student`  
+Method: `GET`  
+Content-Type: _none_  
+Query Parameters:
+
+| Name   | Required | Description                          | Example values                |
+|--------|----------|--------------------------------------|-------------------------------|
+| `role` | Yes      | The role being assigned to the user. | zajemce, student, zamestnanec |
+
+### Response
+
+Server responds with the `WTDGUID` cookie, which has an int value. (probably the user id)
 
 ## Session
 
