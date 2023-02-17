@@ -10,10 +10,10 @@ import me.tomasan7.jecnaapi.util.JecnaPeriodEncoder.jecnaEncode
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.util.SchoolYearHalf
 import me.tomasan7.jecnaapi.web.Auth
-import me.tomasan7.jecnaapi.web.jecna.JecnaWebClient
 import me.tomasan7.jecnaapi.web.AuthenticationException
 import me.tomasan7.jecnaapi.web.append
-import java.time.Instant
+import me.tomasan7.jecnaapi.web.jecna.JecnaWebClient
+import me.tomasan7.jecnaapi.web.jecna.Role
 import java.time.Month
 
 /**
@@ -26,12 +26,12 @@ class JecnaClient(autoLogin: Boolean = false)
 {
     private val webClient = JecnaWebClient(autoLogin)
 
-    var autoLogin: Boolean by webClient::autoLogin
-    val lastSuccessfulLoginTime: Instant? by webClient::lastSuccessfulLoginTime
+    var autoLogin by webClient::autoLogin
+    val lastSuccessfulLoginTime by webClient::lastSuccessfulLoginTime
 
-    /** The [Auth], that was last used in a call to [login]. (also the one with two parameters) */
-    val lastLoginAuth: Auth?
-        get() = webClient.lastLoginAuth
+    /** The [Auth], that was last used in a call to [login]. */
+    val lastLoginAuth by webClient::lastLoginAuth
+    val role by webClient::role
 
     private val newsPageParser: HtmlNewsPageParser = HtmlNewsPageParserImpl
     private val gradesPageParser: HtmlGradesPageParser = HtmlGradesPageParserImpl
@@ -50,7 +50,13 @@ class JecnaClient(autoLogin: Boolean = false)
 
     suspend fun getCookieValue(name: String) = webClient.getCookieValue(name)
 
+    suspend fun getCookie(name: String) = webClient.getCookie(name)
+
+    suspend fun getSessionCookie() = webClient.getSessionCookie()
+
     suspend fun setCookie(name: String, value: String) = webClient.setCookie(name, value)
+
+    suspend fun setRole(role: Role) = webClient.setRole(role)
 
     suspend fun getNewsPage() = newsPageParser.parse(queryStringBody(PageWebPath.news))
 
@@ -86,9 +92,8 @@ class JecnaClient(autoLogin: Boolean = false)
 
     suspend fun getTeacher(teacherReference: TeacherReference) = teacherParser.parse(queryStringBody("${PageWebPath.teachers}/${teacherReference.tag}"))
 
-    suspend fun getRole() = webClient.getRole()
-
-    suspend fun setRole(role: String) = webClient.setRole(role)
+    /** A query without any authentication (autologin) handling. */
+    suspend fun plainQuery(path: String, parameters: Parameters? = null) = webClient.plainQuery(path, parameters)
 
     /**
      * Makes a request to the provided path. Responses may vary depending on whether user is logged in or not.
