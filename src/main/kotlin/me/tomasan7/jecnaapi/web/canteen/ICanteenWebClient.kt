@@ -1,4 +1,4 @@
-package me.tomasan7.jecnaapi.web
+package me.tomasan7.jecnaapi.web.canteen
 
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
@@ -8,6 +8,8 @@ import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import me.tomasan7.jecnaapi.parser.parsers.selectFirstOrThrow
+import me.tomasan7.jecnaapi.web.Auth
+import me.tomasan7.jecnaapi.web.AuthWebClient
 import org.jsoup.Jsoup
 
 class ICanteenWebClient : AuthWebClient

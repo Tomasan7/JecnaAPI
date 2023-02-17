@@ -10,7 +10,7 @@ import me.tomasan7.jecnaapi.util.JecnaPeriodEncoder.jecnaEncode
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.util.SchoolYearHalf
 import me.tomasan7.jecnaapi.web.Auth
-import me.tomasan7.jecnaapi.web.JecnaWebClient
+import me.tomasan7.jecnaapi.web.jecna.JecnaWebClient
 import me.tomasan7.jecnaapi.web.AuthenticationException
 import me.tomasan7.jecnaapi.web.append
 import java.time.Instant

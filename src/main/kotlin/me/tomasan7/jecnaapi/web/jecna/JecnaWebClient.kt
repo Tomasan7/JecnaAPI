@@ -1,4 +1,4 @@
-package me.tomasan7.jecnaapi.web
+package me.tomasan7.jecnaapi.web.jecna
 
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
@@ -7,6 +7,9 @@ import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import me.tomasan7.jecnaapi.web.Auth
+import me.tomasan7.jecnaapi.web.AuthWebClient
+import me.tomasan7.jecnaapi.web.AuthenticationException
 import org.jsoup.Jsoup
 import java.time.Instant
 

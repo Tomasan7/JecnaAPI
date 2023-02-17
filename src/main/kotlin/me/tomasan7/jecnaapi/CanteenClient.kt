@@ -6,7 +6,7 @@ import me.tomasan7.jecnaapi.data.canteen.*
 import me.tomasan7.jecnaapi.parser.parsers.HtmlCanteenParser
 import me.tomasan7.jecnaapi.parser.parsers.HtmlCanteenParserImpl
 import me.tomasan7.jecnaapi.web.Auth
-import me.tomasan7.jecnaapi.web.ICanteenWebClient
+import me.tomasan7.jecnaapi.web.canteen.ICanteenWebClient
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
