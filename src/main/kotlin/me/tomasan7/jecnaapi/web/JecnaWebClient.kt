@@ -43,6 +43,8 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
 
     private suspend fun getCookie(name: String) = cookieStorage.get(Url(ENDPOINT)).firstOrNull { it.name == name }
 
+    private suspend fun getSessionCookie() = getCookie(SESSION_ID_COOKIE_NAME)
+
     override suspend fun login(auth: Auth): Boolean
     {
         lastLoginAuth = auth
@@ -183,6 +185,8 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
     companion object
     {
         const val ENDPOINT = "https://www.spsejecna.cz"
+
+        const val SESSION_ID_COOKIE_NAME = "JSESSIONID"
 
         /**
          * Endpoint used for testing whether user is logged in or not.
