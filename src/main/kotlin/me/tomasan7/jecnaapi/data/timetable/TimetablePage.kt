@@ -48,7 +48,7 @@ data class TimetablePage private constructor(
         override fun toString(): String
         {
             val fromStr = DATE_FORMAT.format(from)
-            val toStr = to?.let { DATE_FORMAT.format(it) } ?: "???"
+            val toStr = to?.let { DATE_FORMAT.format(it) } ?: "?"
 
             return if (header != null)
                 "$header: $fromStr - $toStr"
