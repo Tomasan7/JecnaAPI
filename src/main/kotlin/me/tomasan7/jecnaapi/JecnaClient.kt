@@ -29,9 +29,7 @@ class JecnaClient(autoLogin: Boolean = false)
     var autoLogin: Boolean by webClient::autoLogin
     val lastSuccessfulLoginTime: Instant? by webClient::lastSuccessfulLoginTime
 
-    /**
-     * The [Auth], that was last used in a call to [login]. (also the one with two parameters)
-     */
+    /** The [Auth], that was last used in a call to [login]. (also the one with two parameters) */
     val lastLoginAuth: Auth?
         get() = webClient.lastLoginAuth
 
