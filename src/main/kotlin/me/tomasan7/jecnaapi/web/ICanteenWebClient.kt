@@ -8,7 +8,6 @@ import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import me.tomasan7.jecnaapi.parser.parsers.selectFirstOrThrow
-import me.tomasan7.jecnaapi.web.JecnaWebClient.Companion.ENDPOINT
 import org.jsoup.Jsoup
 
 class ICanteenWebClient : AuthWebClient
