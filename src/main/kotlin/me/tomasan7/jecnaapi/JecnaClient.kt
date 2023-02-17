@@ -50,7 +50,7 @@ class JecnaClient(autoLogin: Boolean = false)
 
     suspend fun isLoggedIn() = webClient.isLoggedIn()
 
-    suspend fun getCookie(name: String) = webClient.getCookie(name)
+    suspend fun getCookieValue(name: String) = webClient.getCookieValue(name)
 
     suspend fun setCookie(name: String, value: String) = webClient.setCookie(name, value)
 

@@ -37,9 +37,11 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
 
     private var token3: String? = null
 
-    suspend fun getCookie(name: String) = cookieStorage.get(Url(ENDPOINT)).firstOrNull { it.name == name }?.value
+    suspend fun getCookieValue(name: String) = getCookie(name)?.value
 
     suspend fun setCookie(name: String, value: String) = cookieStorage.addCookie(ENDPOINT, Cookie(name, value))
+
+    private suspend fun getCookie(name: String) = cookieStorage.get(Url(ENDPOINT)).firstOrNull { it.name == name }
 
     override suspend fun login(auth: Auth): Boolean
     {
@@ -116,7 +118,7 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
     }
 
     /** Gets user's role cookie. Doesn't make any requests. */
-    suspend fun getRole() = getCookie("role")
+    suspend fun getRole() = getCookieValue("role")
 
     /** Sets user's role cookie. Doesn't make any requests. */
     suspend fun setRole(role: String) = setCookie("role", role)
