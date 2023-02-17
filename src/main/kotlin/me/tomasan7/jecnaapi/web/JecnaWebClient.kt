@@ -187,5 +187,11 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
          * Using particularly this one, because it's the smallest => fastest to download.
          */
         const val LOGIN_TEST_ENDPOINT = "/user-student/record-list"
+
+        /**
+         * Returns the full URL for the given path.
+         * @param path The path to query. Must include first slash.
+         */
+        fun getUrlForPath(path: String) = ENDPOINT + path
     }
 }
