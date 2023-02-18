@@ -42,8 +42,19 @@ tasks {
     compileTestKotlin {
         kotlinOptions.jvmTarget = "1.8"
     }
+    val removeMainFile = register("removeMainFile") {
+        doFirst {
+            sourceSets.main.get().kotlin.srcDirs.forEach {
+                println(it)
+                val mainFile = File(it, "me/tomasan7/jecnaapi/Main.kt")
+                if (mainFile.exists())
+                    mainFile.delete()
+            }
+        }
+    }
     publishToMavenLocal {
-        dependsOn(test)
+        dependsOn(clean, removeMainFile)
+        mustRunAfter(removeMainFile)
     }
 }
 
