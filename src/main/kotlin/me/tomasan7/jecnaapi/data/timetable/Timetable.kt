@@ -122,8 +122,9 @@ class Timetable private constructor(
     fun getLessonSpot(day: DayOfWeek, time: LocalTime, takeEmpty: Boolean = false, trim: Boolean = true): LessonSpot?
     {
         val lessonPeriod = getLessonPeriod(time) ?: return null
+        val lessonPeriodsTrimmed = lessonPeriodsTrimmed[day] ?: return null
 
-        if (trim && lessonPeriod !in lessonPeriodsTrimmed[day]!!)
+        if (trim && lessonPeriod !in lessonPeriodsTrimmed)
             return null
 
         return getLessonSpot(day, lessonPeriod)?.takeIf { takeEmpty || it.isNotEmpty() }
