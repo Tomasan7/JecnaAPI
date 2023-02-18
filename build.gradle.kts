@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "me.tomasan7"
-version = "2.0.0-alpha3"
+version = "2.0.0-alpha4-SNAPSHOT"
 
 repositories {
     mavenCentral()
