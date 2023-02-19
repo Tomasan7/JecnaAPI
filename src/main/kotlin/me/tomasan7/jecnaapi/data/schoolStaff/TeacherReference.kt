@@ -1,5 +1,9 @@
 package me.tomasan7.jecnaapi.data.schoolStaff
 
+import kotlinx.serialization.Serializable
+import me.tomasan7.jecnaapi.serialization.TeacherReferenceSerializer
+
+@Serializable(with = TeacherReferenceSerializer::class)
 class TeacherReference(
     val fullName: String,
     tag: String
