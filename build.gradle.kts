@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "me.tomasan7"
-version = "1.2.12"
+version = "1.2.13"
 
 repositories {
     mavenCentral()
