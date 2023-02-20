@@ -84,7 +84,7 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
     }
 
     /** Sets user's role cookie. Doesn't make any requests. */
-    suspend fun setRole(role: String) = cookieStorage.addCookie(ENDPOINT, Cookie("role", role))
+    suspend fun setRole(role: String) = query("/user/role", Parameters.build { append("role", role) })
 
     /** Gets user's role cookie. Doesn't make any requests. */
     suspend fun getRole() = cookieStorage.get(Url(ENDPOINT)).find { it.name == "role" }?.value
