@@ -77,7 +77,7 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
 
     suspend fun setRole(role: Role)
     {
-        query("/user/role", Parameters.build { append("role", role.value) })
+        plainQuery("/user/role", Parameters.build { append("role", role.value) })
         this.role = role
     }
 
