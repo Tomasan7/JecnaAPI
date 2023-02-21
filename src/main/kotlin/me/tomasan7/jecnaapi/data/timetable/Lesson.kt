@@ -11,6 +11,7 @@ import me.tomasan7.jecnaapi.util.Name
 @Serializable
 data class Lesson(
     val subjectName: Name,
+    val clazz: String? = null,
     val teacherName: Name?,
     val classroom: String?,
     val group: String?

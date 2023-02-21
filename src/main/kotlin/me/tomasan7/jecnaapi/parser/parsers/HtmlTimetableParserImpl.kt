@@ -113,6 +113,7 @@ object HtmlTimetableParserImpl : HtmlTimetableParser
     private fun parseLesson(lessonEle: Element): Lesson
     {
         val subjectEle = lessonEle.selectFirstOrThrow(".subject")
+        val classEle = lessonEle.selectFirst(".class")
         val groupEle = lessonEle.selectFirst(".group")
         val employeeEle = lessonEle.selectFirst(".employee")
 
@@ -123,6 +124,7 @@ object HtmlTimetableParserImpl : HtmlTimetableParser
 
         return Lesson(
             subjectName = subjectName,
+            clazz = classEle?.text(),
             teacherName = teacherName,
             classroom = classroom,
             group = group
