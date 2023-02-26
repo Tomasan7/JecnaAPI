@@ -27,7 +27,7 @@ dependencies {
     api("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
     /* Ktor Serialization (just core, so the user decides the format) */
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.4.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.5.0")
 
     testImplementation(kotlin("test"))
 }
