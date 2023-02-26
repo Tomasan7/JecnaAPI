@@ -21,7 +21,7 @@ dependencies {
     /* Kotlin Coroutines - for asynchronous programming. */
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
     /* Jsoup - for parsing HTML. */
-    implementation("org.jsoup:jsoup:1.15.3")
+    implementation("org.jsoup:jsoup:1.15.4")
     /* Ktor - for HTTP client. */
     val ktorVersion = "2.2.3"
     api("io.ktor:ktor-client-core:$ktorVersion")
