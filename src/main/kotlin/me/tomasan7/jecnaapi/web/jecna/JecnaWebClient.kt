@@ -83,6 +83,7 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
 
     override suspend fun logout()
     {
+        lastLoginAuth = null
         query("/user/logout")
     }
 
