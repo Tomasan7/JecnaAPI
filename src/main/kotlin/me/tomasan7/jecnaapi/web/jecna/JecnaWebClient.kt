@@ -31,6 +31,7 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
         followRedirects = false
     }
     private var token3: String? = null
+    private var autoLoginAttempted = false
 
     var lastSuccessfulLoginAuth: Auth? = null
         private set
@@ -107,24 +108,26 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
         val response = plainQuery(path, parameters)
 
         /* No redirect to login. */
-        val locationHeader = response.headers[HttpHeaders.Location] ?: return response
+        val locationHeader = response.headers[HttpHeaders.Location] ?: return response.also { autoLoginAttempted = false }
+
+        if (!locationHeader.startsWith("$ENDPOINT/user/need-login"))
+            return response.also { autoLoginAttempted = false }
 
         /* Redirect to login. */
-        if (locationHeader.startsWith("$ENDPOINT/user/need-login"))
+
+        if (!autoLogin || lastSuccessfulLoginAuth == null)
+            throw AuthenticationException()
+
+        if (autoLoginAttempted)
         {
-            if (autoLogin && lastSuccessfulLoginAuth != null)
-            {
-                /* Login and retry request. */
-                login(lastSuccessfulLoginAuth!!)
-                /* Throws AuthenticationException if the request still fails because of Auth. */
-                return query(path, parameters)
-            }
-            else
-                /* AutoLogin not provided, throwing exception.  */
-                throw AuthenticationException()
+            autoLoginAttempted = false
+            throw AuthenticationException()
         }
 
-        return response
+        login(lastSuccessfulLoginAuth!!)
+
+        autoLoginAttempted = true
+        return query(path, parameters)
     }
 
     private fun tryFindAndSaveToken3(htmlDocument: String): Boolean
