@@ -83,7 +83,7 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
     override suspend fun logout()
     {
         lastSuccessfulLoginAuth = null
-        query("/user/logout")
+        plainQuery("/user/logout")
     }
 
     /* Responds with status 302 (redirect to login page) when user is not logged in. */
