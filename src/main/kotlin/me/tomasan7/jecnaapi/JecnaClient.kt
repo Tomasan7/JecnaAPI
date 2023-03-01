@@ -30,7 +30,7 @@ class JecnaClient(autoLogin: Boolean = false)
     val lastSuccessfulLoginTime by webClient::lastSuccessfulLoginTime
 
     /** The [Auth], that was last used in a call to [login]. */
-    val lastLoginAuth by webClient::lastLoginAuth
+    val lastLoginAuth by webClient::lastSuccessfulLoginAuth
     val role by webClient::role
 
     private val newsPageParser: HtmlNewsPageParser = HtmlNewsPageParserImpl

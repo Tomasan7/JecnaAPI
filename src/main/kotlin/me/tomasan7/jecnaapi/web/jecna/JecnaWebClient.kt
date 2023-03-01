@@ -16,7 +16,7 @@ import java.time.Instant
 /**
  * Http client for accessing the Ječná web.
  *
- * @param autoLogin Saves provided [Auth] on each [login] call.
+ * @param autoLogin Saves [Auth] that led to successful [login] result.
  * Then when calling [query] and it fails because of [AuthenticationException], [login] is called with the saved [Auth] and the request retried.
  * If it fails again, [AuthenticationException] is thrown.
  */
@@ -32,7 +32,7 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
     }
     private var token3: String? = null
 
-    var lastLoginAuth: Auth? = null
+    var lastSuccessfulLoginAuth: Auth? = null
         private set
     var lastSuccessfulLoginTime: Instant? = null
         private set
@@ -49,8 +49,6 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
 
     override suspend fun login(auth: Auth): Boolean
     {
-        lastLoginAuth = auth
-
         if (token3 == null)
             requestToken3()
 
@@ -67,12 +65,13 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
 
         val locationHeader = response.headers[HttpHeaders.Location] ?: return false
 
-        val successful = locationHeader == "/"
+        if (locationHeader != "/")
+            return false
 
-        if (successful)
-            lastSuccessfulLoginTime = Instant.now()
+        lastSuccessfulLoginAuth = auth
+        lastSuccessfulLoginTime = Instant.now()
 
-        return successful
+        return true
     }
 
     suspend fun setRole(role: Role)
@@ -83,7 +82,7 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
 
     override suspend fun logout()
     {
-        lastLoginAuth = null
+        lastSuccessfulLoginAuth = null
         query("/user/logout")
     }
 
@@ -113,10 +112,10 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
         /* Redirect to login. */
         if (locationHeader.startsWith("$ENDPOINT/user/need-login"))
         {
-            if (autoLogin && lastLoginAuth != null)
+            if (autoLogin && lastSuccessfulLoginAuth != null)
             {
                 /* Login and retry request. */
-                login(lastLoginAuth!!)
+                login(lastSuccessfulLoginAuth!!)
                 /* Throws AuthenticationException if the request still fails because of Auth. */
                 return query(path, parameters)
             }
