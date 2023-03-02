@@ -98,6 +98,10 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
         return response
     }
 
+    /** A query without any authentication (autologin) handling. */
+    suspend fun plainQueryStringBody(path: String, parameters: Parameters? = null) =
+        plainQuery(path, parameters).bodyAsText()
+
     /**
      * A query with autologin handling.
      *
