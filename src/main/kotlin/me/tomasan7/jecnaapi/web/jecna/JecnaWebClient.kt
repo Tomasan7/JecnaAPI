@@ -150,7 +150,7 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
         if (previousRole != Role.STUDENT)
             setRole(Role.STUDENT)
 
-        val foundToken = tryFindAndSaveToken3(queryStringBody("/"))
+        val foundToken = tryFindAndSaveToken3(plainQueryStringBody("/"))
 
         if (!foundToken)
             throw RuntimeException("Failed to find token3.")
