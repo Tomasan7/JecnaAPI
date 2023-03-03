@@ -73,17 +73,19 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
         val menuItemEles = dayMenuEle.select(".orderContent > div > div")
 
         for (menuItemEle in menuItemEles)
-            parseMenuItem(menuItemEle)?.let { dayMenuBuilder.addMenuItem(it) }
+            dayMenuBuilder.addMenuItem(parseMenuItem(menuItemEle))
 
         return dayMenuBuilder.build()
     }
 
-    private fun parseMenuItem(menuItemEle: Element): MenuItem?
+    private fun parseMenuItem(menuItemEle: Element): MenuItem
     {
         val eles = menuItemEle.select("> span > span")
-        val orderButtonEle = eles[0].selectFirst("a")
+        val orderButtonEle = eles[0].selectFirstOrThrow("a", "order button")
         val foodNameEle = eles[1]
         val itemDescriptionStr = foodNameEle.ownText()
+        val numberText = orderButtonEle.selectFirstOrThrow(".smallBoldTitle.button-link-align", "lunch number text")
+        val number = numberText.text().replace("Oběd ", "").toInt()
 
         val itemDescription = if (itemDescriptionStr.isNotEmpty())
         {
@@ -99,12 +101,13 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
         val allergensText = foodNameEle.selectFirst(".textGrey")?.text()
         val allergens = allergensText?.substring(1, allergensText.length - 1)?.split(", ")
 
-        val onclick = orderButtonEle!!.attr("onclick")
+        val onclick = orderButtonEle.attr("onclick")
 
         val putOnExchangeButtonEle = menuItemEle.selectFirst(".icons")?.allElements?.find { it.ownText() in arrayOf("do burzy >", "z burzy <") }
         val putOnExchangeOnClick = putOnExchangeButtonEle?.attr("onclick")
 
         return MenuItem(
+            number = number,
             description = itemDescription,
             allergens = allergens,
             price = parseCredit(
