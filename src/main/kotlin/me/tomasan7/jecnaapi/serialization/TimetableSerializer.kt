@@ -40,7 +40,7 @@ object TimetableSerializer : KSerializer<Timetable>
     }
 
     @Serializable
-    class TimetableSurrogate(
+    data class TimetableSurrogate(
         val lessonPeriods: List<LessonPeriod>,
         val timetable: Map<DayOfWeek, List<LessonSpot>>
     )
