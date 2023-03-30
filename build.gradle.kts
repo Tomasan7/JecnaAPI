@@ -16,13 +16,13 @@ repositories {
 dependencies {
     /* Align versions of all Kotlin components. */
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
-    /* Use the Kotlin standard library. */
+    /* Kotlin standard library */
     implementation(kotlin("stdlib"))
-    /* Kotlin Coroutines - for asynchronous programming. */
+    /* Asynchronous programming */
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-    /* Jsoup - for parsing HTML. */
+    /* HTML parsing */
     implementation("org.jsoup:jsoup:1.15.4")
-    /* Ktor - for HTTP client. */
+    /* HTTP client */
     val ktorVersion = "2.2.4"
     api("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
