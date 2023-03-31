@@ -18,6 +18,8 @@ JecnaAPI je Kotlin knihovna, díky které lze přistupovat k datům webu [spseje
 
 ## Instalace
 
+`<version>` referuje na název tagu v [releases](https://github.com/Tomasan7/JecnaAPI/releases/tag/v3.1.0).
+
 ### Gradle
 
 `build.gradle.kts`
