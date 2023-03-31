@@ -16,6 +16,50 @@ JecnaAPI je Kotlin knihovna, díky které lze přistupovat k datům webu [spseje
 - dávání obědů do/z burzy
 - odkupování obědů z burzy
 
+## Instalace
+
+### Gradle
+
+`build.gradle.kts`
+```kotlin
+repositories {
+    maven("https://jitpack.io")
+}
+dependencies {
+    implementation("com.github.Tomasan7:JecnaAPI:<version>")
+}
+```
+
+`build.gradle`
+```groovy
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+dependencies {
+    implementation 'com.github.Tomasan7:JecnaAPI:<version>'
+}
+```
+
+### Maven
+`pom.xml`
+```xml
+<repositories>
+    ...
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+<dependencies>
+    ...
+    <dependency>
+        <groupId>com.github.Tomasan7</groupId>
+        <artifactId>JecnaAPI</artifactId>
+        <version>VERSION</version>
+    </dependency>
+</dependencies>
+```
+
 ## Použití
 
 ### Vytvoření JecnaClient objektu
