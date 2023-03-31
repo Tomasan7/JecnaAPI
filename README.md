@@ -58,4 +58,4 @@ runBlocking {
 }
 ```
 
-Více příkladů najdete ve složce [examples](/src/main/kotlin/examples).
+Více příkladů najdete ve složce [examples](/src/examples).
