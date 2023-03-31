@@ -46,10 +46,12 @@ tasks {
     val removeMainFile = register("removeMainFile") {
         doFirst {
             sourceSets.main.get().kotlin.srcDirs.forEach {
-                println(it)
                 val mainFile = File(it, "me/tomasan7/jecnaapi/Main.kt")
                 if (mainFile.exists())
+                {
+                    println("Deleted file: ${mainFile.absolutePath}")
                     mainFile.delete()
+                }
             }
         }
     }
