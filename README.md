@@ -48,7 +48,7 @@ runBlocking {
 }
 ```
 
-Některé metody berou obdoví (např. rok) jako parametr.
+Některé metody berou období (např. rok) jako parametr.
 
 ```kotlin
 /* runBlocking, nebo jiný coroutine scope. */
