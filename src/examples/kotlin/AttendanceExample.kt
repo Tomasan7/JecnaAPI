@@ -8,7 +8,7 @@ fun main(): Unit = runBlocking {
 
     client.login("user", "password")
 
-    /* Můžete specifikovat čas v argumentu */
+    /* Lze specifikovat období v argumentu */
     val attendancesPage = client.getAttendancesPage()
 
     /* Všechny dny, pro které existují data */
