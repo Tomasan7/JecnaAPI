@@ -18,7 +18,7 @@ JecnaAPI je Kotlin knihovna, díky které lze přistupovat k datům webu [spseje
 
 ## Instalace
 
-`<version>` referuje na název tagu v [releases](https://github.com/Tomasan7/JecnaAPI/releases/tag/v3.1.0).
+`<version>` referuje na název tagu v [releases](https://github.com/Tomasan7/JecnaAPI/releases).
 
 ### Gradle
 
@@ -28,7 +28,9 @@ repositories {
     maven("https://jitpack.io")
 }
 dependencies {
-    implementation("com.github.Tomasan7:JecnaAPI:<version>")
+    implementation("com.github.Tomasan7.JecnaAPI:jecnaapi:<version>")
+    /* Pokud chcete používat z Javy, přidejte i následující. */
+    implementation("com.github.Tomasan7.JecnaAPI:jecnaapi-java:<version>")
 }
 ```
 
@@ -38,7 +40,9 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 dependencies {
-    implementation 'com.github.Tomasan7:JecnaAPI:<version>'
+    implementation 'com.github.Tomasan7.JecnaAPI:jecnaapi:<version>'
+    /* Pokud chcete používat z Javy, přidejte i následující. */
+    implementation 'com.github.Tomasan7.JecnaAPI:jecnaapi-java:<version>'
 }
 ```
 
@@ -55,9 +59,15 @@ dependencies {
 <dependencies>
     ...
     <dependency>
-        <groupId>com.github.Tomasan7</groupId>
-        <artifactId>JecnaAPI</artifactId>
+        <groupId>com.github.Tomasan7.JecnaAPI</groupId>
+        <artifactId>jecnaapi</artifactId>
         <version>VERSION</version>
+    </dependency>
+    <!-- Pokud chcete používat z Javy, přidejte i následující. -->
+    <dependency>
+      <groupId>com.github.Tomasan7.JecnaAPI</groupId>
+      <artifactId>jecnaapi-java</artifactId>
+      <version>VERSION</version>
     </dependency>
 </dependencies>
 ```
