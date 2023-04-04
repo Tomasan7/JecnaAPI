@@ -27,9 +27,9 @@ class JecnaClient(autoLogin: Boolean = false)
     private val webClient = JecnaWebClient(autoLogin)
 
     var autoLogin by webClient::autoLogin
+    /** The last [time][java.time.Instant] a call to [login] was successful (returned `true`). */
     val lastSuccessfulLoginTime by webClient::lastSuccessfulLoginTime
-
-    /** The [Auth], that was last used in a call to [login]. */
+    /** The [Auth], that was last used in a call to [login], which was successful (returned `true`). */
     val lastSuccessfulLoginAuth by webClient::lastSuccessfulLoginAuth
     val role by webClient::role
 
@@ -115,9 +115,7 @@ class JecnaClient(autoLogin: Boolean = false)
      */
     suspend fun queryStringBody(path: String, parameters: Parameters? = null) = webClient.queryStringBody(path, parameters)
 
-    /**
-     * Closes the HTTP client.
-     */
+    /** Closes the HTTP client. */
     fun close() = webClient.close()
 
     companion object
