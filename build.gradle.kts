@@ -96,6 +96,13 @@ allprojects {
                 pom {
                     name.set("JecnaAPI")
                     description.set("A library to access data from the SPSE Jecna web.")
+                    licenses {
+                        license {
+                            name.set("MIT License")
+                            url.set("https://www.opensource.org/licenses/mit-license.php")
+                            distribution.set("repo")
+                        }
+                    }
                     developers {
                         developer {
                             id.set("Tomasan7")
