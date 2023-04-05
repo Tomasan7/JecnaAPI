@@ -1,24 +1,15 @@
 plugins {
-    val kotlinVersion = "1.8.10"
-    kotlin("jvm") version kotlinVersion
-    kotlin("plugin.serialization") version kotlinVersion
-    id("org.jetbrains.dokka") version kotlinVersion
+    kotlin("jvm")
+    kotlin("plugin.serialization")
+    id("org.jetbrains.dokka")
     `java-library`
     `maven-publish`
 }
 
 group = "me.tomasan7"
-version = "3.1.1"
-
-repositories {
-    mavenCentral()
-}
+version = "3.2.0-SNAPSHOT"
 
 dependencies {
-    /* Align versions of all Kotlin components. */
-    implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
-    /* Kotlin standard library */
-    implementation(kotlin("stdlib"))
     /* Asynchronous programming */
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
     /* HTML parsing */
@@ -33,60 +24,94 @@ dependencies {
     testImplementation(kotlin("test"))
 }
 
-tasks {
-    test {
-        useJUnitPlatform()
+allprojects {
+    apply(plugin = "org.jetbrains.kotlin.jvm")
+    apply(plugin = "java-library")
+    apply(plugin = "maven-publish")
+    apply(plugin = "org.jetbrains.dokka")
+
+    dependencies {
+        /* Kotlin standard library */
+        implementation(kotlin("stdlib"))
+        /* Align versions of all Kotlin components. */
+        implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
     }
-    compileKotlin {
-        kotlinOptions.jvmTarget = "17"
-    }
-    compileTestKotlin {
-        kotlinOptions.jvmTarget = "17"
-    }
-    val removeMainFile = register("removeMainFile") {
-        doFirst {
-            sourceSets.main.get().kotlin.srcDirs.forEach {
-                val mainFile = File(it, "me/tomasan7/jecnaapi/Main.kt")
-                if (mainFile.exists())
-                {
-                    println("Deleted file: ${mainFile.absolutePath}")
-                    mainFile.delete()
+
+    group = rootProject.group
+    version = rootProject.version
+
+    tasks {
+        compileKotlin {
+            kotlinOptions {
+                jvmTarget = "17"
+            }
+        }
+        val removeMainFiles = register("removeMainFiles") {
+            doLast {
+                sourceSets.main.get().allSource.forEach { file ->
+                    if (file.name in listOf("Main.kt", "Main.java"))
+                    {
+                        println("Deleted file: ${file.absolutePath}")
+                        file.delete()
+                    }
                 }
             }
         }
+        publishToMavenLocal {
+            dependsOn(clean, removeMainFiles)
+            mustRunAfter(clean, removeMainFiles)
+        }
     }
-    publishToMavenLocal {
-        dependsOn(clean, removeMainFile)
-        mustRunAfter(removeMainFile)
+
+    java {
+        withSourcesJar()
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(17))
+        }
     }
-}
 
-// https://github.com/Kotlin/dokka/blob/master/examples/gradle/dokka-library-publishing-example/build.gradle.kts
+    kotlin {
+        jvmToolchain(17)
+    }
 
-val dokkaJavadocJar by tasks.register<Jar>("dokkaJavadocJar") {
-    dependsOn(tasks.dokkaJavadoc)
-    from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
-    archiveClassifier.set("javadoc")
-}
+    val dokkaJavadocJar by tasks.register<Jar>("dokkaJavadocJar") {
+        dependsOn(tasks.dokkaJavadoc)
+        from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
+        archiveClassifier.set("javadoc")
+    }
 
-val dokkaHtmlJar by tasks.register<Jar>("dokkaHtmlJar") {
-    dependsOn(tasks.dokkaHtml)
-    from(tasks.dokkaHtml.flatMap { it.outputDirectory })
-    archiveClassifier.set("html-doc")
-}
+    val dokkaHtmlJar by tasks.register<Jar>("dokkaHtmlJar") {
+        dependsOn(tasks.dokkaHtml)
+        from(tasks.dokkaHtml.flatMap { it.outputDirectory })
+        archiveClassifier.set("html-doc")
+    }
 
-java {
-    withSourcesJar()
-}
+    publishing {
+        publications {
+            create<MavenPublication>("maven") {
+                from(components["java"])
+                artifact(dokkaJavadocJar)
+                artifact(dokkaHtmlJar)
 
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            artifactId = "jecna-api"
-
-            from(components["java"])
-            artifact(dokkaJavadocJar)
-            artifact(dokkaHtmlJar)
+                pom {
+                    name.set("JecnaAPI")
+                    description.set("A library to access data from the SPSE Jecna web.")
+                    licenses {
+                        license {
+                            name.set("MIT License")
+                            url.set("https://www.opensource.org/licenses/mit-license.php")
+                            distribution.set("repo")
+                        }
+                    }
+                    developers {
+                        developer {
+                            id.set("Tomasan7")
+                            name.set("Tomáš Hůla")
+                            email.set("tomashula06@gmail.com")
+                        }
+                    }
+                }
+            }
         }
     }
 }
