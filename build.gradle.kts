@@ -92,6 +92,18 @@ allprojects {
                 from(components["java"])
                 artifact(dokkaJavadocJar)
                 artifact(dokkaHtmlJar)
+
+                pom {
+                    name.set("JecnaAPI")
+                    description.set("A library to access data from the SPSE Jecna web.")
+                    developers {
+                        developer {
+                            id.set("Tomasan7")
+                            name.set("Tomáš Hůla")
+                            email.set("tomashula06@gmail.com")
+                        }
+                    }
+                }
             }
         }
     }
