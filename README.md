@@ -74,16 +74,25 @@ dependencies {
 
 ## Použití
 
+Knihovna je primárně naprogramovaná v Kotlinu, ale je možné ji používat i z Javy. Chcete-li jí používat z Javy, musíte přidat dependency na `jecnaapi-java` (viz [Instalace](#instalace)). Java místo Kotlin coroutine používá `CompletableFuture` API.
+
 ### Vytvoření JecnaClient objektu
 
+`Kotlin`
 ```kotlin
 val jecnaClient = JecnaClient()
+```
+
+`Java`
+```java
+JecnaClientJavaWrapper jecnaClient = new JecnaClientJavaWrapper();
 ```
 
 ### Přihlášení
 
 Přihlášení je nezbytné k čtení dat studenta.
 
+`Kotlin`
 ```kotlin
 /* runBlocking, nebo jiný coroutine scope. */
 runBlocking {
@@ -91,8 +100,14 @@ runBlocking {
 }
 ```
 
+`Java`
+```java
+jecnaClient.login("username", "password");
+```
+
 ### Čtení dat
 
+`Kotlin`
 ```kotlin
 /* runBlocking, nebo jiný coroutine scope. */
 runBlocking {
@@ -104,14 +119,30 @@ runBlocking {
 }
 ```
 
+`Java`
+```java
+NewsPage newsPage = jecnaClient.getNewsPage().join();
+GradesPage gradesPage = jecnaClient.getGradesPage().join();
+TimetablePage timetablePage = jecnaClient.getTimetablePage().join();
+AttendancePage attendancePage = jecnaClient.getAttendancePage().join();
+TeachersPage teachersPage = jecnaClient.getTeachersPage().join();
+```
+
 Některé metody berou období (např. rok) jako parametr.
 
+`Kotlin`
 ```kotlin
 /* runBlocking, nebo jiný coroutine scope. */
 runBlocking {
 /* Získání známek z roku 2021/2022 z druhého pololetí.  */
   val gradesPage = jecnaClient.getGradesPage(SchoolYear(2021), SchoolYearHalf.SECOND)
 }
+```
+
+`Java`
+```java
+/* Získání známek z roku 2021/2022 z druhého pololetí.  */
+GradesPage gradesPage = jecnaClient.getGradesPage(new SchoolYear(2021), SchoolYearHalf.SECOND).join();
 ```
 
 Více příkladů najdete ve složce [examples](/src/examples).
