@@ -48,6 +48,7 @@ data class Grades private constructor(private val subjectPartsGrades: Map<String
 
     companion object
     {
+        @JvmStatic
         fun builder() = Builder()
     }
 

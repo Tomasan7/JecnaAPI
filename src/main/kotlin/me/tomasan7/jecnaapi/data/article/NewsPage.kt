@@ -12,6 +12,7 @@ data class NewsPage(val articles: List<Article>)
 {
     companion object
     {
+        @JvmStatic
         fun builder() = Builder()
     }
 

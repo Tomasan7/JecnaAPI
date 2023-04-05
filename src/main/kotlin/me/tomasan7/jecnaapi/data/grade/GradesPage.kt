@@ -104,6 +104,7 @@ data class GradesPage private constructor(
 
     companion object
     {
+        @JvmStatic
         fun builder() = Builder()
     }
 }

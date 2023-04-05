@@ -13,6 +13,7 @@ enum class SchoolYearHalf
         /**
          * @return [SchoolYearHalf] that was on the month provided in [date].
          */
+        @JvmStatic
         fun fromDate(date: LocalDate) = if (date.month !in Month.FEBRUARY..Month.AUGUST)
             SchoolYearHalf.FIRST
         else
@@ -21,6 +22,7 @@ enum class SchoolYearHalf
         /**
          * @return Current [SchoolYearHalf].
          */
+        @JvmStatic
         fun current() = fromDate(LocalDate.now())
     }
 }

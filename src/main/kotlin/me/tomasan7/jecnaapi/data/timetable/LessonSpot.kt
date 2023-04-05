@@ -58,6 +58,7 @@ class LessonSpot(val lessons: List<Lesson>, val periodSpan: Int = 1) : Iterable<
     companion object
     {
         /** Creates a [LessonSpot] with no [lessons][Lesson] and provided [periodSpan]. */
+        @JvmStatic
         fun empty(periodSpan: Int = 1) = LessonSpot(emptyList(), periodSpan)
     }
 }

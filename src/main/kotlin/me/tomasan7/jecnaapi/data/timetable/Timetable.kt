@@ -119,6 +119,7 @@ class Timetable private constructor(
      * @param takeEmpty Whether [empty][LessonSpot.isEmpty] [LessonSpot] should be returned, or `null` instead.
      * @param trim Whether the empty [LessonSpots][LessonSpot] at the end of the day should not be returned.
      */
+    @JvmOverloads
     fun getLessonSpot(day: DayOfWeek, time: LocalTime, takeEmpty: Boolean = false, trim: Boolean = true): LessonSpot?
     {
         val lessonPeriod = getLessonPeriod(time) ?: return null
@@ -136,6 +137,7 @@ class Timetable private constructor(
      * @param takeEmpty Whether [empty][LessonSpot.isEmpty] [LessonSpot] should be returned, or `null` instead.
      * @param trim Whether the empty [LessonSpots][LessonSpot] at the end of the day should not be returned.
      */
+    @JvmOverloads
     fun getLessonSpot(datetime: LocalDateTime, takeEmpty: Boolean = false, trim: Boolean = true) =
         getLessonSpot(datetime.dayOfWeek, datetime.toLocalTime(), takeEmpty, trim)
 
@@ -145,6 +147,7 @@ class Timetable private constructor(
      * @param takeEmpty Whether [empty][LessonSpot.isEmpty] [LessonSpot] should be returned, or `null` instead.
      * @param trim Whether the empty [LessonSpots][LessonSpot] at the end of the day should not be returned.
      */
+    @JvmOverloads
     fun getLessonSpot(instant: Instant, takeEmpty: Boolean = false, trim: Boolean = true) =
         getLessonSpot(LocalDateTime.ofInstant(instant, ZoneId.systemDefault()), takeEmpty, trim)
 
@@ -161,6 +164,7 @@ class Timetable private constructor(
      * @param takeEmpty Whether [empty][LessonSpot.isEmpty] [LessonSpot] should be returned, or `null` instead.
      * @param trim Whether the empty [LessonSpots][LessonSpot] at the end of the day should not be returned.
      */
+    @JvmOverloads
     fun getNextLessonSpot(
         day: DayOfWeek,
         time: LocalTime,
@@ -197,6 +201,7 @@ class Timetable private constructor(
      * @param takeEmpty Whether [empty][LessonSpot.isEmpty] [LessonSpot] should be returned, or `null` instead.
      * @param trim Whether the empty [LessonSpots][LessonSpot] at the end of the day should not be returned.
      */
+    @JvmOverloads
     fun getNextLessonSpot(datetime: LocalDateTime, takeEmpty: Boolean = false, trim: Boolean = true) =
         getNextLessonSpot(datetime.dayOfWeek, datetime.toLocalTime(), takeEmpty, trim)
 
@@ -206,6 +211,7 @@ class Timetable private constructor(
      * @param takeEmpty Whether [empty][LessonSpot.isEmpty] [LessonSpot] should be returned, or `null` instead.
      * @param trim Whether the empty [LessonSpots][LessonSpot] at the end of the day should not be returned.
      */
+    @JvmOverloads
     fun getNextLessonSpot(instant: Instant, takeEmpty: Boolean = false, trim: Boolean = true) =
         getNextLessonSpot(LocalDateTime.ofInstant(instant, ZoneId.systemDefault()), takeEmpty, trim)
 
@@ -215,11 +221,13 @@ class Timetable private constructor(
      * @param takeEmpty Whether [empty][LessonSpot.isEmpty] [LessonSpot] should be returned, or `null` instead.
      * @param trim Whether the empty [LessonSpots][LessonSpot] at the end of the day should not be returned.
      */
+    @JvmOverloads
     fun getCurrentNextLessonSpot(takeEmpty: Boolean = false, trim: Boolean = true) =
         getNextLessonSpot(Instant.now(), takeEmpty, trim)
 
     companion object
     {
+        @JvmStatic
         fun builder() = Builder()
     }
 

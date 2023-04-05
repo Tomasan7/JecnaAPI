@@ -15,6 +15,7 @@ data class DayMenu(
 
     companion object
     {
+        @JvmStatic
         fun builder(day: LocalDate) = Builder(day)
     }
 

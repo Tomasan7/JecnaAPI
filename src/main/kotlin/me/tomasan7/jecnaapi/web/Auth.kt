@@ -43,6 +43,7 @@ data class Auth(val username: String, val password: String)
          * @param bytes The encrypted bytes.
          * @return The [Auth] instance.
          */
+        @JvmStatic
         fun decrypt(bytes: ByteArray): Auth
         {
             /* Shift the characters bytes back. */

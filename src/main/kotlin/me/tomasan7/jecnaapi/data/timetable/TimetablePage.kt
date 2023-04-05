@@ -22,6 +22,7 @@ data class TimetablePage private constructor(
 
     companion object
     {
+        @JvmStatic
         fun builder() = Builder()
     }
 

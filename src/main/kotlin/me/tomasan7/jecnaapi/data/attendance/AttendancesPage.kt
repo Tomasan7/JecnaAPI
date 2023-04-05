@@ -92,6 +92,7 @@ data class AttendancesPage private constructor(
          */
         fun List<Attendance>.toAttendanceString() = joinToString()
 
+        @JvmStatic
         fun builder() = Builder()
     }
 }

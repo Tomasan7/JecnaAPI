@@ -26,6 +26,7 @@ data class ArticleFile(
         /**
          * Matches the dot between file name and extension.
          */
+        @JvmField
         val FILE_EXTENSION_DOT_REGEX = Regex("""\.(?!.*\.)""")
     }
 }

@@ -6,6 +6,7 @@ data class TeachersPage(val teachersReferences: Set<TeacherReference>)
 {
     companion object
     {
+        @JvmStatic
         fun builder() = Builder()
     }
 

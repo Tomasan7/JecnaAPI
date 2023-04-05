@@ -89,6 +89,7 @@ data class SchoolYear(val firstCalendarYear: Int): Comparable<SchoolYear>
         /**
          * Constructs a [SchoolYear] this [date] belongs to. Considers the summer holidays as a part of the ending [SchoolYear].
          */
+        @JvmStatic
         fun fromDate(date: LocalDate) = SchoolYear(if (date.month in FIRST_CALENDAR_YEAR_MONTHS) date.year else date.year - 1)
 
         /**
@@ -96,6 +97,7 @@ data class SchoolYear(val firstCalendarYear: Int): Comparable<SchoolYear>
          * @throws IllegalArgumentException When the [string] [String] is not in the correct format.
          * @see [SchoolYear.toString]
          */
+        @JvmStatic
         fun fromString(string: String): SchoolYear
         {
             val split = string.split("/")
@@ -122,6 +124,7 @@ data class SchoolYear(val firstCalendarYear: Int): Comparable<SchoolYear>
         /**
          * @return Current [SchoolYear].
          */
+        @JvmStatic
         fun current() = fromDate(LocalDate.now())
     }
 }

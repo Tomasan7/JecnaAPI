@@ -36,6 +36,7 @@ data class LessonPeriod(
          * @throws IllegalArgumentException When the provided [String] is in incorrect format.
          * @return The parsed [LessonPeriod].
          */
+        @JvmStatic
         fun fromString(string: String): LessonPeriod
         {
             val split = string.split(" - ")

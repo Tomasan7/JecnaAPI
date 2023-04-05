@@ -36,6 +36,7 @@ class Menu(menu: Map<LocalDate, DayMenu>) : Iterable<DayMenu>
 
     companion object
     {
+        @JvmStatic
         fun builder() = Builder()
     }
 
