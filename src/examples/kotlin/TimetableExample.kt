@@ -10,29 +10,18 @@ fun main(): Unit = runBlocking {
     client.login("user", "password")
 
     val timetablePage = client.getTimetablePage()
+    val timetable = timetablePage.timetable
 
-    /* Celý rozvrh */
-    for (days in timetablePage.timetable.days)
-        println(timetablePage.timetable[days])
-
-    /* Od kdy do kdy trvá hodina v daném čase (null pokud není hodina/ je přestávka) */
-    val lessonTimeSpan = timetablePage.timetable.getLessonPeriod(LocalTime.of(8, 35))
-    println(lessonTimeSpan)
-
-    /* Od kdy do kdy trvá hodina v čase nynějším (null pokud není hodina/ je přestávka) */
-    val currentTimeLessonTimeSpan = timetablePage.timetable.getCurrentLessonPeriod()
-    println(println(currentTimeLessonTimeSpan))
-
-    /* Vrátí časové rozmezí následující po nynější hodině */
-    val upcomingLesson = timetablePage.timetable.getNextLessonPeriod(LocalTime.of(8, 35))
-    println(upcomingLesson)
-
-    /* Vrátí všechny hodiny v daném dni */
-    val lessonsInCertainDay = timetablePage.timetable[DayOfWeek.WEDNESDAY]
-    println(lessonsInCertainDay)
+    /* Vypíše všechny hodiny v týdnu */
+    for (day in timetable.days)
+    {
+        val subjects = timetable[day]?.joinToString { it.firstOrNull()?.subjectName?.full ?: "--" }
+        println("$day: $subjects")
+    }
 
     println()
+
     /* Vrátí konkrétní hodinu daného dne, v určeném čase */
-    val lessonDuringDayAndTime = timetablePage.timetable.getLessonSpot(DayOfWeek.TUESDAY, LocalTime.of(10,45))
-    println(lessonDuringDayAndTime)
+    val lessonAtSpecificTime = timetable.getLessonSpot(DayOfWeek.TUESDAY, LocalTime.of(10, 45))
+    println("Hodina v úterá v '10:45': $lessonAtSpecificTime")
 }

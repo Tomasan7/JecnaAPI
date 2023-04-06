@@ -1,5 +1,3 @@
-package examples
-
 import kotlinx.coroutines.runBlocking
 import me.tomasan7.jecnaapi.JecnaClient
 import me.tomasan7.jecnaapi.util.SchoolYear
@@ -16,6 +14,7 @@ fun main(): Unit = runBlocking {
 
     val mathSubject = gradesPage["Matematika"]!!
 
+    /* Průmer známek */
     val mathAverage = mathSubject.grades.average()
 
     println("Průměr z matematiky: $mathAverage")

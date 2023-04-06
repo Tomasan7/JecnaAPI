@@ -1,6 +1,5 @@
 import kotlinx.coroutines.runBlocking
 import me.tomasan7.jecnaapi.JecnaClient
-import java.time.LocalDate
 
 fun main(): Unit = runBlocking {
 
@@ -17,7 +16,4 @@ fun main(): Unit = runBlocking {
     /* Všechny příchody a odchody (v daném půlroce) */
     for (day in attendedDays)
         println(attendancesPage[day])
-
-    /* Můžete vypsat konkrétní příchod a odchod ze dne, který je uložen (prázdný [] pokud den není uložen) */
-    println(attendancesPage[LocalDate.of(2023, 3, 30)])
 }
