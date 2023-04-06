@@ -21,7 +21,7 @@ JecnaAPI je Kotlin knihovna, díky které lze přistupovat k datům webu [spseje
 
 ### Gradle
 
-`build.gradle` (Groovy)
+###### build.gradle (Groovy)
 ```groovy
 repositories {
     maven { url 'https://jitpack.io' }
@@ -33,7 +33,7 @@ dependencies {
 }
 ```
 
-`build.gradle.kts` (Kotlin)
+###### build.gradle.kts (Kotlin)
 ```kotlin
 repositories {
     maven("https://jitpack.io")
@@ -46,7 +46,7 @@ dependencies {
 ```
 
 ### Maven
-`pom.xml`
+######  pom.xml
 ```xml
 <repositories>
     ...
@@ -77,7 +77,7 @@ Knihovna je primárně naprogramovaná v Kotlinu, ale je možné ji používat i
 
 ### Vytvoření JecnaClient objektu
 
-`Kotlin`
+##### Kotlin
 ```kotlin
 val jecnaClient = JecnaClient()
 ```
@@ -91,7 +91,7 @@ JecnaClientJavaWrapper jecnaClient = new JecnaClientJavaWrapper();
 
 Přihlášení je nezbytné k čtení dat studenta.
 
-`Kotlin`
+##### Kotlin
 ```kotlin
 /* runBlocking, nebo jiný coroutine scope. */
 runBlocking {
@@ -99,14 +99,14 @@ runBlocking {
 }
 ```
 
-`Java`
+##### Java
 ```java
 jecnaClient.login("username", "password");
 ```
 
 ### Čtení dat
 
-`Kotlin`
+##### Kotlin
 ```kotlin
 /* runBlocking, nebo jiný coroutine scope. */
 runBlocking {
@@ -118,7 +118,7 @@ runBlocking {
 }
 ```
 
-`Java`
+##### Java
 ```java
 NewsPage newsPage = jecnaClient.getNewsPage().join();
 GradesPage gradesPage = jecnaClient.getGradesPage().join();
@@ -129,7 +129,7 @@ TeachersPage teachersPage = jecnaClient.getTeachersPage().join();
 
 Některé metody berou období (např. rok) jako parametr.
 
-`Kotlin`
+##### Kotlin
 ```kotlin
 /* runBlocking, nebo jiný coroutine scope. */
 runBlocking {
@@ -138,7 +138,7 @@ runBlocking {
 }
 ```
 
-`Java`
+##### Java
 ```java
 /* Získání známek z roku 2021/2022 z druhého pololetí.  */
 GradesPage gradesPage = jecnaClient.getGradesPage(new SchoolYear(2021), SchoolYearHalf.SECOND).join();
