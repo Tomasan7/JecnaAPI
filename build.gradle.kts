@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "me.tomasan7"
-version = "3.2.0"
+version = "3.2.1"
 
 dependencies {
     /* Asynchronous programming */
