@@ -144,4 +144,4 @@ runBlocking {
 GradesPage gradesPage = jecnaClient.getGradesPage(new SchoolYear(2021), SchoolYearHalf.SECOND).join();
 ```
 
-Více příkladů najdete ve složce [examples](/src/examples).
+Více příkladů najdete ve složkách [kotlin-examples](/src/examples/kotlin) a [java-examples](/jecnaapi-java/src/examples/java).
