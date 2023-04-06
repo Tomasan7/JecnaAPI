@@ -73,7 +73,7 @@ dependencies {
 
 ## Použití
 
-Knihovna je primárně naprogramovaná v Kotlinu, ale je možné ji používat i z Javy. Chcete-li jí používat z Javy, musíte přidat dependency na `jecnaapi-java` (viz [Instalace](#instalace)). Java místo Kotlin coroutine používá `CompletableFuture` API.
+Knihovna je primárně naprogramovaná v Kotlinu, ale je možné ji používat i z Javy. Chcete-li jí používat z Javy, musíte přidat dependency na `jecnaapi-java` (viz [Instalace](#instalace)). Java místo Kotlin coroutines používá `CompletableFuture` API.
 
 ### Vytvoření JecnaClient objektu
 
