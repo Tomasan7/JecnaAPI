@@ -7,7 +7,7 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import me.tomasan7.jecnaapi.util.SchoolYear
 
-object SchoolYearSerializer : KSerializer<SchoolYear>
+internal object SchoolYearSerializer : KSerializer<SchoolYear>
 {
     override val descriptor = PrimitiveSerialDescriptor("SchoolYear", PrimitiveKind.STRING)
 

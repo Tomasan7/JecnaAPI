@@ -9,7 +9,7 @@ import kotlinx.serialization.encoding.Encoder
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
-object LocalTimeSerializer : KSerializer<LocalTime>
+internal object LocalTimeSerializer : KSerializer<LocalTime>
 {
     override val descriptor: SerialDescriptor
         get() = PrimitiveSerialDescriptor("LocalTime", PrimitiveKind.STRING)

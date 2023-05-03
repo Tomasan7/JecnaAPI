@@ -7,7 +7,7 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import me.tomasan7.jecnaapi.data.schoolStaff.TeacherReference
 
-object TeacherReferenceSerializer : KSerializer<TeacherReference>
+internal object TeacherReferenceSerializer : KSerializer<TeacherReference>
 {
     override val descriptor = PrimitiveSerialDescriptor("Name", PrimitiveKind.STRING)
 

@@ -9,7 +9,7 @@ import me.tomasan7.jecnaapi.data.timetable.LessonSpot
 import me.tomasan7.jecnaapi.data.timetable.Timetable
 import java.time.DayOfWeek
 
-object TimetableSerializer : KSerializer<Timetable>
+internal object TimetableSerializer : KSerializer<Timetable>
 {
     /* https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/serializers.md#composite-serializer-via-surrogate */
 
@@ -40,7 +40,7 @@ object TimetableSerializer : KSerializer<Timetable>
     }
 
     @Serializable
-    data class TimetableSurrogate(
+    private data class TimetableSurrogate(
         val lessonPeriods: List<LessonPeriod>,
         val timetable: Map<DayOfWeek, List<LessonSpot>>
     )

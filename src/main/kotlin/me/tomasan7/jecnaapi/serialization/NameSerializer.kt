@@ -7,7 +7,7 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import me.tomasan7.jecnaapi.util.Name
 
-object NameSerializer : KSerializer<Name>
+internal object NameSerializer : KSerializer<Name>
 {
     override val descriptor = PrimitiveSerialDescriptor("Name", PrimitiveKind.STRING)
 
