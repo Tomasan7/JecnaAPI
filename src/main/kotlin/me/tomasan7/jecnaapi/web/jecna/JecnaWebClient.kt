@@ -145,6 +145,9 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
 
     private suspend fun requestToken3()
     {
+        /* May also just manually set the WTDGUID cookie. So save one request.
+        However, that's more error-prone, for when they change it. */
+
         val previousRole = role
         /* Login form with the token3 is not in the root page, when you are neither student nor teacher. */
         if (previousRole != Role.STUDENT)
