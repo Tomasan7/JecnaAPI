@@ -65,12 +65,13 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
 
     private fun parseDayMenu(dayMenuEle: Element): DayMenu
     {
-        val dayStr = dayMenuEle.selectFirstOrThrow("div > strong > .important").text()
+        val dayTitle = dayMenuEle.selectFirstOrThrow(".jidelnicekTop").text()
+        val dayStr = DATE_REGEX.find(dayTitle)?.value ?: throw ParseException("Failed to parse day date.")
         val day = LocalDate.parse(dayStr, DATE_FORMAT)
 
         val dayMenuBuilder = DayMenu.builder(day)
 
-        val menuItemEles = dayMenuEle.select(".orderContent > div > div")
+        val menuItemEles = dayMenuEle.select(".jidelnicekMain > .jidelnicekItem")
 
         for (menuItemEle in menuItemEles)
             dayMenuBuilder.addMenuItem(parseMenuItem(menuItemEle))
@@ -80,9 +81,8 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
 
     private fun parseMenuItem(menuItemEle: Element): MenuItem
     {
-        val eles = menuItemEle.select("> span > span")
-        val orderButtonEle = eles[0].selectFirstOrThrow("a", "order button")
-        val foodNameEle = eles[1]
+        val orderButtonEle = menuItemEle.selectFirstOrThrow(".jidWrapLeft > a", "order button")
+        val foodNameEle = menuItemEle.selectFirstOrThrow(".jidWrapCenter", "food name")
         val itemDescriptionStr = foodNameEle.ownText()
         val numberText = orderButtonEle.selectFirstOrThrow(".smallBoldTitle.button-link-align", "lunch number text")
         val number = numberText.text().replace("Oběd ", "").toInt()
@@ -98,12 +98,13 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
         }
         else null
 
-        val allergensText = foodNameEle.selectFirst(".textGrey")?.text()
-        val allergens = allergensText?.substring(1, allergensText.length - 1)?.split(", ")
+        val allergens = menuItemEle.select(".textGrey > .textGrey").map { rawText(it.attr("title")) }
 
         val onclick = orderButtonEle.attr("onclick")
 
-        val putOnExchangeButtonEle = menuItemEle.selectFirst(".icons")?.allElements?.find { it.ownText() in arrayOf("do burzy >", "z burzy <") }
+        val putOnExchangeButtonEle = menuItemEle.selectFirst(".input-group")?.allElements?.find {
+            it.ownText().matches(Regex("ks (?:z|do) burzy"))
+        }
         val putOnExchangeOnClick = putOnExchangeButtonEle?.attr("onclick")
 
         return MenuItem(
@@ -122,12 +123,16 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
         )
     }
 
+    private fun rawText(html: String) = Jsoup.parse(html).text()
+
     private val DATE_FORMAT: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+
+    private val DATE_REGEX = Regex("""\d{2}\.\d{2}\.\d{4}""")
 
     /**
      * Matches the whole item description. Match contains capturing groups listed in [ItemDescriptionRegexGroups].
      */
-    private val ITEM_DESCRIPTION_REGEX = Regex("""^(?<${ItemDescriptionRegexGroups.SOUP}>.*?) , ;(?<${ItemDescriptionRegexGroups.REST}>.*)""")
+    private val ITEM_DESCRIPTION_REGEX = Regex("""^(?<${ItemDescriptionRegexGroups.SOUP}>.*?), ;(?<${ItemDescriptionRegexGroups.REST}>.*)""")
 
     /**
      * Contains names of regex capture groups inside [ITEM_DESCRIPTION_REGEX].

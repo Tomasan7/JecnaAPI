@@ -26,7 +26,7 @@ class ICanteenWebClient : AuthWebClient
 
     override suspend fun login(auth: Auth): Boolean
     {
-        val loginFormHtmlResponse = queryStringBody("/faces/login.jsp")
+        val loginFormHtmlResponse = queryStringBody("/login")
         val loginPostResponse = httpClient.submitForm(
             block = newRequestBuilder("/j_spring_security_check"),
             formParameters = Parameters.build {
@@ -41,7 +41,7 @@ class ICanteenWebClient : AuthWebClient
             })
 
         /* If the login was unsuccessful, the web redirects back to the login page. */
-        return !loginPostResponse.headers[HttpHeaders.Location]!!.startsWith("/faces/login.jsp")
+        return !loginPostResponse.headers[HttpHeaders.Location]!!.startsWith("/login")
     }
 
     override suspend fun logout()
@@ -51,11 +51,11 @@ class ICanteenWebClient : AuthWebClient
         val locationHeader = logoutFormResponse.headers[HttpHeaders.Location]
 
         /* Is true when no one is logged in. */
-        if (locationHeader != null && locationHeader.endsWith("/faces/login.jsp"))
+        if (locationHeader != null && locationHeader.endsWith("/login"))
             return
 
         httpClient.submitForm(
-            block = newRequestBuilder("/j_spring_security_logout"),
+            block = newRequestBuilder("/logout"),
             formParameters = Parameters.build {
                 append(
                     name = "_csrf",
@@ -67,7 +67,11 @@ class ICanteenWebClient : AuthWebClient
 
     override suspend fun isLoggedIn() = !query("/faces/secured/main.jsp").headers.contains("Location")
 
-    override suspend fun query(path: String, parameters: Parameters?) = httpClient.get(newRequestBuilder(path, parameters))
+    override suspend fun query(path: String, parameters: Parameters?): HttpResponse
+    {
+        val response = httpClient.get(newRequestBuilder(path, parameters))
+        return response
+    }
 
     /**
      * Returns a function modifying [HttpRequestBuilder] used by Ktor HttpClient.
@@ -97,6 +101,6 @@ class ICanteenWebClient : AuthWebClient
 
     companion object
     {
-        const val ENDPOINT = "https://objednavky.jidelnasokolska.cz"
+        const val ENDPOINT = "https://strav.nasejidelna.cz/0341"
     }
 }
