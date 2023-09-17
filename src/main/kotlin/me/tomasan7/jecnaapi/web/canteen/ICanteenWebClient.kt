@@ -1,13 +1,16 @@
 package me.tomasan7.jecnaapi.web.canteen
 
 import io.ktor.client.*
+import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.*
 import io.ktor.client.plugins.cookies.*
+import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import me.tomasan7.jecnaapi.parser.parsers.selectFirstOrThrow
+import me.tomasan7.jecnaapi.parser.HtmlElementNotFoundException
 import me.tomasan7.jecnaapi.web.Auth
 import me.tomasan7.jecnaapi.web.AuthWebClient
 import org.jsoup.Jsoup
@@ -20,90 +23,75 @@ class ICanteenWebClient : AuthWebClient
         install(HttpCookies) {
             storage = cookieStorage
         }
-
+        defaultRequest {
+            url {
+                takeFrom("$ENDPOINT/$CANTEEN_CODE/")
+                parameters.append("terminal", "false")
+                parameters.append("printer", "false")
+                parameters.append("keyboard", "false")
+                parameters.append("status", "true")
+            }
+        }
         followRedirects = false
     }
 
+    suspend fun getCsrfTokenFromCookie() = cookieStorage.get(Url("$ENDPOINT/$CANTEEN_CODE"))["XSRF-TOKEN"]?.value
+
+    /** Tries to find a value of any `input` tag with name `_csrf`. */
+    suspend fun findCsrfToken(html: String) = Jsoup
+        .parse(html)
+        .selectFirst("input[name=_csrf]")
+        ?.attr("value")
+
+    fun HttpResponse.isRedirect() = status.value in 300..399
+
+    suspend fun findCsrfTokenOrThrow(html: String) = findCsrfToken(html)
+        ?: throw HtmlElementNotFoundException.byName("CSRF token")
+
     override suspend fun login(auth: Auth): Boolean
     {
-        val loginFormHtmlResponse = queryStringBody("/login")
+        val loginFormHtmlResponse = queryStringBody("login")
+        val csrfToken = findCsrfTokenOrThrow(loginFormHtmlResponse)
+
         val loginPostResponse = httpClient.submitForm(
-            block = newRequestBuilder("/j_spring_security_check"),
+            url = "j_spring_security_check",
             formParameters = Parameters.build {
                 append("j_username", auth.username)
                 append("j_password", auth.password)
                 append("type", "web")
-                append(
-                    "_csrf", Jsoup.parse(loginFormHtmlResponse)
-                        .selectFirstOrThrow("#signup-user-col > div > form > ul > li > input[name=_csrf]", "CSRF token")
-                        .attr("value")
-                )
-                append("targetUrl", "/faces/secured/main.jsp")
+                append("_csrf", csrfToken)
+                append("targetUrl", "/")
             })
 
-        /* If the login was unsuccessful, the web redirects back to the login page. */
-        return !loginPostResponse.headers[HttpHeaders.Location]!!.startsWith("/login")
+        return !loginPostResponse.headers[HttpHeaders.Location]!!.contains("login_error=1")
     }
 
     override suspend fun logout()
     {
-        val logoutFormResponse = query("/faces/secured/mobile.jsp")
+        val csrfToken = getCsrfTokenFromCookie() ?: run {
+            val response = query("faces/secured/main.jsp")
+            /* Redirects to login, if no one is logged in */
+            if (response.isRedirect())
+                return
 
-        val locationHeader = logoutFormResponse.headers[HttpHeaders.Location]
-
-        /* Is true when no one is logged in. */
-        if (locationHeader != null && locationHeader.endsWith("/login"))
-            return
-
-        httpClient.submitForm(
-            block = newRequestBuilder("/logout"),
-            formParameters = Parameters.build {
-                append(
-                    name = "_csrf",
-                    value = Jsoup.parse(logoutFormResponse.bodyAsText())
-                        .selectFirstOrThrow("#logout > input[name=_csrf]", "CSRF token").attr("value")
-                )
-            })
-    }
-
-    override suspend fun isLoggedIn() = !query("/faces/secured/main.jsp").headers.contains("Location")
-
-    override suspend fun query(path: String, parameters: Parameters?) = httpClient.get(newRequestBuilder(path, parameters))
-
-    /**
-     * Returns a function modifying [HttpRequestBuilder] used by Ktor HttpClient.
-     * Sets the url relative to [ENDPOINT].
-     *
-     * @param path The path to query. Must include first slash.
-     * @param parameters HTTP parameters, which will be sent URL encoded.
-     * @param block Additional modifications to the request.
-     * @return The function.
-     */
-    private fun newRequestBuilder(
-        path: String,
-        parameters: Parameters? = null,
-        block: (HttpRequestBuilder.() -> Unit)? = null
-    ): HttpRequestBuilder.() -> Unit
-    {
-        return {
-            if (block != null)
-                block()
-
-            url(urlString = ENDPOINT + path)
-
-            url {
-                this.parameters.append("terminal", "false")
-                this.parameters.append("printer", "false")
-                this.parameters.append("keyboard", "false")
-                this.parameters.append("status", "true")
-                if (parameters != null)
-                    this.parameters.appendAll(parameters)
-            }
+            findCsrfTokenOrThrow(response.bodyAsText())
         }
+
+        httpClient.submitForm("logout", parametersOf("_csrf", csrfToken))
+        httpClient.get("logoutall")
     }
+
+    override suspend fun isLoggedIn() = !query("faces/secured/main.jsp").isRedirect()
+
+    override suspend fun query(path: String, parameters: Parameters?) =
+        httpClient.get(path) {
+            if (parameters != null)
+                url.parameters.appendAll(parameters)
+        }
 
     companion object
     {
-        const val ENDPOINT = "https://strav.nasejidelna.cz/0341"
+        const val ENDPOINT = "https://strav.nasejidelna.cz"
+        const val CANTEEN_CODE = "0341"
     }
 }

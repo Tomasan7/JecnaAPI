@@ -167,7 +167,7 @@ class CanteenClient
 
     companion object
     {
-        private const val WEB_PATH = "/faces/secured/mobile.jsp"
+        private const val WEB_PATH = "faces/secured/mobile.jsp"
         private val DAY_MENU_DAY_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd")
     }
 }
