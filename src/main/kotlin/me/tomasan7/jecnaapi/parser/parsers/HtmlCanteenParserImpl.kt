@@ -25,7 +25,7 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
                 menuBuilder.addDayMenu(dayMenu.day, dayMenu)
             }
 
-            val credit = parseCredit(document.selectFirstOrThrow("#Kredit").text())
+            val credit = parseCreditText(document.selectFirstOrThrow("#Kredit").text())
 
             return MenuPage(menuBuilder.build(), credit)
         }
@@ -48,13 +48,13 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
         val creditEle = document.selectFirstOrThrow("#Kredit")
         val timeEle = document.selectFirstOrThrow("#time")
 
-        val credit = parseCredit(creditEle.text())
+        val credit = parseCreditText(creditEle.text())
         val time = timeEle.text().toLong()
 
         return OrderResponse(credit, time)
     }
 
-    private fun parseCredit(creditEleText: String) = creditEleText
+    override fun parseCreditText(creditEleText: String) = creditEleText
         .trim()
         .replace(" Kč", "")
         /* Comma replaced with dot to make conversion to float possible. */
@@ -111,7 +111,7 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
             number = number,
             description = itemDescription,
             allergens = allergens,
-            price = parseCredit(
+            price = parseCreditText(
                 orderButtonEle.selectFirstOrThrow(".important.warning.button-link-align", "order price").text()
             ),
             isEnabled = !orderButtonEle.hasClass("disabled"),
