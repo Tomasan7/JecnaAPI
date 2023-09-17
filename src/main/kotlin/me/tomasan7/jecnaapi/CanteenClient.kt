@@ -35,10 +35,10 @@ class CanteenClient
 
     fun getMenuAsync(days: Iterable<LocalDate>): Flow<DayMenu> = channelFlow {
         for (day in days)
-                launch {
-                    val dayMenu = getDayMenu(day)
-                    send(dayMenu)
-                }
+            launch {
+                val dayMenu = getDayMenu(day)
+                send(dayMenu)
+            }
     }
 
     // TODO: Make it apparent that this function is making a request to the server.
