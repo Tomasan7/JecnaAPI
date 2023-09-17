@@ -2,11 +2,16 @@ package me.tomasan7.jecnaapi
 
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.launch
 import me.tomasan7.jecnaapi.data.canteen.*
 import me.tomasan7.jecnaapi.parser.parsers.HtmlCanteenParser
 import me.tomasan7.jecnaapi.parser.parsers.HtmlCanteenParserImpl
+import me.tomasan7.jecnaapi.parser.parsers.selectFirstOrThrow
 import me.tomasan7.jecnaapi.web.Auth
 import me.tomasan7.jecnaapi.web.canteen.ICanteenWebClient
+import org.jsoup.Jsoup
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -16,7 +21,6 @@ import java.time.format.DateTimeFormatter
 class CanteenClient
 {
     private val webClient = ICanteenWebClient()
-
     private val canteenParser: HtmlCanteenParser = HtmlCanteenParserImpl
 
     suspend fun login(username: String, password: String) = login(Auth(username, password))
@@ -29,6 +33,32 @@ class CanteenClient
 
     suspend fun getMenuPage() = canteenParser.parse(webClient.queryStringBody(WEB_PATH))
 
+    fun getMenuAsync(days: Iterable<LocalDate>): Flow<DayMenu> = channelFlow {
+        for (day in days)
+                launch {
+                    val dayMenu = getDayMenu(day)
+                    send(dayMenu)
+                }
+    }
+
+    // TODO: Make it apparent that this function is making a request to the server.
+    suspend fun getDayMenu(day: LocalDate): DayMenu
+    {
+        val dayMenuHtml = webClient.queryStringBody(
+            path = "faces/secured/db/dbJidelnicekOnDayView.jsp",
+            parameters = parametersOf("day", DAY_MENU_DAY_FORMATTER.format(day))
+        )
+        return canteenParser.parseDayMenu(dayMenuHtml)
+    }
+
+    // TODO: Make it apparent that this function is making a request to the server.
+    suspend fun getCredit(): Float
+    {
+        val html = webClient.queryStringBody("faces/secured/main.jsp")
+        val creditEle = Jsoup.parse(html).selectFirstOrThrow("#Kredit")
+        return canteenParser.parseCreditText(creditEle.text())
+    }
+
     /**
      * Orders the [menuItem].
      *
@@ -40,7 +70,7 @@ class CanteenClient
         if (!menuItem.isEnabled)
             return false
 
-        val response = webClient.queryStringBody("/faces/secured/" + menuItem.orderPath)
+        val response = webClient.queryStringBody("faces/secured/" + menuItem.orderPath)
 
         /* Same check as on the original website. */
         return !response.contains("error")
@@ -131,20 +161,8 @@ class CanteenClient
 
     private suspend fun requestAndUpdateDayMenu(dayMenuDay: LocalDate, menu: Menu)
     {
-        val newDayMenu = requestDayMenu(dayMenuDay)
+        val newDayMenu = getDayMenu(dayMenuDay)
         menu.replace(dayMenuDay, newDayMenu)
-    }
-
-    private suspend fun requestDayMenu(dayMenuDay: LocalDate): DayMenu
-    {
-        /* The day string formatted as the server accepts it. */
-        val dayStr = dayMenuDay.format(DAY_MENU_DAY_FORMATTER)
-        val newDayMenuHtml = webClient.queryStringBody(
-            path = "/faces/secured/db/dbJidelnicekOnDayView.jsp",
-            parameters = parametersOf("day", dayStr)
-        )
-
-        return canteenParser.parseDayMenu(newDayMenuHtml)
     }
 
     /**
