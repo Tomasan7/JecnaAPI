@@ -49,7 +49,7 @@ class CanteenClient
     {
         val dayMenuHtml = webClient.queryStringBody(
             path = "faces/secured/db/dbJidelnicekOnDayView.jsp",
-            parameters = parametersOf("day", DAY_MENU_DAY_FORMATTER.format(day))
+            parameters = parametersOf("day", day.toString())
         )
         return canteenParser.parseDayMenu(dayMenuHtml)
     }
@@ -139,6 +139,5 @@ class CanteenClient
     {
         private const val WEB_PATH = "faces/secured/mobile.jsp"
         private val TIME_REPLACE_REGEX = Regex("""(?<=time=)\d{13}""")
-        private val DAY_MENU_DAY_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd")
     }
 }
