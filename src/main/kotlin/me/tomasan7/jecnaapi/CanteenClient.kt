@@ -44,7 +44,6 @@ class CanteenClient
             }
     }
 
-    // TODO: Make it apparent that this function is making a request to the server.
     suspend fun getDayMenu(day: LocalDate): DayMenu
     {
         val dayMenuHtml = webClient.queryStringBody(
@@ -54,7 +53,6 @@ class CanteenClient
         return canteenParser.parseDayMenu(dayMenuHtml)
     }
 
-    // TODO: Make it apparent that this function is making a request to the server.
     suspend fun getCredit(): Float
     {
         val html = webClient.queryStringBody("faces/secured/main.jsp")
