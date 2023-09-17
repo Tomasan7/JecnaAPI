@@ -34,6 +34,9 @@ class CanteenClient
 
     suspend fun isLoggedIn() = webClient.isLoggedIn()
 
+    /**
+     * Prefer using [getMenuAsync] instead.
+     */
     suspend fun getMenuPage() = canteenParser.parse(webClient.queryStringBody(WEB_PATH))
 
     fun getMenuAsync(days: Iterable<LocalDate>): Flow<DayMenu> = channelFlow {
@@ -90,6 +93,7 @@ class CanteenClient
 
     suspend fun putOnExchange(menuItem: MenuItem) = menuItem.putOnExchangePath?.let { ajaxOrder(it).first } ?: false
 
+    /** Also updates [lastTime] variable. */
     private suspend fun ajaxOrder(url: String): Pair<Boolean, String>
     {
         val response = webClient.queryStringBody("faces/secured/$url")
