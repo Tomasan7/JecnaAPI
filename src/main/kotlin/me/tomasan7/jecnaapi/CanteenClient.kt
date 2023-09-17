@@ -141,7 +141,7 @@ class CanteenClient
         val dayStr = dayMenuDay.format(DAY_MENU_DAY_FORMATTER)
         val newDayMenuHtml = webClient.queryStringBody(
             path = "/faces/secured/db/dbJidelnicekOnDayView.jsp",
-            parameters = Parameters.build { append("day", dayStr) }
+            parameters = parametersOf("day", dayStr)
         )
 
         return canteenParser.parseDayMenu(newDayMenuHtml)
