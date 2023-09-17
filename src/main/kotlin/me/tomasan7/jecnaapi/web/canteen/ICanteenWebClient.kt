@@ -38,14 +38,14 @@ class ICanteenWebClient : AuthWebClient
     suspend fun getCsrfTokenFromCookie() = cookieStorage.get(Url("$ENDPOINT/$CANTEEN_CODE"))["XSRF-TOKEN"]?.value
 
     /** Tries to find a value of any `input` tag with name `_csrf`. */
-    suspend fun findCsrfToken(html: String) = Jsoup
+    fun findCsrfToken(html: String) = Jsoup
         .parse(html)
         .selectFirst("input[name=_csrf]")
         ?.attr("value")
 
     fun HttpResponse.isRedirect() = status.value in 300..399
 
-    suspend fun findCsrfTokenOrThrow(html: String) = findCsrfToken(html)
+    fun findCsrfTokenOrThrow(html: String) = findCsrfToken(html)
         ?: throw HtmlElementNotFoundException.byName("CSRF token")
 
     override suspend fun login(auth: Auth): Boolean
