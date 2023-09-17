@@ -68,11 +68,7 @@ class ICanteenWebClient : AuthWebClient
 
     override suspend fun isLoggedIn() = !query("/faces/secured/main.jsp").headers.contains("Location")
 
-    override suspend fun query(path: String, parameters: Parameters?): HttpResponse
-    {
-        val response = httpClient.get(newRequestBuilder(path, parameters))
-        return response
-    }
+    override suspend fun query(path: String, parameters: Parameters?) = httpClient.get(newRequestBuilder(path, parameters))
 
     /**
      * Returns a function modifying [HttpRequestBuilder] used by Ktor HttpClient.
