@@ -46,20 +46,17 @@ allprojects {
                 jvmTarget = "17"
             }
         }
-        val removeMainFiles = register("removeMainFiles") {
+        val checkMainDoesntExist = register("checkMainDoesntExist") {
             doLast {
                 sourceSets.main.get().allSource.forEach { file ->
                     if (file.name in listOf("Main.kt", "Main.java"))
-                    {
-                        println("Deleted file: ${file.absolutePath}")
-                        file.delete()
-                    }
+                        throw IllegalStateException("Main file found: $file")
                 }
             }
         }
         publishToMavenLocal {
-            dependsOn(clean, removeMainFiles)
-            mustRunAfter(clean, removeMainFiles)
+            dependsOn(clean, checkMainDoesntExist)
+            mustRunAfter(clean, checkMainDoesntExist)
         }
     }
 
