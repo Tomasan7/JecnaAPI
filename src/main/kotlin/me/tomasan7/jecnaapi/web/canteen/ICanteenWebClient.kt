@@ -32,12 +32,13 @@ class ICanteenWebClient : AuthWebClient
             formParameters = Parameters.build {
                 append("j_username", auth.username)
                 append("j_password", auth.password)
-                append("terminal", false.toString())
                 append("type", "web")
-                append("_csrf", Jsoup.parse(loginFormHtmlResponse)
-                    .selectFirstOrThrow("#signup-user-col > div > form > ul > li > input[name=_csrf]", "CSRF token")
-                    .attr("value"))
-                append("targetUrl", "/faces/secured/main.jsp?terminal=false&status=true&printer=&keyboard=")
+                append(
+                    "_csrf", Jsoup.parse(loginFormHtmlResponse)
+                        .selectFirstOrThrow("#signup-user-col > div > form > ul > li > input[name=_csrf]", "CSRF token")
+                        .attr("value")
+                )
+                append("targetUrl", "/faces/secured/main.jsp")
             })
 
         /* If the login was unsuccessful, the web redirects back to the login page. */
@@ -94,8 +95,14 @@ class ICanteenWebClient : AuthWebClient
 
             url(urlString = ENDPOINT + path)
 
-            if (parameters != null)
-                url { this.parameters.appendAll(parameters) }
+            url {
+                this.parameters.append("terminal", "false")
+                this.parameters.append("printer", "false")
+                this.parameters.append("keyboard", "false")
+                this.parameters.append("status", "true")
+                if (parameters != null)
+                    this.parameters.appendAll(parameters)
+            }
         }
     }
 
