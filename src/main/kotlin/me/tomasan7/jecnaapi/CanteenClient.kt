@@ -19,10 +19,16 @@ import java.time.format.DateTimeFormatter
 /**
  * A client to read and order menus.
  */
-class CanteenClient
+class CanteenClient(autoLogin: Boolean = false)
 {
-    private val webClient = ICanteenWebClient()
+    private val webClient = ICanteenWebClient(autoLogin)
     private val canteenParser: HtmlCanteenParser = HtmlCanteenParserImpl
+
+    var autoLogin by webClient::autoLogin
+    /** The last [time][java.time.Instant] a call to [login] was successful (returned `true`). */
+    val lastSuccessfulLoginTime by webClient::lastSuccessfulLoginTime
+    /** The [Auth], that was last used in a call to [login], which was successful (returned `true`). */
+    val lastSuccessfulLoginAuth by webClient::lastSuccessfulLoginAuth
 
     private var lastTime = 0L
 
