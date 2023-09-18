@@ -1,6 +1,5 @@
 build/
 /.gradle/
-/gradle/wrapper/gradle-wrapper.jar
 /.idea/
 /run/
 Main.kt
