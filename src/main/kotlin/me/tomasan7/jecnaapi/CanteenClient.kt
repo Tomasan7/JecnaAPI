@@ -2,22 +2,35 @@ package me.tomasan7.jecnaapi
 
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.launch
 import me.tomasan7.jecnaapi.data.canteen.*
+import me.tomasan7.jecnaapi.parser.ParseException
 import me.tomasan7.jecnaapi.parser.parsers.HtmlCanteenParser
 import me.tomasan7.jecnaapi.parser.parsers.HtmlCanteenParserImpl
+import me.tomasan7.jecnaapi.parser.parsers.selectFirstOrThrow
 import me.tomasan7.jecnaapi.web.Auth
 import me.tomasan7.jecnaapi.web.canteen.ICanteenWebClient
+import org.jsoup.Jsoup
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 /**
  * A client to read and order menus.
  */
-class CanteenClient
+class CanteenClient(autoLogin: Boolean = false)
 {
-    private val webClient = ICanteenWebClient()
-
+    private val webClient = ICanteenWebClient(autoLogin)
     private val canteenParser: HtmlCanteenParser = HtmlCanteenParserImpl
+
+    var autoLogin by webClient::autoLogin
+    /** The last [time][java.time.Instant] a call to [login] was successful (returned `true`). */
+    val lastSuccessfulLoginTime by webClient::lastSuccessfulLoginTime
+    /** The [Auth], that was last used in a call to [login], which was successful (returned `true`). */
+    val lastSuccessfulLoginAuth by webClient::lastSuccessfulLoginAuth
+
+    private var lastTime = 0L
 
     suspend fun login(username: String, password: String) = login(Auth(username, password))
 
@@ -27,124 +40,88 @@ class CanteenClient
 
     suspend fun isLoggedIn() = webClient.isLoggedIn()
 
+    /**
+     * Prefer using [getMenuAsync] instead.
+     */
     suspend fun getMenuPage() = canteenParser.parse(webClient.queryStringBody(WEB_PATH))
 
+    fun getMenuAsync(days: Iterable<LocalDate>): Flow<DayMenu> = channelFlow {
+        for (day in days)
+            launch {
+                val dayMenu = getDayMenu(day)
+                send(dayMenu)
+            }
+    }
+
+    suspend fun getDayMenu(day: LocalDate): DayMenu
+    {
+        val dayMenuHtml = webClient.queryStringBody(
+            path = "faces/secured/db/dbJidelnicekOnDayView.jsp",
+            parameters = parametersOf("day", day.toString())
+        )
+        return canteenParser.parseDayMenu(dayMenuHtml)
+    }
+
+    suspend fun getCredit(): Float
+    {
+        val html = webClient.queryStringBody("faces/secured/main.jsp")
+        val creditEle = Jsoup.parse(html).selectFirstOrThrow("#Kredit")
+        return canteenParser.parseCreditText(creditEle.text())
+    }
+
     /**
      * Orders the [menuItem].
      *
      * @param menuItem The [MenuItem] to order.
-     * @return Whether the order was successful or not.
+     * @return Either new credit or null, if something went wrong.
      */
-    suspend fun order(menuItem: MenuItem): Boolean
+    suspend fun order(menuItem: MenuItem): Float?
     {
         if (!menuItem.isEnabled)
-            return false
+            return null
 
-        val response = webClient.queryStringBody("/faces/secured/" + menuItem.orderPath)
+        val finalMenuItem = if (lastTime != 0L)
+            menuItem.updated(lastTime)
+        else
+            menuItem
 
-        /* Same check as on the original website. */
-        return !response.contains("error")
+        val (successful, response) = ajaxOrder(finalMenuItem.orderPath)
+
+        if (!successful)
+            return null
+
+        return try
+        {
+            canteenParser.parseOrderResponse(response).credit
+        }
+        catch (ignored: ParseException) { null }
     }
 
-    /**
-     * Orders the [menuItem].
-     * And updates whole [MenuPage] accordingly.
-     *
-     * @param menuItem The [MenuItem] to order.
-     * @param dayMenuDay the [day][LocalDate] of the [DayMenu] the [menuItem] is in.
-     * @param menuPage The [Menu] the [menuItem] is in.
-     * @return Whether the order was successful or not.
-     */
-    suspend fun order(menuItem: MenuItem, dayMenuDay: LocalDate, menuPage: MenuPage): Boolean
+    suspend fun putOnExchange(menuItem: MenuItem) = menuItem.putOnExchangePath?.let { ajaxOrder(it).first } ?: false
+
+    /** Also updates [lastTime] variable. */
+    private suspend fun ajaxOrder(url: String): Pair<Boolean, String>
     {
-        if (!menuItem.isEnabled)
-            return false
-
-        return ajaxOrder(menuItem.orderPath, dayMenuDay, menuPage)
-    }
-
-    /**
-     * Orders the [menuItem].
-     * And updates whole [MenuPage] accordingly.
-     *
-     * @param menuItem The [MenuItem] to order.
-     * @param dayMenuDay the [day][LocalDate] of the [DayMenu] the [menuItem] is in.
-     * @param menuPage The [Menu] the [menuItem] is in.
-     * @return Whether the order was successful or not.
-     */
-    suspend fun order(menuItem: MenuItem, dayMenu: DayMenu, menuPage: MenuPage) = order(menuItem, dayMenu.day, menuPage)
-
-    /**
-     * Orders the [menuItem].
-     * And updates whole [MenuPage] accordingly.
-     * Use [order] with [dayMenuDay][LocalDate] parameter, if you have it.
-     * This function finds the [day][LocalDate] of the [menuItem] in the [menuPage].
-     *
-     * @param menuItem The [MenuItem] to order.
-     * @param menuPage The [MenuPage] the [menuItem] is in.
-     * @return Whether the order was successful or not.
-     */
-    suspend fun order(menuItem: MenuItem, menuPage: MenuPage) =
-        order(menuItem, menuPage.menu.dayMenus.find { it.items.contains(menuItem) }!!.day, menuPage)
-
-    suspend fun putOnExchange(menuItem: MenuItem, dayMenuDay: LocalDate, menuPage: MenuPage) =
-        menuItem.putOnExchangePath?.let { ajaxOrder(it, dayMenuDay, menuPage) } ?: false
-
-    suspend fun putOnExchange(menuItem: MenuItem, menuPage: MenuPage) =
-        putOnExchange(menuItem, menuPage.menu.dayMenus.find { it.items.contains(menuItem) }!!.day, menuPage)
-
-    private suspend fun ajaxOrder(url: String, dayMenuDay: LocalDate, menuPage: MenuPage): Boolean
-    {
-        val ajaxOrderRequestResult = ajaxOrderRequest(url)
-
-        if (!ajaxOrderRequestResult.first)
-            return false
-
-        requestAndUpdateDayMenu(dayMenuDay, menuPage.menu)
-
-        val responseStr = ajaxOrderRequestResult.second
-        val orderResponse = canteenParser.parseOrderResponse(responseStr)
-
-        menuPage.update(orderResponse)
-
-        return true
-    }
-
-    private suspend fun ajaxOrderRequest(url: String): Pair<Boolean, String>
-    {
-        val response = webClient.queryStringBody("/faces/secured/$url")
+        val response = webClient.queryStringBody("faces/secured/$url")
 
         /* Same check as on the official website. */
         if (response.contains("error"))
             return false to response
 
+        val orderResponse = canteenParser.parseOrderResponse(response)
+        lastTime = orderResponse.time
+
         return true to response
     }
 
-    private fun MenuPage.update(orderResponse: OrderResponse)
+    /**
+     * Returns a [MenuItem] with updated time in the [MenuItem.orderPath] and possibly [MenuItem.putOnExchangePath].
+     */
+    private fun MenuItem.updated(time: Long): MenuItem
     {
-        credit = orderResponse.credit
-
-        /* Updating time on all menu items. */
-        menu.dayMenus.forEach { dayMenu -> dayMenu.items.forEach{ it.updateTime(orderResponse.time) } }
-    }
-
-    private suspend fun requestAndUpdateDayMenu(dayMenuDay: LocalDate, menu: Menu)
-    {
-        val newDayMenu = requestDayMenu(dayMenuDay)
-        menu.replace(dayMenuDay, newDayMenu)
-    }
-
-    private suspend fun requestDayMenu(dayMenuDay: LocalDate): DayMenu
-    {
-        /* The day string formatted as the server accepts it. */
-        val dayStr = dayMenuDay.format(DAY_MENU_DAY_FORMATTER)
-        val newDayMenuHtml = webClient.queryStringBody(
-            path = "/faces/secured/db/dbJidelnicekOnDayView.jsp",
-            parameters = Parameters.build { append("day", dayStr) }
-        )
-
-        return canteenParser.parseDayMenu(newDayMenuHtml)
+        val newOrderPath = orderPath.replace(TIME_REPLACE_REGEX, time.toString())
+        val newPutOnExchangePath = putOnExchangePath?.replace(TIME_REPLACE_REGEX, time.toString())
+        return copy(orderPath = newOrderPath, putOnExchangePath = newPutOnExchangePath)
     }
 
     /**
@@ -163,11 +140,12 @@ class CanteenClient
      * @param parameters HTTP parameters, which will be sent URL encoded.
      * @return The HTTP response's body as [String].
      */
-    suspend fun queryStringBody(path: String, parameters: Parameters? = null) = webClient.queryStringBody(path, parameters)
+    suspend fun queryStringBody(path: String, parameters: Parameters? = null) =
+        webClient.queryStringBody(path, parameters)
 
     companion object
     {
-        private const val WEB_PATH = "/faces/secured/mobile.jsp"
-        private val DAY_MENU_DAY_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        private const val WEB_PATH = "faces/secured/mobile.jsp"
+        private val TIME_REPLACE_REGEX = Regex("""(?<=time=)\d{13}""")
     }
 }

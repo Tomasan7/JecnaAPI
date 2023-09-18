@@ -19,4 +19,6 @@ internal interface HtmlCanteenParser
     fun parseDayMenu(html: String): DayMenu
 
     fun parseOrderResponse(orderResponseHtml: String): OrderResponse
+
+    fun parseCreditText(creditEleText: String): Float
 }

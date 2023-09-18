@@ -21,6 +21,9 @@ dependencies {
     /* Ktor Serialization (just core, so the user decides the format) */
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.5.0")
 
+    /* Debugging only */
+    //implementation("io.ktor:ktor-client-logging-jvm:2.2.4")
+
     testImplementation(kotlin("test"))
 }
 
@@ -46,20 +49,17 @@ allprojects {
                 jvmTarget = "17"
             }
         }
-        val removeMainFiles = register("removeMainFiles") {
+        val checkMainDoesntExist = register("checkMainDoesntExist") {
             doLast {
                 sourceSets.main.get().allSource.forEach { file ->
                     if (file.name in listOf("Main.kt", "Main.java"))
-                    {
-                        println("Deleted file: ${file.absolutePath}")
-                        file.delete()
-                    }
+                        throw IllegalStateException("Main file found: $file")
                 }
             }
         }
         publishToMavenLocal {
-            dependsOn(clean, removeMainFiles)
-            mustRunAfter(clean, removeMainFiles)
+            dependsOn(clean, checkMainDoesntExist)
+            mustRunAfter(clean, checkMainDoesntExist)
         }
     }
 
