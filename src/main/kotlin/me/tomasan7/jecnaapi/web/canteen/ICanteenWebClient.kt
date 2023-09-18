@@ -4,7 +4,6 @@ import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.cookies.*
-import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
 import io.ktor.client.statement.*
@@ -13,7 +12,6 @@ import me.tomasan7.jecnaapi.parser.HtmlElementNotFoundException
 import me.tomasan7.jecnaapi.web.Auth
 import me.tomasan7.jecnaapi.web.AuthWebClient
 import me.tomasan7.jecnaapi.web.AuthenticationException
-import me.tomasan7.jecnaapi.web.jecna.JecnaWebClient.Companion.ENDPOINT
 import org.jsoup.Jsoup
 import java.time.Instant
 
