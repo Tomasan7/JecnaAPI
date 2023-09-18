@@ -21,6 +21,9 @@ dependencies {
     /* Ktor Serialization (just core, so the user decides the format) */
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.5.0")
 
+    /* Debugging only */
+    //implementation("io.ktor:ktor-client-logging-jvm:2.2.4")
+
     testImplementation(kotlin("test"))
 }
 

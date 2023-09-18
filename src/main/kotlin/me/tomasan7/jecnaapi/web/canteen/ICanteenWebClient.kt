@@ -35,6 +35,20 @@ class ICanteenWebClient(var autoLogin: Boolean = false) : AuthWebClient
             }
         }
         followRedirects = false
+        // Debugging only
+        /*install(Logging) {
+            logger = object: Logger
+            {
+                override fun log(message: String)
+                {
+                    if (!message.contains("REQUEST"))
+                        return
+                    val message1 = message.split("\n")[0].replace("$ENDPOINT/$CANTEEN_CODE", "")
+                    println(message1)
+                }
+            }
+            level = LogLevel.INFO
+        }*/
     }
 
     private var autoLoginAttempted = false
