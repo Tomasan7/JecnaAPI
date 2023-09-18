@@ -1,7 +1,7 @@
 plugins {
-    kotlin("jvm")
-    kotlin("plugin.serialization")
-    id("org.jetbrains.dokka")
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.plugin.serialization)
+    alias(libs.plugins.dokka)
     `java-library`
     `maven-publish`
 }
@@ -10,18 +10,13 @@ group = "me.tomasan7"
 version = "3.3.0"
 
 dependencies {
-    /* Asynchronous programming */
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-    /* HTML parsing */
-    implementation("org.jsoup:jsoup:1.15.4")
-    /* HTTP client */
-    val ktorVersion = "2.2.4"
-    api("io.ktor:ktor-client-core:$ktorVersion")
-    implementation("io.ktor:ktor-client-cio:$ktorVersion")
-    /* Ktor Serialization (just core, so the user decides the format) */
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.5.0")
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.serialization.core)
+    implementation(libs.jsoup)
+    api(libs.ktor.client.core)
+    implementation(libs.ktor.client.cio)
 
-    /* Debugging only */
+    // Debugging only
     //implementation("io.ktor:ktor-client-logging-jvm:2.2.4")
 
     testImplementation(kotlin("test"))
