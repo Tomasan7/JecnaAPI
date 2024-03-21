@@ -39,12 +39,7 @@ allprojects {
     version = rootProject.version
 
     tasks {
-        compileKotlin {
-            kotlinOptions {
-                jvmTarget = "17"
-            }
-        }
-        val checkMainDoesntExist = register("checkMainDoesntExist") {
+        val checkMainDoesntExist by registering {
             doLast {
                 sourceSets.main.get().allSource.forEach { file ->
                     if (file.name in listOf("Main.kt", "Main.java"))
@@ -60,22 +55,21 @@ allprojects {
 
     java {
         withSourcesJar()
-        toolchain {
-            languageVersion.set(JavaLanguageVersion.of(17))
-        }
     }
 
     kotlin {
         jvmToolchain(17)
     }
 
-    val dokkaJavadocJar by tasks.register<Jar>("dokkaJavadocJar") {
+    // https://kotlinlang.org/docs/dokka-gradle.html#build-javadoc-jar
+
+    val dokkaJavadocJar by tasks.registering(Jar::class) {
         dependsOn(tasks.dokkaJavadoc)
         from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
         archiveClassifier.set("javadoc")
     }
 
-    val dokkaHtmlJar by tasks.register<Jar>("dokkaHtmlJar") {
+    val dokkaHtmlJar by tasks.registering(Jar::class) {
         dependsOn(tasks.dokkaHtml)
         from(tasks.dokkaHtml.flatMap { it.outputDirectory })
         archiveClassifier.set("html-doc")
