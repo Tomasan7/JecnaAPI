@@ -2,7 +2,6 @@ package me.tomasan7.jecnaapi.util
 
 import me.tomasan7.jecnaapi.util.JecnaPeriodEncoder.jecnaDecode
 import me.tomasan7.jecnaapi.util.JecnaPeriodEncoder.jecnaEncode
-import org.junit.Assert.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
