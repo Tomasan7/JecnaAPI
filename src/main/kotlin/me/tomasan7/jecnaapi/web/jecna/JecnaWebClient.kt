@@ -50,8 +50,8 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
 
     override suspend fun login(auth: Auth): Boolean
     {
-        if (token3 == null)
-            requestToken3()
+        /* Request token3 with each login, because it is changed when the session expires. */
+        requestToken3()
 
         val response = httpClient.submitForm(
             block = newRequestBuilder("/user/login"),
