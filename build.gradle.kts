@@ -48,8 +48,7 @@ allprojects {
             }
         }
         publishToMavenLocal {
-            dependsOn(clean, checkMainDoesntExist)
-            mustRunAfter(clean, checkMainDoesntExist)
+            dependsOn(clean, test, checkMainDoesntExist)
         }
     }
 
