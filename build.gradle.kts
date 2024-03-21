@@ -42,7 +42,7 @@ allprojects {
         val checkMainDoesntExist by registering {
             doLast {
                 sourceSets.main.get().allSource.forEach { file ->
-                    if (file.name in listOf("Main.kt", "Main.java"))
+                    if (file.name in setOf("Main.kt", "Main.java"))
                         throw IllegalStateException("Main file found: $file")
                 }
             }
