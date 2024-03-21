@@ -1,7 +1,7 @@
 package me.tomasan7.jecnaapi.util
 
-import org.junit.jupiter.api.Assertions.*
 import kotlin.test.Test
+import kotlin.test.assertEquals
 
 internal class SchoolYearRangeTest
 {
@@ -19,6 +19,6 @@ internal class SchoolYearRangeTest
 
         assertEquals(expected, actual)
 
-        assertEquals(emptyList<SchoolYear>(), (2022.schoolYear()..2020.schoolYear()).toList())
+        assertEquals(emptyList(), (2022.schoolYear()..2020.schoolYear()).toList())
     }
 }

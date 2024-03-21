@@ -1,10 +1,7 @@
 package me.tomasan7.jecnaapi.util
 
-import org.junit.jupiter.api.assertThrows
-import kotlin.test.Test
 import java.time.LocalDate
-import kotlin.test.assertEquals
-import kotlin.test.assertNotEquals
+import kotlin.test.*
 
 internal class SchoolYearTest
 {
@@ -13,11 +10,11 @@ internal class SchoolYearTest
     {
         assertEquals(SchoolYear.fromString("2021/2022"), SchoolYear(2021))
 
-        assertThrows<IllegalArgumentException>("SchoolYear String wasn't in correct format. (firstYear/secondYear)") {
+        assertFailsWith<IllegalArgumentException>("SchoolYear String wasn't in correct format. (firstYear/secondYear)") {
             SchoolYear.fromString("2021-2022")
         }
 
-        assertThrows<IllegalArgumentException>("SchoolYear String wasn't in correct format. SecondYear must be equal to firstYear + 1.") {
+        assertFailsWith<IllegalArgumentException>("SchoolYear String wasn't in correct format. SecondYear must be equal to firstYear + 1.") {
             SchoolYear.fromString("2021/2023")
         }
     }

@@ -2,9 +2,10 @@ package me.tomasan7.jecnaapi.util
 
 import me.tomasan7.jecnaapi.util.JecnaPeriodEncoder.jecnaDecode
 import me.tomasan7.jecnaapi.util.JecnaPeriodEncoder.jecnaEncode
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
+import org.junit.Assert.assertThrows
+import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 internal class JecnaPeriodEncoderTest
 {
@@ -15,7 +16,8 @@ internal class JecnaPeriodEncoderTest
         assertEquals(JecnaPeriodEncoder.SCHOOL_YEAR_ID_KEY to 11, SchoolYear(2019).jecnaEncode())
 
         val schoolYear = SchoolYear(2007)
-        assertThrows<IllegalArgumentException>("Lowest supported school year is 2008/2009. (got $schoolYear)") {
+
+        assertFailsWith<IllegalArgumentException>("Lowest supported school year is 2008/2009. (got $schoolYear)") {
             JecnaPeriodEncoder.encodeSchoolYear(schoolYear)
         }
     }
@@ -27,7 +29,7 @@ internal class JecnaPeriodEncoderTest
         assertEquals(SchoolYear(2019), SchoolYear.jecnaDecode(11))
 
         val id = -1
-        assertThrows<IllegalArgumentException>("Id cannot be less than 0. (got $id)") {
+        assertFailsWith<IllegalArgumentException>("Id cannot be less than 0. (got $id)") {
             JecnaPeriodEncoder.decodeSchoolYear(id)
         }
     }
@@ -48,7 +50,7 @@ internal class JecnaPeriodEncoderTest
         assertEquals(SchoolYearHalf.SECOND, JecnaPeriodEncoder.decodeSchoolYearHalf(JecnaPeriodEncoder.SECOND_HALF_ID))
 
         val id = 20
-        assertThrows<IllegalArgumentException>("Id doesn't correspond to any year half. (got $id)") {
+        assertFailsWith<IllegalArgumentException>("Id doesn't correspond to any year half. (got $id)") {
             JecnaPeriodEncoder.decodeSchoolYearHalf(id)
         }
     }
@@ -60,7 +62,7 @@ internal class JecnaPeriodEncoderTest
         assertEquals(JecnaPeriodEncoder.MONTH_ID_KEY to 12, JecnaPeriodEncoder.encodeMonth(12))
 
         val monthValue = 13
-        assertThrows<IllegalArgumentException>("Month must be between 1 and 12. (got $monthValue)") {
+        assertFailsWith<IllegalArgumentException>("Month must be between 1 and 12. (got $monthValue)") {
             JecnaPeriodEncoder.encodeMonth(13)
         }
     }
