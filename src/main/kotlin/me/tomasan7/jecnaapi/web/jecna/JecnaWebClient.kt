@@ -30,7 +30,6 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
 
         followRedirects = false
     }
-    private var token3: String? = null
     private var autoLoginAttempted = false
 
     var lastSuccessfulLoginAuth: Auth? = null
@@ -50,15 +49,15 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
 
     override suspend fun login(auth: Auth): Boolean
     {
-        /* Request token3 with each login, because it is changed when the session expires. */
-        requestToken3()
+        val token3 = requestToken3()
+            ?: throw IllegalStateException("Token3 not found.")
 
         val response = httpClient.submitForm(
             block = newRequestBuilder("/user/login"),
             formParameters = Parameters.build {
                 append("user", auth.username)
                 append("pass", auth.password)
-                append("token3", token3!!)
+                append("token3", token3)
             })
 
         if (response.status != HttpStatusCode.Found)
@@ -94,7 +93,6 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
     suspend fun plainQuery(path: String, parameters: Parameters? = null): HttpResponse
     {
         val response = httpClient.get(newRequestBuilder(path, parameters))
-        tryFindAndSaveToken3(response.bodyAsText())
         return response
     }
 
@@ -134,16 +132,14 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
         return query(path, parameters)
     }
 
-    private fun tryFindAndSaveToken3(htmlDocument: String): Boolean
+    private fun findToken3(htmlDocument: String): String?
     {
         val document = Jsoup.parse(htmlDocument)
-        val token3Ele = document.selectFirst("input[name=token3]") ?: return false
-        val token3 = token3Ele.attr("value")
-        this.token3 = token3
-        return true
+        val token3Ele = document.selectFirst("input[name=token3]") ?: return null
+        return token3Ele.attr("value")
     }
 
-    private suspend fun requestToken3()
+    private suspend fun requestToken3(): String?
     {
         /* May also just manually set the WTDGUID cookie. So save one request.
         However, that's more error-prone, for when they change it. */
@@ -153,13 +149,12 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
         if (previousRole != Role.STUDENT)
             setRole(Role.STUDENT)
 
-        val foundToken = tryFindAndSaveToken3(plainQueryStringBody("/"))
-
-        if (!foundToken)
-            throw RuntimeException("Failed to find token3.")
+        val token3 = findToken3(plainQueryStringBody("/"))
 
         if (previousRole != null && previousRole != Role.STUDENT)
             setRole(previousRole)
+
+        return token3
     }
 
     /**
