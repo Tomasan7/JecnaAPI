@@ -28,18 +28,18 @@ sealed interface FinalGrade
      * Warning, when student has bad grades.
      */
     @Serializable
-    object GradesWarning : FinalGrade
+    data object GradesWarning : FinalGrade
 
     /**
      * Warning, when student doesn't have enough grades to be qualified.
      * Happens, when he is absent on tests.
      */
     @Serializable
-    object AbsenceWarning : FinalGrade
+    data object AbsenceWarning : FinalGrade
 
     /**
      * Student has both [GradesWarning] and [AbsenceWarning] at once.
      */
     @Serializable
-    object GradesAndAbsenceWarning : FinalGrade
+    data object GradesAndAbsenceWarning : FinalGrade
 }
