@@ -64,6 +64,13 @@ data class Grades private constructor(private val subjectPartsGrades: Map<String
             subjectPartsGrades[subjectPart] = LinkedList(grades)
         }
 
-        fun build() = Grades(subjectPartsGrades)
+        fun build(): Grades
+        {
+            /* Ensure there always is at least the null (non-categorized) subject part. */
+            if (subjectPartsGrades.isEmpty())
+                subjectPartsGrades[null] = emptyMutableLinkedList()
+
+            return Grades(subjectPartsGrades)
+        }
     }
 }
