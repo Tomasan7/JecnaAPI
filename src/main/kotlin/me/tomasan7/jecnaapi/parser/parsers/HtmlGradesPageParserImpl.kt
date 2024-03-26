@@ -46,7 +46,7 @@ internal object HtmlGradesPageParserImpl : HtmlGradesPageParser
                                           parseFinalGrade(rowEle.findFinalGradeEle().expectElement("behaviour final grade"), subjectName))
                 else
                     gradesPageBuilder.addSubject(Subject(subjectName,
-                                                         parseSubjectGrades(mainColumnEle, subjectName),
+                                                         parseSubjectGrades(mainColumnEle),
                                                          rowEle.findFinalGradeEle()?.let { parseFinalGrade(it, subjectName) }))
             }
 
@@ -70,7 +70,7 @@ internal object HtmlGradesPageParserImpl : HtmlGradesPageParser
      * @param subjectName The [name][Name] of the subject this grades are in.
      * @return The parsed [grades][Subject.Grades].
      */
-    private fun parseSubjectGrades(gradesColumnEle: Element, subjectName: Name): Grades
+    private fun parseSubjectGrades(gradesColumnEle: Element): Grades
     {
         val subjectGradesBuilder = Grades.builder()
 
@@ -86,7 +86,7 @@ internal object HtmlGradesPageParserImpl : HtmlGradesPageParser
                 /* The substring removes the colon (':') after the subject part. */
                 lastSubjectPart = contentEle.text().let { it.substring(0, it.length - 1) }
             else if (contentEle.`is`("a"))
-                subjectGradesBuilder.addGrade(lastSubjectPart, parseGrade(contentEle, subjectName))
+                subjectGradesBuilder.addGrade(lastSubjectPart, parseGrade(contentEle))
         }
 
         return subjectGradesBuilder.build()
@@ -160,7 +160,7 @@ internal object HtmlGradesPageParserImpl : HtmlGradesPageParser
      *
      * @return The parsed [Grade].
      */
-    private fun parseGrade(gradeEle: Element, subjectName: Name): Grade
+    private fun parseGrade(gradeEle: Element): Grade
     {
         val valueChar = gradeEle.selectFirstOrThrow(".value").text()[0]
         val small = gradeEle.classNames().contains("scoreSmall")
@@ -182,7 +182,7 @@ internal object HtmlGradesPageParserImpl : HtmlGradesPageParser
 
         val teacherName = Name(teacherFull, teacherShort)
 
-        return Grade(valueChar, small, subjectName, teacherName, description, receiveDate, gradeId)
+        return Grade(valueChar, small, teacherName, description, receiveDate, gradeId)
     }
 
     /**

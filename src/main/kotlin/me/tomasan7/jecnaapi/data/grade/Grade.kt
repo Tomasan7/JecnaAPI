@@ -11,7 +11,6 @@ import java.time.LocalDate
 /**
  * @property value       Grade's value. Is 0 for N.
  * @property small       Whether the grade is small or big. (it's weight)
- * @property subject     The subject th grade is from.
  * @property teacher     The teacher, who gave you the grade.
  * @property description Description of the grade.
  * @property gradeId     The id of the grade in Jecna backend.
@@ -20,7 +19,6 @@ import java.time.LocalDate
 data class Grade(
     val value: Int,
     val small: Boolean,
-    val subject: Name? = null,
     val teacher: Name? = null,
     val description: String? = null,
     val receiveDate: LocalDate? = null,
@@ -35,7 +33,6 @@ data class Grade(
     constructor(
         valueChar: Char,
         small: Boolean,
-        subject: Name? = null,
         teacher: Name? = null,
         description: String? = null,
         receiveDate: LocalDate? = null,
@@ -43,7 +40,6 @@ data class Grade(
     ) : this(
         valueCharToValue(valueChar),
         small,
-        subject,
         teacher,
         description,
         receiveDate,
