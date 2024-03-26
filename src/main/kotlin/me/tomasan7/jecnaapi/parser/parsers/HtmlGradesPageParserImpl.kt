@@ -169,8 +169,11 @@ internal object HtmlGradesPageParserImpl : HtmlGradesPageParser
 
         /* The title attribute of the grade element, which contains all the details. (description, date and teacher) */
         val titleAttr = gradeEle.attr("title")
+        val hrefAttr = gradeEle.attr("href")
+        val gradeId = GRADE_ID_REGEX.find(hrefAttr)?.value?.toIntOrNull()
+            ?: throw ParseException("Failed to parse grade id from href: $hrefAttr")
 
-        val detailsMatch = GRADE_DETAILS_REGEX.find(titleAttr) ?: return Grade(valueChar, small)
+        val detailsMatch = GRADE_DETAILS_REGEX.find(titleAttr) ?: return Grade(valueChar, small, gradeId = gradeId)
 
         /* Just description is optional, the rest is always there. */
         val description = detailsMatch.groups[GradeDetailsRegexGroups.DESCRIPTION]?.value
@@ -179,7 +182,7 @@ internal object HtmlGradesPageParserImpl : HtmlGradesPageParser
 
         val teacherName = Name(teacherFull, teacherShort)
 
-        return Grade(valueChar, small, subjectName, teacherName, description, receiveDate)
+        return Grade(valueChar, small, subjectName, teacherName, description, receiveDate, gradeId)
     }
 
     /**
@@ -241,6 +244,11 @@ internal object HtmlGradesPageParserImpl : HtmlGradesPageParser
      * Matches the whole name of a subject. Match contains capturing groups listed in [SubjectNameRegexGroups].
      */
     private val SUBJECT_NAME_REGEX = Regex("""(?<${SubjectNameRegexGroups.FULL}>.*?)(?: \((?<${SubjectNameRegexGroups.SHORT}>\w{1,4})\))?${'$'}""")
+
+    /**
+     * Matches the grade's id in it's href attribute.
+     */
+    private val GRADE_ID_REGEX = Regex("""(?<=scoreId=)\d+""")
 
     /**
      * Contains names of regex capture groups inside [GRADE_DETAILS_REGEX].

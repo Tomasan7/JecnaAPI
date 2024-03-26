@@ -14,6 +14,7 @@ import java.time.LocalDate
  * @property subject     The subject th grade is from.
  * @property teacher     The teacher, who gave you the grade.
  * @property description Description of the grade.
+ * @property gradeId     The id of the grade in Jecna backend.
  */
 @Serializable
 data class Grade(
@@ -22,7 +23,8 @@ data class Grade(
     val subject: Name? = null,
     val teacher: Name? = null,
     val description: String? = null,
-    val receiveDate: LocalDate? = null
+    val receiveDate: LocalDate? = null,
+    val gradeId: Int
 )
 {
     /**
@@ -30,17 +32,23 @@ data class Grade(
      *
      * @param valueChar The value's char representation.
      */
-    constructor(valueChar: Char,
-                small: Boolean,
-                subject: Name? = null,
-                teacher: Name? = null,
-                description: String? = null,
-                receiveDate: LocalDate? = null) : this(valueCharToValue(valueChar),
-                                                       small,
-                                                       subject,
-                                                       teacher,
-                                                       description,
-                                                       receiveDate)
+    constructor(
+        valueChar: Char,
+        small: Boolean,
+        subject: Name? = null,
+        teacher: Name? = null,
+        description: String? = null,
+        receiveDate: LocalDate? = null,
+        gradeId: Int
+    ) : this(
+        valueCharToValue(valueChar),
+        small,
+        subject,
+        teacher,
+        description,
+        receiveDate,
+        gradeId
+    )
 
     init
     {
