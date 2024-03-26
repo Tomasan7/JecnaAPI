@@ -61,10 +61,7 @@ data class Grade(
         private val gradeCharValues = listOf('N', '0', '1', '2', '3', '4', '5')
 
         /**
-         * Converts value's char representation to the value.
-         *
-         * @param valueChar The value's char representation.
-         * @return It's value.
+         * Converts value's char representation to its value.
          */
         private fun valueCharToValue(valueChar: Char): Int
         {
