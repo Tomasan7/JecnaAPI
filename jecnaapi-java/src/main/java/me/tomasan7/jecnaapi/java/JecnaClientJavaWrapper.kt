@@ -104,6 +104,17 @@ class JecnaClientJavaWrapper(autoLogin: Boolean = false)
     /** The last [time][java.time.Instant] a call to [login] was successful (returned `true`). */
     fun getLastSuccessfulLoginTime() = wrappedClient.lastSuccessfulLoginTime
 
-    /** The [Auth], that was last used in a call to [login], which was successful (returned `true`). */
-    fun getLastSuccessfulLoginAuth() = wrappedClient.lastSuccessfulLoginAuth
+    /**
+     * [Auth] used by autologin. Is automatically updated by [login] on a successful login.
+     * Is set to `null` on [logout].
+     */
+    fun getAutoLoginAuth() = wrappedClient.autoLoginAuth
+
+    /**
+     * Sets [Auth] used by autologin.
+     */
+    fun setAutoLoginAuth(auth: Auth)
+    {
+        wrappedClient.autoLoginAuth = auth
+    }
 }

@@ -29,8 +29,11 @@ class JecnaClient(autoLogin: Boolean = false)
     var autoLogin by webClient::autoLogin
     /** The last [time][java.time.Instant] a call to [login] was successful (returned `true`). */
     val lastSuccessfulLoginTime by webClient::lastSuccessfulLoginTime
-    /** The [Auth], that was last used in a call to [login], which was successful (returned `true`). */
-    val lastSuccessfulLoginAuth by webClient::lastSuccessfulLoginAuth
+    /**
+     * [Auth] used by [autoLogin]. Is automatically updated by [login] on a successful login.
+     * Is set to `null` on [logout].
+     */
+    var autoLoginAuth by webClient::autoLoginAuth
     val role by webClient::role
 
     private val newsPageParser: HtmlNewsPageParser = HtmlNewsPageParserImpl

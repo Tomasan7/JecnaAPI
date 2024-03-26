@@ -32,8 +32,11 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
     }
     private var autoLoginAttempted = false
 
-    var lastSuccessfulLoginAuth: Auth? = null
-        private set
+    /**
+     * [Auth] used by [autoLogin]. Is automatically updated by [login] on a successful login.
+     * Is set to `null` on [logout].
+     */
+    var autoLoginAuth: Auth? = null
     var lastSuccessfulLoginTime: Instant? = null
         private set
     var role: Role? = null
@@ -68,7 +71,7 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
         if (locationHeader != "/")
             return false
 
-        lastSuccessfulLoginAuth = auth
+        autoLoginAuth = auth
         lastSuccessfulLoginTime = Instant.now()
 
         return true
@@ -82,7 +85,7 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
 
     override suspend fun logout()
     {
-        lastSuccessfulLoginAuth = null
+        autoLoginAuth = null
         plainQuery("/user/logout")
     }
 
@@ -117,7 +120,7 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
 
         /* Redirect to login. */
 
-        if (!autoLogin || lastSuccessfulLoginAuth == null)
+        if (!autoLogin || autoLoginAuth == null)
             throw AuthenticationException()
 
         if (autoLoginAttempted)
@@ -126,7 +129,7 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
             throw AuthenticationException()
         }
 
-        login(lastSuccessfulLoginAuth!!)
+        login(autoLoginAuth!!)
 
         autoLoginAttempted = true
         return query(path, parameters)
