@@ -39,6 +39,7 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
     var autoLoginAuth: Auth? = null
     var lastSuccessfulLoginTime: Instant? = null
         private set
+    /* Value may be incorrect if the session has expired */
     var role: Role? = null
         private set
 
@@ -149,8 +150,7 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
 
         val previousRole = role
         /* Login form with the token3 is not in the root page, when you are neither student nor teacher. */
-        if (previousRole != Role.STUDENT)
-            setRole(Role.STUDENT)
+        setRole(Role.STUDENT)
 
         val token3 = findToken3(plainQueryStringBody("/"))
 
