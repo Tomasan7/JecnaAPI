@@ -13,6 +13,7 @@ import me.tomasan7.jecnaapi.web.AuthWebClient
 import me.tomasan7.jecnaapi.web.AuthenticationException
 import org.jsoup.Jsoup
 import java.time.Instant
+import kotlin.time.Duration
 
 /**
  * Http client for accessing the Ječná web.
@@ -21,7 +22,7 @@ import java.time.Instant
  * Then when calling [query] and it fails because of [AuthenticationException], [login] is called with the saved [Auth] and the request retried.
  * If it fails again, [AuthenticationException] is thrown.
  */
-class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
+class JecnaWebClient(var autoLogin: Boolean = false, requestTimeout: Duration) : AuthWebClient
 {
     private val cookieStorage = AcceptAllCookiesStorage()
     private val httpClient = HttpClient(CIO) {
@@ -30,6 +31,9 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
         }
         install(DefaultRequest) {
             url(ENDPOINT)
+        }
+        install(HttpTimeout) {
+            requestTimeoutMillis = requestTimeout.inWholeMilliseconds
         }
         followRedirects = false
     }

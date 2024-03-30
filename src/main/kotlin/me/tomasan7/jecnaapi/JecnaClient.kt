@@ -15,6 +15,8 @@ import me.tomasan7.jecnaapi.web.append
 import me.tomasan7.jecnaapi.web.jecna.JecnaWebClient
 import me.tomasan7.jecnaapi.web.jecna.Role
 import java.time.Month
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * A client to access Jecna Web data.
@@ -22,9 +24,9 @@ import java.time.Month
  * @param autoLogin Saves provided [Auth] on each [login] call.
  * Then when calling [query] and it fails because of [AuthenticationException], [login] is called with the saved [Auth] and the request retried.
  */
-class JecnaClient(autoLogin: Boolean = false)
+class JecnaClient(autoLogin: Boolean = false, requestTimout: Duration = 10.seconds)
 {
-    private val webClient = JecnaWebClient(autoLogin)
+    private val webClient = JecnaWebClient(autoLogin, requestTimout)
 
     var autoLogin by webClient::autoLogin
     /** The last [time][java.time.Instant] a call to [login] was successful (returned `true`). */
