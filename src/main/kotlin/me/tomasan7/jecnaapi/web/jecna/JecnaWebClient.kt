@@ -2,6 +2,7 @@ package me.tomasan7.jecnaapi.web.jecna
 
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
+import io.ktor.client.plugins.*
 import io.ktor.client.plugins.cookies.*
 import io.ktor.client.request.*
 import io.ktor.client.request.forms.*
@@ -27,7 +28,9 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
         install(HttpCookies) {
             storage = cookieStorage
         }
-
+        install(DefaultRequest) {
+            url(ENDPOINT)
+        }
         followRedirects = false
     }
     private var autoLoginAttempted = false
@@ -57,12 +60,13 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
             ?: throw IllegalStateException("Token3 not found.")
 
         val response = httpClient.submitForm(
-            block = newRequestBuilder("/user/login"),
+            "/user/login",
             formParameters = Parameters.build {
                 append("user", auth.username)
                 append("pass", auth.password)
                 append("token3", token3)
-            })
+            }
+        )
 
         if (response.status != HttpStatusCode.Found)
             return false
@@ -96,7 +100,9 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
     /** A query without any authentication (autologin) handling. */
     suspend fun plainQuery(path: String, parameters: Parameters? = null): HttpResponse
     {
-        val response = httpClient.get(newRequestBuilder(path, parameters))
+        val response = httpClient.get(path) {
+            parameters?.let { url.parameters.appendAll(it) }
+        }
         return response
     }
 
@@ -164,33 +170,6 @@ class JecnaWebClient(var autoLogin: Boolean = false) : AuthWebClient
      * Closes the HTTP client.
      */
     fun close() = httpClient.close()
-
-    /**
-     * Returns a function modifying [HttpRequestBuilder] used by Ktor HttpClient.
-     * Sets the url relative to [ENDPOINT].
-     * Adds a User-Agent header, since the web requires it. (uses Mozilla/5.0)
-     *
-     * @param path The path to query. Must include first slash.
-     * @param parameters HTTP parameters, which will be sent URL encoded.
-     * @param block Additional modifications to the request.
-     * @return The function.
-     */
-    private fun newRequestBuilder(
-        path: String,
-        parameters: Parameters? = null,
-        block: (HttpRequestBuilder.() -> Unit)? = null
-    ): HttpRequestBuilder.() -> Unit
-    {
-        return {
-            if (block != null)
-                block()
-
-            url(urlString = ENDPOINT + path)
-
-            if (parameters != null)
-                url { this.parameters.appendAll(parameters) }
-        }
-    }
 
     companion object
     {
