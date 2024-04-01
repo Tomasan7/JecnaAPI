@@ -11,8 +11,8 @@ import io.ktor.http.*
 import me.tomasan7.jecnaapi.web.Auth
 import me.tomasan7.jecnaapi.web.AuthWebClient
 import me.tomasan7.jecnaapi.web.AuthenticationException
-import me.tomasan7.jecnaapi.web.canteen.ICanteenWebClient.Companion.ENDPOINT
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import java.time.Instant
 import kotlin.time.Duration
 
@@ -61,7 +61,13 @@ class JecnaWebClient(var autoLogin: Boolean = false, requestTimeout: Duration) :
 
     override suspend fun login(auth: Auth): Boolean
     {
-        val token3 = requestToken3()
+        val rootStudentPageDocument = Jsoup.parse(getRootStudentPageHtml())
+
+        /* If logout button is found, the user is already logged in. */
+        if (rootStudentPageDocument.selectFirst("""[href="/user/logout"]""") != null)
+            return true
+
+        val token3 = findToken3(rootStudentPageDocument)
             ?: throw IllegalStateException("Token3 not found.")
 
         val response = httpClient.submitForm(
@@ -149,12 +155,19 @@ class JecnaWebClient(var autoLogin: Boolean = false, requestTimeout: Duration) :
         return query(path, parameters)
     }
 
-    private fun findToken3(htmlDocument: String): String?
+    private suspend fun getRootStudentPageHtml(): String
     {
-        val document = Jsoup.parse(htmlDocument)
+        setRole(Role.STUDENT)
+        return plainQueryStringBody("/")
+    }
+
+    private fun findToken3(document: Document): String?
+    {
         val token3Ele = document.selectFirst("input[name=token3]") ?: return null
         return token3Ele.attr("value")
     }
+
+    private fun findToken3(htmlDocument: String) = findToken3(Jsoup.parse(htmlDocument))
 
     private suspend fun requestToken3(): String?
     {
