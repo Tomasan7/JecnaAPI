@@ -11,6 +11,7 @@ import io.ktor.http.*
 import me.tomasan7.jecnaapi.web.Auth
 import me.tomasan7.jecnaapi.web.AuthWebClient
 import me.tomasan7.jecnaapi.web.AuthenticationException
+import me.tomasan7.jecnaapi.web.canteen.ICanteenWebClient.Companion.ENDPOINT
 import org.jsoup.Jsoup
 import java.time.Instant
 import kotlin.time.Duration
@@ -88,7 +89,9 @@ class JecnaWebClient(var autoLogin: Boolean = false, requestTimeout: Duration) :
 
     suspend fun setRole(role: Role)
     {
-        plainQuery("/user/role", parametersOf("role", role.value))
+        /* Refer to Role section in /internal_docs/Jecna_server.md */
+        setCookie("WTDGUID", ROLE_TO_WTDGUID_COOKIE_VALUE_MAP[role]!!)
+        //plainQuery("/user/role", parametersOf("role", role.value))
         this.role = role
     }
 
@@ -192,5 +195,12 @@ class JecnaWebClient(var autoLogin: Boolean = false, requestTimeout: Duration) :
          * @param path The path to query. Must include first slash.
          */
         fun getUrlForPath(path: String) = ENDPOINT + path
+
+        /* Refer to Role section in /internal_docs/Jecna_server.md */
+        val ROLE_TO_WTDGUID_COOKIE_VALUE_MAP = mapOf(
+            Role.INTERESTED to "0",
+            Role.STUDENT to "10",
+            Role.EMPLOYEE to "100"
+        )
     }
 }
