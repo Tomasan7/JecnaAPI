@@ -1,11 +1,19 @@
 # General
 
-The server uses [WebToDate](https://webtodate.cz/) CMS (content management system).
-It has Apache as backend.
+The is suspected to use [WebToDate](https://webtodate.cz/) CMS, (content management system) because it uses
+a `WTDGUID` (WebToDateGUserId) cookie.
 
 ## Role
 
-The root (`/`) page is based on your role. The role is selected by the main three buttons on the top of the page. Roles are: `zajemce, student, zamestnanec` (unofficial). The role is associated with the user by the `WTDGUID` cookie, which is used to identify the user.
+The root (`/`) page is based on your role. The role is selected by the main three buttons on the top of the page. Roles
+are: `zajemce`, `student`, `zamestnanec` (unofficial). The role is saved into a `WTDGUID` cookie. These are the values of
+the cookie:
+
+| role          | `WTDGUID` cookie value |
+|---------------|------------------------|
+| `zajemce`     | 0                      |
+| `student`     | 10                     |
+| `zamestnanec` | 100                    |
 
 ### Request
 
@@ -14,7 +22,7 @@ Method: `GET`
 Content-Type: _none_  
 Query Parameters:
 
-| Name   | Required | Description                          | Example values                |
+| Name   | Required | Description                          | Possible values               |
 |--------|----------|--------------------------------------|-------------------------------|
 | `role` | Yes      | The role being assigned to the user. | zajemce, student, zamestnanec |
 
@@ -36,6 +44,7 @@ Its end is dictated by the browser. (See [Session](https://developer.mozilla.org
 # Login
 
 ## Request
+
 Path: `/user/login`  
 Method: `POST`    
 Content-Type: `application/x-www-form-urlencoded`  
@@ -49,12 +58,20 @@ Form Parameters:
 | `submit` | No       | Sent by the button. Has only value "Přihlásit se"         | Přihlásit se (only value) |
 
 ### token3
-Token3 is a [CSRF Protection](https://laravel.com/docs/9.x/csrf). It is always tied to a session, so each session has the same token3 for its entire life. It has a numeric value. You can find it as a hidden `input` in the login form. A selector would be `#loginForm input[name=token3]`.
+
+Token3 is a [CSRF Protection](https://laravel.com/docs/9.x/csrf). It is always tied to a session, so each session has
+the same token3 for its entire life. It has a numeric value. You can find it as a hidden `input` in the login form. A
+selector would be `#loginForm input[name=token3]`.
 
 ## Response
-- If the user was already logged in, the server will respond with redirect to root (`/`), **even if the credentials are incorrect**.
-- If the password or username is incorrect, the server will respond (`200 OK`) with a login problem page. (same as `/user/login-problem`)  
+
+- If the user was already logged in, the server will respond with redirect to root (`/`), **even if the credentials are
+  incorrect**.
+- If the password or username is incorrect, the server will respond (`200 OK`) with a login problem page. (same
+  as `/user/login-problem`)
 - If token3 is missing or incorrect, the user will be redirected (`302 Moved Temporarily`) to `/user/login-problem`.
 - If the login is successful, the user will be redirected (`302 Moved Temporarily`) to either:
-  - the page, which the login happened from. ([Referer header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referer))
-  - or root (`/`) if the [Referer header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referer) is missing.
+    - the page, which the login happened
+      from. ([Referer header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referer))
+    - or root (`/`) if the [Referer header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referer) is
+      missing.
