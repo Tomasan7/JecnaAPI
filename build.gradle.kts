@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "me.tomasan7"
-version = "5.0.0"
+version = "5.0.1"
 
 dependencies {
     implementation(libs.kotlinx.coroutines.core)
